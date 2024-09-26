@@ -1,0 +1,28 @@
+.highlight {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.advantage-card {
+    border: none;
+    text-align: center;
+}
+
+.advantage-icon {
+    font-size: 3rem;
+    color: #28a745;
+}
+
+.btn-custom {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-custom:hover {
+    background-color: #218838;
+}

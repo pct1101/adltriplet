@@ -1,0 +1,30 @@
+.news-box {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .news-box img {
+    border-radius: 8px;
+    height: 250px !important;
+    width: 100%;
+  }
+  
+  .news-box h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .news-date {
+    font-size: 0.9rem;
+    color: gray;
+  }
+  
+  .news-description {
+    margin-bottom: 15px;
+  }
+  
+  .btn-outline-primary {
+    padding: 8px 15px;
+  }
+  

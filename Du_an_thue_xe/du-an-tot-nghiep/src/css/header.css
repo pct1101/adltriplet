@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* Giới hạn chiều rộng của container */
+  }
+  
+  .navbar-nav {
+    margin: 0 auto;
+  }
+  
+  .navbar-brand {
+    flex-grow: 1;
+    text-align: left;
+  }
+  
+  .navbar-nav .nav-item {
+    padding: 0 15px;
+  }
+  
+  .navbar-nav.ms-auto {
+    flex-grow: 1;
+    text-align: right;
+  }
+  

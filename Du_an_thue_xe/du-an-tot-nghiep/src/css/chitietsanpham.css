@@ -1,0 +1,39 @@
+.product-info {
+    background-color: #f5fff5;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.discount {
+    font-size: 1.5rem;
+    color: #ff0000;
+}
+
+.total-price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.custom-card {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+.rating-star {
+    color: gold;
+}
+
+.border-green {
+    border: 2px solid #28a745;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.d-flex{
+    width: 105%;
+}
+.mainproduct{
+    width: 150px !important;
+}
+

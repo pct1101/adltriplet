@@ -1,0 +1,20 @@
+.card {
+    min-height: 350px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* CSS để điều chỉnh padding trong form */
+.container {
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+/* Đổi màu chữ liên kết */
+.card-footer a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.card-footer a:hover {
+    text-decoration: underline;
+}

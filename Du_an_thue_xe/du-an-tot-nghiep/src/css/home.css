@@ -1,0 +1,49 @@
+.banner-container1{
+  background-image: url('https://g7taxi.vn/wp-content/uploads/2022/07/kinh-nghiem-lai-xe-o-to-cho-nguoi-moi-hoc.jpg'); 
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.banner-container2{
+  background-image: url('https://cdn.thuvienphapluat.vn/uploads/tintuc/2022/06/10/benh-gi-khong-duoc-lai-xe.jpg'); 
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.btn.btn-success{
+  width: 140px;
+  height: 50px;
+  display: block;
+  padding: 11px;
+  text-decoration: aliceblue;
+  font-family: sans-serif;
+}
+
+.banner-content {
+  color: white;
+  text-align: center;
+}
+
+.banner-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.banner-content p {
+  font-size: 1.2rem;
+}
+
+.banner-content hr {
+  width: 80px;
+  border-top: 2px solid white;
+  margin: 20px auto;
+}

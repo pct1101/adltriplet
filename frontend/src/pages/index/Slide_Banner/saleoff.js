@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/saleoff.css";
+import "../../../css/saleoff.css";
 
 function Saleoff() {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "./header";
-import Footer from "./footer";
-import "../css/chitietsanpham.css";
+import Header from "../header/header";
+import Footer from "../footer/footer";
+import "../../../css/chitietsanpham.css";
 
 function Chitietsanpham() {
   return (

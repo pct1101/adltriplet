@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./page/home";
-import Chitietsanpham from "./page/chitietsanpham";
-import Dangnhap from "./page/dangnhap";
-import Dangky from "./page/dangky";
-import Blog from "./page/blog";
+import Chitietsanpham from "./pages/index/body/chitietsanpham";
+import Dangnhap from "./pages/index/SignUp/dangnhap";
+import Dangky from "./pages/index/SignUp/dangky";
+import Blog from "./pages/index/header/blog";
+import Home from "./pages/index";
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React from "react";
-import Header from "./header";
-import Footer from "./footer";
-import "../css/formsignupin.css";
+import Header from "../header/header";
+import Footer from "../footer/footer";
+import "../../../css/formsignupin.css";
 
 function Dangky() {
   return (

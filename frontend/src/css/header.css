@@ -1,41 +1,61 @@
 .logo img{
   width: 100%;
   max-width: 179px;
-  height: 120px;
+  height: 100px;
+}
+  .container.header{
+    height: 100px;
+  }
+
+.navbar.navbar-expand-lg.navbar-light.bg-light{
+  width: 100%;
+  position: fixed ;
+  z-index: 9999;
+
 }
 #navbarNav.collapse.navbar-collapse{
-  font-size: 22px;
   justify-content: center;
   font-weight: bold;
 }
 .navbar-nav {
 justify-content:space-between ;
+font-size: 18px;
 gap: 20px;
-} 
-.navbar-icon{
-  background-color:#A2FDBF
-   ;
+}
+
+.signin-icon{
   width:100%;
-  max-width: 13rem;
+  max-width: 146px;
   border: 1px solid;
   border-radius: 19px;
   height: 53px;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-
-}
-.navbar-icon a {
-  display: flex; /* Sử dụng Flexbox cho thẻ <a> */
+  display: flex;
   justify-content: center;
-  align-items: center; /* Căn giữa cả văn bản và biểu tượng */
-  text-decoration: none; /* Xóa gạch chân (tùy chọn) */
+  align-items: center;
+  padding: 0;
+}
+.signin-icon:hover{
+  background-color:#A2FDBF;
+  transition: cubic-bezier(0.075, 0.82, 0.165, 7);
+  cursor: pointer;
+
+}
+.signup-icon{
+ 
+  width:100%;
+  max-width: 100px;
+  height: 53px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
 }
 
-.navbar-icon i {
-  font-size: 1.2rem; /* Kích thước biểu tượng (có thể tùy chỉnh) */
-}
-i.fa-solid{
-  padding: 2px;
-  margin-left: 10px;
+
+
+/* Login */
+.login{
+  display: flex;
+  width: 100%;
+  max-width: 200px;
 }

@@ -6,24 +6,18 @@ import Sanphamlist from "./body/sanphamlist";
 import Saleoff from "./Slide_Banner/saleoff";
 import News from "./header/news";
 import "../../css/home.css";
+import Slider from "./Slide_Banner/slider";
+import Endow from "./Slide_Banner/endow";
 
 function Home() {
   return (
     <div>
       <Header />
-      <div className="banner-container1">
-        <div className="banner-content text-center">
-          <h1>Cùng Bạn Đến Mọi Hành Trình</h1>
-          <hr />
-          <p>
-            Trải nghiệm sự khác biệt từ hơn 8000 xe gia đình đời mới khắp Việt
-            Nam
-          </p>
-        </div>
-      </div>
+      <Slider />
       <Timkiemxe />
-      <Sanphamlist />
       <Saleoff />
+      <Sanphamlist />
+      <Endow />
       <div className="banner-container2">
         <div className="banner-content text-center">
           <h1>BẠN ĐÃ SẲN SÀNG ĐỂ BẮT ĐẦU CUỘC HÀNH TRÌNH !</h1>

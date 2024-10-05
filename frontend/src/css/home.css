@@ -47,3 +47,157 @@
   border-top: 2px solid white;
   margin: 20px auto;
 }
+/* Blog */
+.highlight {
+  font-weight: bold;
+  color: #28a745;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.advantage-card {
+  border: none;
+  text-align: center;
+}
+
+.advantage-icon {
+  font-size: 3rem;
+  color: #28a745;
+}
+
+.btn-custom {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-custom:hover {
+  background-color: #218838;
+}
+
+/* news */
+.news-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.news-box img {
+  border-radius: 8px;
+  height: 250px !important;
+  width: 100%;
+}
+
+.news-box h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.news-date {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.news-description {
+  margin-bottom: 15px;
+}
+
+.btn-outline-primary {
+  padding: 8px 15px;
+}
+
+
+/* sales off */
+.promo-box, .advantage-box {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.promo-box h5, .advantage-box h5 {
+  font-weight: bold;
+}
+
+.promo-box p, .advantage-box p {
+  font-size: 1rem;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+
+/* productlist */
+.container {
+  max-width: 1200px;
+}
+
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.card-text {
+  font-size: 1rem;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.btn {
+  padding: 10px 20px;
+}
+.card-img-top{
+  height: 200px !important;
+}
+
+
+
+/* detail product */
+.product-info {
+  background-color: #f5fff5;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.discount {
+  font-size: 1.5rem;
+  color: #ff0000;
+}
+
+.total-price {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.custom-card {
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.rating-star {
+  color: gold;
+}
+
+.border-green {
+  border: 2px solid #28a745;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.d-flex{
+  width: 105%;
+}
+.mainproduct{
+  width: 150px !important;
+}
+

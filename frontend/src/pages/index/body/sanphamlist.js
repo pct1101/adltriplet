@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../css/sanphamlist.css";
+import "../../../css/home.css";
 
 function Sanphamlist() {
   return (

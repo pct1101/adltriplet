@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "./header";
 import Footer from "../footer/footer";
-import "../../../css/blog.css";
+import "../../../css/home.css";
 
 function Blog() {
   return (

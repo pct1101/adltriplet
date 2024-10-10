@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\CarFavoriteController;
+use App\Http\Controllers\CarFeedbackController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -12,3 +13,4 @@ Route::get('/sp/{id}', [CarController::class, 'get_details']);
 Route::get('/loai/{id}', [CarController::class, 'get_kind_of_car']);
 Route::get('/carfavorite', [CarFavoriteController::class, 'index']);
 Route::post('/carfavorite', [CarFavoriteController::class,'add']);
+Route::get('/carfeedback/{car_id}', [CarFeedbackController::class,'showfeedback']);

@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import "../../../css/home.css";
 import axios from "axios";
 
-
-const API_URL = 'http://localhost:8000/api';
+const API_URL = "http://localhost:8000/api";
 
 // Hàm gọi API để lấy danh sách xe
 export const getAllCars = () => {
@@ -17,11 +16,11 @@ const Productlist = () => {
   useEffect(() => {
     // Gọi API để lấy danh sách xe
     getAllCars()
-      .then(response => {
+      .then((response) => {
         setCars(response.data); // Cập nhật state với dữ liệu nhận được
       })
-      .catch(error => {
-        console.error('Error fetching car list:', error);
+      .catch((error) => {
+        console.error("Error fetching car list:", error);
       });
   }, []);
 
@@ -47,7 +46,7 @@ const Productlist = () => {
           </p>
         </div>
         <div className="row">
-          {cars.map(car => (
+          {cars.map((car) => (
             <div className="col-md-3">
               <div className="card mb-4">
                 {/* Sử dụng Link để điều hướng khi click vào ảnh */}
@@ -65,7 +64,8 @@ const Productlist = () => {
                 <div className="card-body">
                   <h5 className="card-title">{car.car_name}</h5>
                   <p className="card-text">
-                    {car.seats} chỗ, 5.0 ⭐, 20 chuyến, {formatPrice(car.rental_price)}
+                    {car.seats} chỗ, 5.0 ⭐, 20 chuyến,{" "}
+                    {formatPrice(car.rental_price)}
                   </p>
                   <hr />
                   <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
@@ -73,157 +73,9 @@ const Productlist = () => {
               </div>
             </div>
           ))}
-          {/* <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div>{" "}
-          <div className="col-md-3">
-            <div className="card mb-4">
-              <img
-                src="https://mercedesnhatrangvn.com/wp-content/uploads/2022/07/Mercedes-Maybach-S-680-4matic.jpg"
-                className="card-img-top"
-                alt="Car"
-              />
-              <div className="card-tag">
-                <span className="tag-item transmission">Số tự động</span>
-                <span className="tag-item non-mortgage">Giao xe tận nơi</span>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">MAYBACH-MERCEDES S 680</h5>
-                <p className="card-text">
-                  5 chỗ, 5.0 ⭐, 20 chuyến, 1,126K/ngày
-                </p>
-                <hr />
-                <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
-              </div>
-            </div>
-          </div> */}
-          {/* Thêm các card tương tự cho các xe khác */}
         </div>
       </div>
     </div>
   );
-}
+};
 export default Productlist;

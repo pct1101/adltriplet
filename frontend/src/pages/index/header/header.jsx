@@ -61,7 +61,7 @@ function Header() {
 
           <div className="login ms-auto">
             <ul className="signup-icon mb-2 mb-lg-0">
-              <a className="nav-link active" href="/dangnhap">
+              <a className="nav-link active" href="/dangky">
                 Đăng Ký
               </a>
             </ul>

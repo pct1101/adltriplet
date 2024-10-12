@@ -1,9 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "../header/header";
 import Footer from "../footer/footer";
+import axios from "axios";
 import "../../../css/home.css";
 
-function Chitietsanpham() {
+
+const API_URL = 'http://localhost:8000/api';
+
+export const getCarDetails = (id) => {
+  return axios.get(`${API_URL}/sp/${id}`);
+};
+
+const Chitietsanpham = () => {
+  const { id } = useParams(); // Lấy ID từ URL
+  const [car, setCar] = useState(null); // State để lưu trữ chi tiết xe
+
+  useEffect(() => {
+    // Gọi API để lấy thông tin chi tiết xe
+    const fetchCarDetails = async () => {
+      try {
+        const response = await getCarDetails(id);
+        setCar(response.data); // Lưu trữ dữ liệu chi tiết xe vào state
+      } catch (error) {
+        console.error("Error fetching car details", error);
+      }
+    };
+    fetchCarDetails();
+  }, [id]);
+
+  if (!car) {
+    return <div>Loading...</div>;
+  }
+  const formatPrice = (price) => {
+    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
+    if (price >= 1000) {
+      return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
+    }
+    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+  };
+
   return (
     <div>
       <Header />
@@ -16,10 +52,10 @@ function Chitietsanpham() {
               src="https://cdn.oto360.net/images/car/toyota/cross_2404.webp"
               alt="Main Image"
               class="img-fluid mb-3"
-            />
+            /> {/* CHƯA CÓ DỮ LIỆU  */}
 
             {/* <!-- Thumbnails --> */}
-            <div className="mainproduct">
+            <div className="mainproduct"> {/* CHƯA CÓ DỮ LIỆU  */}
               <div class="d-flex">
                 <img
                   src="https://cdn.oto360.net/images/car/toyota/cross_2404.webp"
@@ -43,54 +79,56 @@ function Chitietsanpham() {
             </div>
 
             {/* <!-- Product Information --> */}
-            <h2 class="mt-4">KIA SELTOS PREMIUM 2024</h2>
+            <h2 class="mt-4">{car.car_name}</h2>
             <p>
               <i class="bi bi-star-fill rating-star"></i> 5.0 | 20 chuyến | Quận
               12, Thành phố Hồ Chí Minh
-            </p>
+            </p> {/* CHƯA CÓ DỮ LIỆU  */}
 
             <div class="d-flex justify-content-between">
               <div class="d-flex align-items-center">
                 <i class="bi bi-car-front-fill"></i>
-                <span>Số tự động</span>
+                <span><b>Số tự động</b></span> {/* CHƯA CÓ DỮ LIỆU  */}
               </div>
             </div>
 
             {/* <!-- Specifications --> */}
             <div class="row mt-4">
-              <div class="col-md-3 text-center">
+              <div class="col-md-2 text-center">
                 <p>
                   <strong>Số ghế</strong>
                 </p>
-                <p>5 chỗ</p>
+                <p>{car.seats} chỗ</p>
               </div>
-              <div class="col-md-3 text-center">
+              <div class="col-md-2 text-center">
                 <p>
                   <strong>Nhiên liệu</strong>
                 </p>
-                <p>Xăng</p>
+                <p>Xăng</p> {/* CHƯA CÓ DỮ LIỆU  */}
               </div>
-              <div class="col-md-3 text-center">
+              <div class="col-md-2 text-center">
                 <p>
                   <strong>Hệ số</strong>
                 </p>
-                <p>Số tự động</p>
+                <p>Số tự động</p> {/* CHƯA CÓ DỮ LIỆU  */}
               </div>
-              <div class="col-md-3 text-center">
+              <div class="col-md-2 text-center">
                 <p>
                   <strong>Tiêu hao</strong>
                 </p>
-                <p>10lít/100km</p>
+                <p>10lít/100km</p> {/* CHƯA CÓ DỮ LIỆU  */}
+              </div><div class="col-md-2 text-center">
+                <p>
+                  <strong>Biển sổ</strong>
+                </p>
+                <p>{car.license_plate}</p> {/* CHƯA CÓ DỮ LIỆU  */}
               </div>
             </div>
 
             {/* <!-- Description --> */}
             <h4 class="mt-4">Mô tả</h4>
             <p>
-              KIA SELTOS PREMIUM 2024 sở hữu diện mạo có chút khác biệt so với
-              thế hệ trước với thiết kế hiện đại, thể thao và thời thượng. Xe
-              được trang bị nhiều tính năng hiện đại và tiện nghi, phù hợp với
-              những khách hàng yêu thích sự cá tính và khác biệt.
+              {car.car_description}
             </p>
 
             {/* <!-- Rental Documents --> */}
@@ -119,7 +157,7 @@ function Chitietsanpham() {
                 <span class="discount">1,126k</span>
                 <span class="badge bg-warning text-dark">15% OFF</span>
               </div>
-              <div class="total-price mb-4">1,126k/ngày</div>
+              <div class="total-price mb-4">{formatPrice(car.rental_price)}</div>
 
               <form>
                 <div class="mb-3">
@@ -156,9 +194,10 @@ function Chitietsanpham() {
                   />
                 </div>
                 <div class="mb-3">
-                  <p>Đơn giá thuê: 1,126,000/ngày</p>
-                  <p>Bảo hiểm thuê: 100,000/ngày</p>
+                  <p>Đơn giá thuê: {formatPrice(car.rental_price)}</p>
+                  <p>Bảo hiểm thuê: {formatPrice(100000)}</p>
                 </div>
+                <hr></hr>
                 <div class="mb-3">
                   <label for="discountCode" class="form-label">
                     Mã giảm giá
@@ -172,8 +211,8 @@ function Chitietsanpham() {
                 </div>
 
                 <div class="d-flex justify-content-between">
-                  <p class="mb-0">Tổng cộng</p>
-                  <p class="total-price">1,226,000/ngày</p>
+                  <p class="mb-0"><b>Tổng cộng</b></p>
+                  <p class="total-price">{formatPrice(car.rental_price + 100000)}</p>
                 </div>
 
                 <button class="btn btn-success w-100">Thanh toán</button>
@@ -183,6 +222,7 @@ function Chitietsanpham() {
         </div>
 
         {/* <!-- Similar Cars Section --> */}
+        {/* CHƯA CÓ DỮ LIỆU */}
         <div class="mt-5">
           <h4>Xe tương tự</h4>
           <div class="d-flex">

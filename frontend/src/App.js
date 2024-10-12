@@ -11,7 +11,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" exact element={<Home />} />
-          <Route path="/chitietsanpham" exact element={<Chitietsanpham />} />
+          <Route path="/chitietsanpham/:id" exact element={<Chitietsanpham />} />
           <Route path="/dangnhap" exact element={<Dangnhap />} />
           <Route path="/dangky" exact element={<Dangky />} />
           <Route path="/blog" exact element={<Blog />} />

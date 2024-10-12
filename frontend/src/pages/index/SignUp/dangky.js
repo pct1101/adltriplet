@@ -70,7 +70,7 @@ function Dangky() {
               <div class="card-footer text-center">
                 <p>
                   Bạn đã có tài khoản?{" "}
-                  <a href="/Dangky" class="text-primary">
+                  <a href="/Dangnhap" class="text-primary">
                     Đăng nhập ngay
                   </a>
                 </p>

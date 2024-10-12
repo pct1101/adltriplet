@@ -48,7 +48,7 @@ function Dangnhap() {
               <div class="card-footer text-center">
                 <p>
                   Bạn chưa có tài khoản?{" "}
-                  <a href="#registerForm" class="text-primary">
+                  <a href="/Dangky" class="text-primary">
                     Đăng ký ngay
                   </a>
                 </p>

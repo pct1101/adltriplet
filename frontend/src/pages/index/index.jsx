@@ -2,12 +2,12 @@ import React from "react";
 import Header from "./header/header";
 import Footer from "./footer/footer";
 import Timkiemxe from "./body/timkiemxe";
-import Sanphamlist from "./body/sanphamlist";
 import Saleoff from "./Slide_Banner/saleoff";
 import News from "./header/news";
 import "../../css/home.css";
 import Slider from "./Slide_Banner/slider";
 import Endow from "./Slide_Banner/endow";
+import Productlist from "./body/productslist";
 
 function Home() {
   return (
@@ -16,7 +16,7 @@ function Home() {
       <Slider />
       <Timkiemxe />
       <Saleoff />
-      <Sanphamlist />
+      <Productlist />
       <Endow />
       <div className="banner-container2">
         <div className="banner-content text-center">

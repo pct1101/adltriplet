@@ -8,6 +8,7 @@ export default function Endow() {
         <div className="row">
           <div className="col-md-4">
             <div className="advantage-box text-center p-4 mb-4">
+              <img src="/upload/" />
               <h5>Dòng xe đa dạng</h5>
               <p>
                 Hơn 100 dòng xe cho bạn tuỳ ý lựa chọn: Mini, Sedan, CUV, SUV,

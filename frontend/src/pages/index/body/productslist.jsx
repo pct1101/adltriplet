@@ -1,7 +1,7 @@
 import React from "react";
 import "../../../css/home.css";
 
-function Sanphamlist() {
+function Productlist() {
   return (
     <div className="bgr-products">
       <div className="container">
@@ -187,4 +187,4 @@ function Sanphamlist() {
   );
 }
 
-export default Sanphamlist;
+export default Productlist;

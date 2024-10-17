@@ -48,6 +48,7 @@ class car extends Seeder
                     'license_plate' => '51A-' . mt_rand(100, 999) . '.' . mt_rand(10, 99), 
                     'rental_price' => mt_rand(1000, 8000) * 1000,
                     'mileage' => mt_rand(10000, 60000),
+                    'car_image' => 'xe1-' . $i . '-anhchinh.jpg',
                     'car_description' => 'Xe dòng sedan cốp xe rộng rãi, xe dùng gia đình, ít sử dụng, còn mới, sạch sẽ, VETC tiện lợi, màn hình oledpro A5 giải trí và đầy đủ các tiện ích cơ bản khác',
                     'brandid' => 1
                 ],
@@ -58,6 +59,7 @@ class car extends Seeder
                     'license_plate' => '51A-' . mt_rand(100, 999) . '.' . mt_rand(10, 99),  // Dùng `mt_rand` cho biển số
                     'rental_price' => mt_rand(1000, 8000) * 1000,
                     'mileage' => mt_rand(10000, 60000),
+                    'car_image' => 'xe2-' . $i . '-anhchinh.jpg',
                     'car_description' => 'Xe dòng sedan cốp xe rộng rãi, xe dùng gia đình, ít sử dụng, còn mới, sạch sẽ, VETC tiện lợi, màn hình oledpro A5 giải trí và đầy đủ các tiện ích cơ bản khác',
                     'brandid' => 2
                 ],
@@ -68,6 +70,7 @@ class car extends Seeder
                     'license_plate' => '51A-' . mt_rand(100, 999) . '.' . mt_rand(10, 99),
                     'rental_price' => mt_rand(1000, 8000) * 1000,
                     'mileage' => mt_rand(10000, 60000),
+                    'car_image' => 'xe3-' . $i . '-anhchinh.jpg',
                     'car_description' => 'Xe dòng sedan cốp xe rộng rãi, xe dùng gia đình, ít sử dụng, còn mới, sạch sẽ, VETC tiện lợi, màn hình oledpro A5 giải trí và đầy đủ các tiện ích cơ bản khác',
                     'brandid' => 3
                 ],
@@ -78,6 +81,7 @@ class car extends Seeder
                     'license_plate' => '51A-' . mt_rand(100, 999) . '.' . mt_rand(10, 99), 
                     'rental_price' => mt_rand(1000, 8000) * 1000,
                     'mileage' => mt_rand(10000, 60000),
+                    'car_image' => 'xe4-' . $i . '-anhchinh.jpg',
                     'car_description' => 'Xe dòng sedan cốp xe rộng rãi, xe dùng gia đình, ít sử dụng, còn mới, sạch sẽ, VETC tiện lợi, màn hình oledpro A5 giải trí và đầy đủ các tiện ích cơ bản khác',
                     'brandid' => 4
                 ],
@@ -88,6 +92,7 @@ class car extends Seeder
                     'license_plate' => '51A-' . mt_rand(100, 999) . '.' . mt_rand(10, 99),
                     'rental_price' => mt_rand(1000, 8000) * 1000,
                     'mileage' => mt_rand(10000, 60000),
+                    'car_image' => 'xe5-' . $i . '-anhchinh.jpg',
                     'car_description' => 'Xe dòng sedan cốp xe rộng rãi, xe dùng gia đình, ít sử dụng, còn mới, sạch sẽ, VETC tiện lợi, màn hình oledpro A5 giải trí và đầy đủ các tiện ích cơ bản khác',
                     'brandid' => 5
                 ]

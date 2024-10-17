@@ -8,6 +8,7 @@ import "../../css/home.css";
 import Slider from "./Slide_Banner/slider";
 import Endow from "./Slide_Banner/endow";
 import Productlist from "./body/productslist";
+import CarDelivery from "./Slide_Banner/carDelivery";
 
 function Home() {
   return (
@@ -17,7 +18,7 @@ function Home() {
       <Timkiemxe />
       <Saleoff />
       <Productlist />
-      <Endow />
+      <CarDelivery />
       <div className="banner-container2">
         <div className="banner-content text-center">
           <h1>BẠN ĐÃ SẲN SÀNG ĐỂ BẮT ĐẦU CUỘC HÀNH TRÌNH !</h1>
@@ -30,6 +31,7 @@ function Home() {
           </a>
         </div>
       </div>
+      <Endow />
       <News />
       <Footer />
     </div>

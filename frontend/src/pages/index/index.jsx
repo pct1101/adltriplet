@@ -9,6 +9,7 @@ import Slider from "./Slide_Banner/slider";
 import Endow from "./Slide_Banner/endow";
 import Productlist from "./body/productslist";
 import CarDelivery from "./Slide_Banner/carDelivery";
+import Placecar from "./Slide_Banner/placecar";
 
 function Home() {
   return (
@@ -19,6 +20,7 @@ function Home() {
       <Saleoff />
       <Productlist />
       <CarDelivery />
+      <Placecar />
       <div className="banner-container2">
         <div className="banner-content text-center">
           <h1>BẠN ĐÃ SẲN SÀNG ĐỂ BẮT ĐẦU CUỘC HÀNH TRÌNH !</h1>

@@ -35,13 +35,29 @@ return [
     |
     */
 
+    // 'guards' => [
+    //     'web' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+    // ],
+    // 'api' => [
+    //     'driver' => 'token', // Sử dụng 'token' nếu bạn không dùng Passport hoặc Sanctum
+    //     'provider' => 'users',
+    //     'hash' => false,
+    // ],
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
-    ],
 
+        'api' => [
+            'driver' => 'token', // Hoặc 'passport' nếu bạn dùng Laravel Passport, hoặc 'sanctum' nếu dùng Laravel Sanctum
+            'provider' => 'users',
+            'hash' => false,
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | User Providers

@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+
 class feedback extends Seeder
 {
     /**
@@ -14,7 +15,7 @@ class feedback extends Seeder
     public function run(): void
     {
         // Lấy danh sách các user_id và car_id hợp lệ từ bảng user và car
-        $userIds = DB::table('user')->pluck('user_id')->toArray();
+        $userIds = DB::table('users')->pluck('id')->toArray();
         $carIds = DB::table('car')->pluck('car_id')->toArray();
 
         // Các nội dung phản hồi và đánh giá giả lập

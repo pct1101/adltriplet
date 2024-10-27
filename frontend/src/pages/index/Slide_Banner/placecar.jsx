@@ -43,7 +43,7 @@ function Placecar() {
           modules={[Virtual, Navigation, Pagination, Autoplay]}
           onSwiper={setSwiperRef}
           slidesPerView={4}
-          centeredSlides={true}
+          centeredSlides={false}
           spaceBetween={15}
           navigation={{
             prevEl: ".custom-button-prev",

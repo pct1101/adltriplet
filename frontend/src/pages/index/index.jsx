@@ -6,10 +6,11 @@ import Saleoff from "./Slide_Banner/saleoff";
 import News from "./header/news";
 import "../../css/home.css";
 import Slider from "./Slide_Banner/slider";
-import Endow from "./Slide_Banner/endow";
+import Endow from "./body/endow";
 import Productlist from "./body/productslist";
 import CarDelivery from "./Slide_Banner/carDelivery";
 import Placecar from "./Slide_Banner/placecar";
+import Services from "./body/services";
 
 function Home() {
   return (
@@ -34,6 +35,7 @@ function Home() {
         </div>
       </div>
       <Endow />
+      <Services />  
       <News />
       <Footer />
     </div>

@@ -4,7 +4,12 @@ export default function Endow() {
   return (
     <div>
       <div className="container my-5">
-        <h2 className="text-center mb-4">ƯU ĐIỂM CỦA ADL TRIPBLE T</h2>
+        <div className="title mb-4">
+          <h1 className="text-center">ƯU ĐIỂM NỔI BẬT</h1>
+          <p className="text-center">
+            <span>Nhận nhiều ưu đãi khuyến mãi từ ADL TRIPLE T</span>
+          </p>
+        </div>
         <div className="row">
           <div className="col-md-4">
             <div className="advantage-box text-center p-4 mb-4">

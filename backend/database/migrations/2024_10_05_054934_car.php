@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->double('rental_price');
             $table->boolean('car_status')->default(1);
             $table->double('mileage');
+            $table->string('car_image')->nullable();
             $table->string('car_description');
             $table->unsignedBigInteger('brandid');
             $table->foreign('brandid')->references('brand_id')->on('carbrand');
@@ -48,7 +49,7 @@ return new class extends Migration {
             $table->date('date_favorite');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('car_id');
-            $table->foreign('user_id')->references('user_id')->on('user');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('car_id')->references('car_id')->on('car');
             $table->timestamps();
         });
@@ -61,7 +62,7 @@ return new class extends Migration {
             $table->date('feedback_date');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('car_id');
-            $table->foreign('user_id')->references('user_id')->on('user');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('car_id')->references('car_id')->on('car');
             $table->timestamps();
         });

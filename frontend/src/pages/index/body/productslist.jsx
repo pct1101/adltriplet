@@ -46,7 +46,7 @@ const Productlist = () => {
           </p>
         </div>
         <div className="row">
-          {cars.map((car) => (
+          {cars.splice(0, 8).map((car) => (
             <div className="col-md-3">
               <div className="card mb-4">
                 {/* Sử dụng Link để điều hướng khi click vào ảnh */}
@@ -63,12 +63,22 @@ const Productlist = () => {
                 </div>
                 <div className="card-body">
                   <h5 className="card-title">{car.car_name}</h5>
+
                   <p className="card-text">
-                    {car.seats} chỗ, 5.0 ⭐, 20 chuyến,{" "}
-                    {formatPrice(car.rental_price)}
+                    <i
+                      style={{ paddingRight: "5px" }}
+                      className="fa-solid fa-location-dot"
+                    ></i>
+                    Quận 12, Thành phố Hồ Chí Minh
                   </p>
+
                   <hr />
-                  <p className="card-text">Quận 12, Thành phố Hồ Chí Minh</p>
+                  <p className="card-text d-flex">
+                    5.0 ⭐, 20 chuyến{" "}
+                    <div className="card-price ms-auto">
+                      {formatPrice(car.rental_price)}
+                    </div>
+                  </p>
                 </div>
               </div>
             </div>

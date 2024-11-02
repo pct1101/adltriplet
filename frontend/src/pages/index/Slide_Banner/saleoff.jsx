@@ -29,39 +29,40 @@ function Saleoff() {
   ]);
   return (
     <div>
-      <div className="container">
+      <div style={{ position: "relative" }} className="container">
         <div className="title mb-4">
           <h1 className="text-center">CHƯƠNG TRÌNH KHUYẾN MÃI</h1>
           <p className="text-center">
             <span>Nhận nhiều ưu đãi khuyến mãi từ ADL TRIPLE T</span>
           </p>
         </div>
-        <div className="row" style={{ marginTop: "50px" }}>
-          <>
-            <Swiper
-              modules={[Virtual, Navigation, Pagination, Autoplay]}
-              onSwiper={setSwiperRef}
-              slidesPerView={3}
-              centeredSlides={false}
-              spaceBetween={30}
-              navigation={true}
-              virtual
-              autoplay={{
-                delay: 3500, // 2.5 giây mỗi lần chuyển slide
-                disableOnInteraction: false, // Không dừng autoplay khi người dùng tương tác
-              }}
-              loop={true} // Để kích hoạt loop, slider sẽ quay lại slide đầu khi đến slide cuối
-            >
-              {slide.map((slideBanner, index) => (
-                <SwiperSlide key={slideBanner} virtualIndex={index}>
-                  <div className="col">
-                    <Card.Img variant="sales" src={slideBanner} />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </>
-        </div>
+        <>
+          <Swiper
+            modules={[Virtual, Navigation, Pagination, Autoplay]}
+            onSwiper={setSwiperRef}
+            slidesPerView={3}
+            centeredSlides={false}
+            spaceBetween={30}
+            navigation={{
+              prevEl: ".custom-button-prev",
+              nextEl: ".custom-button-next",
+            }}
+            virtual
+            autoplay={{
+              delay: 3500, // 2.5 giây mỗi lần chuyển slide
+              disableOnInteraction: false, // Không dừng autoplay khi người dùng tương tác
+            }}
+            loop={true} // Để kích hoạt loop, slider sẽ quay lại slide đầu khi đến slide cuối
+          >
+            {slide.map((slideBanner, index) => (
+              <SwiperSlide key={slideBanner} virtualIndex={index}>
+                <div className="">
+                  <Card.Img variant="sales" src={slideBanner} />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </>
       </div>
     </div>
   );

@@ -72,7 +72,7 @@ function CarDelivery() {
                   <div className="fix-img">
                     <img variant="" src={slideBanner} />
                   </div>
-                  <p>Vịnh Hạ Lone</p>
+                  <p>Vịnh Hạ Long</p>
                   <span>1000+ xe chờ</span>
                 </div>
               </SwiperSlide>

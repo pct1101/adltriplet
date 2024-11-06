@@ -29,6 +29,7 @@ function Saleoff() {
   ]);
   return (
     <div>
+      <div className="section-intro"></div>
       <div style={{ position: "relative" }} className="container">
         <div className="title mb-4">
           <h1 className="text-center">CHƯƠNG TRÌNH KHUYẾN MÃI</h1>

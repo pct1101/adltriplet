@@ -1,6 +1,6 @@
 footer {
     background-color: #f8f9fa;
-    padding: 40px 0;
+    z-index: 3333;
   }
   
   footer h5 {
@@ -30,4 +30,7 @@ footer {
     color: #6c757d;
     font-size: 0.9rem;
   }
-  
+  .z-index{
+    position: relative;
+    z-index: 3;
+  }

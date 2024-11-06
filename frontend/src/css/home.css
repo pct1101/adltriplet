@@ -1003,8 +1003,8 @@ position: relative;
 
 }
 .btn.btn-primary{
-  background-color: #5fcf86;
-  border-color: #5fcf86;
+  background-color: #5fcf86 ;
+  border-color: #5fcf86 ;
 }
 .btn.btn-primary.btn--l {
   padding: 16px 80px;

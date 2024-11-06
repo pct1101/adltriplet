@@ -21,11 +21,46 @@ const Detail_product = () => {
 
   const [car, setCar] = useState(null); // State để lưu trữ chi tiết xe
   const [carImages, setCarImages] = useState([]);
-  const [showDatePicker, setShowDatePicker] = useState(false); // chỗ này pop up nè anh em
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  // set giá trị cho days
+  const [startDate, setStartDate] = useState(dayjs("2024-04-17"));
+  const [endDate, setEndDate] = useState(dayjs("2024-04-17"));
+  // chỗ này pop up nè anh em
   const [value, setValue] = React.useState(dayjs("2022-04-17"));
+  //  set none/block cho time
+  const [openDropdown, setOpenDropdown] = useState(null);
+  // set time mặc định
+  const [selectedTimes, setSelectedTimes] = useState({
+    traXe: "20:00", // Thời gian mặc định cho trả xe
+    nhanXe: "08:00", // Thời gian mặc định cho nhận xe (nếu cần)
+  });
+  // Toggle để ẩn/hiện dropdown
+  const handleToggleDropdown = (dropdownName) => {
+    // Nếu dropdown đang mở là dropdown vừa nhấn, đóng nó lại; nếu không, mở dropdown mới khúc này hơi phức tạp ae xem kỹ
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
+  // Xử lý khi người dùng chọn thời gian
+  const handleTimeSelect = (dropdown, time) => {
+    setSelectedTimes((prev) => ({
+      ...prev,
+      [dropdown]: time, // Cập nhật thời gian cho dropdown cụ thể
+    }));
+    setOpenDropdown(null); // Đóng dropdown sau khi chọn
+  };
 
+  // set time
+  const generateTimeOptions = () => {
+    const times = [];
+    for (let hour = 0; hour <= 23; hour++) {
+      const time = `${hour}:00`;
+      times.push(time);
+    }
+    return times;
+  };
+  const timeOptions = generateTimeOptions();
+
+  // Gọi API để lấy thông tin chi tiết xe
   useEffect(() => {
-    // Gọi API để lấy thông tin chi tiết xe
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
@@ -700,7 +735,7 @@ const Detail_product = () => {
                     <span className="value">04/11/2024</span>
                   </div>
                   <div className="wrap-time">
-                    <span className="value">21:30</span>
+                    <span className="value">{selectedTimes.nhanXe}</span>
                   </div>
                 </div>
               </div>
@@ -712,7 +747,7 @@ const Detail_product = () => {
                     <span className="value">05/11/2024</span>
                   </div>
                   <div className="wrap-time">
-                    <span className="value">21:30</span>
+                    <span className="value">{selectedTimes.traXe}</span>
                   </div>
                 </div>
               </div>
@@ -791,82 +826,146 @@ const Detail_product = () => {
               <button className="btn btn-close"></button>
             </div>
             <div className="line-page"> </div>
-
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={["DateCalendar", "DateCalendar"]}>
-                <DemoItem label="">
-                  <DateCalendar defaultValue={dayjs("2024-04-17")} />
-                </DemoItem>
-
-                <DemoItem label="">
-                  <DateCalendar
-                    value={value}
-                    onChange={(newValue) => setValue(newValue)}
-                  />
-                </DemoItem>
-              </DemoContainer>
-            </LocalizationProvider>
-            <div className="time-choose ">
-              <div className="time-choose__item">
-                <div>
-                  <p className="title-time">Nhận xe</p>
-                  <p className="active-time">21:00</p>
-                </div>
-              </div>
-              <div className="wrap-svg">
-                <svg
-                  width="25"
-                  height="24"
-                  viewBox="0 0 25 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12.63 21.2498H12.38C7.34001 21.2498 3.26001 17.1598 3.26001 12.1298V11.8798C3.26001 6.83977 7.35001 2.75977 12.38 2.75977H12.63C17.67 2.75977 21.75 6.84977 21.75 11.8798V12.1298C21.75 17.1598 17.66 21.2498 12.63 21.2498Z"
-                    stroke="#AAAAAA"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                  <path
-                    d="M9.40991 12H15.5699"
-                    stroke="#AAAAAA"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                  <path
-                    d="M15.5899 11.9993L13.1299 9.5293"
-                    stroke="#AAAAAA"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                  <path
-                    d="M15.5899 12L13.1299 14.47"
-                    stroke="#AAAAAA"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></path>
-                </svg>
-              </div>
-              <div className="time-choose__item">
-                <div>
-                  <p className="title-time">Trả xe</p>
-                  <p className="active-time">20:00</p>
-                </div>
-                <div className="dropdown-time">
-                  <div className="custom-radio" id="ast0">
-                    <input
-                      type="radio"
-                      id="rst0"
-                      name="r-startTime"
-                      disabled=""
-                      value="0"
+            <div className="modal-calendar modal-body">
+              {" "}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={["DateCalendar", "DateCalendar"]}>
+                  <DemoItem label="">
+                    <DateCalendar
+                      value={startDate}
+                      onChange={(newValue) => setStartDate(newValue)}
                     />
-                    <label for="rst0">00:00</label>
+                  </DemoItem>
+                  <DemoItem label="">
+                    <DateCalendar
+                      value={endDate}
+                      onChange={(newValue) => setEndDate(newValue)}
+                    />
+                  </DemoItem>
+                </DemoContainer>
+              </LocalizationProvider>
+              <div className="time-choose ">
+                <div
+                  className="time-choose__item"
+                  onClick={() => handleToggleDropdown("nhanXe")}
+                >
+                  <div>
+                    <p className="title-time">Nhận xe</p>
+                    <p className="active-time">{selectedTimes.nhanXe}</p>
                   </div>
+                  <div
+                    className={`dropdown-time ${
+                      openDropdown === "nhanXe" ? "show" : "hide"
+                    }`}
+                  >
+                    {timeOptions.map((time, index) => (
+                      <div className="custom-radio" key={index}>
+                        <input
+                          type="radio"
+                          id={`rst${index}`}
+                          name={`r-startTime-${index}`}
+                          value={time}
+                        />
+                        <label
+                          htmlFor={`nhanXe${index}`}
+                          onClick={() => handleTimeSelect("nhanXe", time)}
+                        >
+                          {time}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="wrap-svg">
+                  <svg
+                    width="25"
+                    height="24"
+                    viewBox="0 0 25 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12.63 21.2498H12.38C7.34001 21.2498 3.26001 17.1598 3.26001 12.1298V11.8798C3.26001 6.83977 7.35001 2.75977 12.38 2.75977H12.63C17.67 2.75977 21.75 6.84977 21.75 11.8798V12.1298C21.75 17.1598 17.66 21.2498 12.63 21.2498Z"
+                      stroke="#AAAAAA"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M9.40991 12H15.5699"
+                      stroke="#AAAAAA"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M15.5899 11.9993L13.1299 9.5293"
+                      stroke="#AAAAAA"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M15.5899 12L13.1299 14.47"
+                      stroke="#AAAAAA"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="time-choose">
+                  <div
+                    className="time-choose__item"
+                    onClick={() => handleToggleDropdown("traXe")}
+                  >
+                    <div>
+                      <p className="title-time">Trả xe</p>
+                      <p className="active-time">{selectedTimes.traXe}</p>
+                    </div>
+                    <div
+                      className={`dropdown-time ${
+                        openDropdown === "traXe" ? "show" : "hide"
+                      }`}
+                    >
+                      {timeOptions.map((time, index) => (
+                        <div className="custom-radio" key={index}>
+                          <input
+                            type="radio"
+                            id={`traXe${index}`}
+                            name={`r-startTime-${index}`}
+                            value={time}
+                          />
+                          <label
+                            htmlFor={`traXe${index}`}
+                            onClick={() => handleTimeSelect("traXe", time)}
+                          >
+                            {time}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <div className="info-time">
+                <div className="info-time__item">
+                  <p className="time">14:00, 06/11 - 20:00, 07/11 </p>
+                  <p className="df-align-center total">
+                    Thời gian thuê:{" "}
+                    <span
+                      className="fontWeight-6 text-primary"
+                      style={{ margin: "0px 2px" }}
+                    >
+                      2 ngày
+                    </span>
+                  </p>
+                </div>
+                <div className="wrap-btn">
+                  <a className="btn btn--s btn-primary">Tiếp tục</a>
                 </div>
               </div>
             </div>

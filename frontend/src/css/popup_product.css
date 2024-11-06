@@ -1,9 +1,13 @@
 
+.group-title {
+    display: flex;            
+    justify-content: space-between;     align-items: center;     
+    width: 100%;        
+    padding: 15px;    
+  }
 .group-title h5{
-    top: 0;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 600px;
 }
 
 .popup-overlay {
@@ -22,7 +26,6 @@
   .popup-content {
     background: white;
     max-height: calc(100dvh - 80px);
-    padding: 24px ;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   }
@@ -43,19 +46,33 @@
     flex-direction: row !important;
     border: 1px solid #e0e0e0 !important;
     border-radius: 15px;
-    margin: 10px 0 10px 0;
 }
 .MuiStack-root.css-11a8txn-MuiStack-root{
     margin-top: 0px !important;
 }
 
-
+.modal-body {
+    max-height: calc(100dvh - 225px);
+}
+ .modal-body {
+    max-height: calc(100dvh - 145px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 24px 24px 0px 24px;
+}
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    grid-gap: 16px;
+    gap: 16px;
+}
 .time-choose {
     display: flex;
     grid-gap: 8px;
     gap: 8px;
     align-items: center;
     width: 100%;
+    
 }
 .time-choose__item {
     position: relative;
@@ -123,4 +140,72 @@ input:disabled {
     color: #333;
     -webkit-text-fill-color: #333;
     -webkit-opacity: 1;
-}   
+}  
+/* dropdown cho time */
+
+  .dropdown-time {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 150px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    opacity: 0;
+    transform: translateY(-10px); /* Trượt lên phía trên một chút */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none; /* Vô hiệu hóa khi ẩn */
+  }
+  
+  .dropdown-time.show {
+    opacity: 1;
+    transform: translateY(0); /* Trở về vị trí ban đầu */
+    pointer-events: auto; /* Kích hoạt khi hiển thị */
+  }
+  .custom-radio label{
+    width: 100%;
+    padding-left: 25px;
+  }
+
+
+.custom-checkbox-indeterminate label:after, .custom-checkbox-selected label:after, .custom-radio label:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 0;
+    background: url("https://www.mioto.vn/static/media/radio.dd1a24ad.svg") 0 0 no-repeat;
+    width: 16px;
+    height: 16px;
+}
+.custom-checkbox-indeterminate label:after, .custom-checkbox-selected label:after, .custom-radio label:after :hover {
+  background-color: red;
+}
+.modal-footer {
+    border-top: 1px solid #e0e0e0;
+    padding: 16px 24px;
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+    box-shadow: -1px -5px 29px rgba(0, 0, 0, .1);
+    width: 100%;
+    padding: 16px 24px !important;
+}
+.info-time {
+    display: flex;
+    grid-gap: 8px;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ .info-time__item .time {
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+   .info-time__item .total {
+    font-size: 14px;
+}
+.fontWeight-6.text-primary {
+    color: #5fcf86 !important;
+    font-weight: 600;
+}

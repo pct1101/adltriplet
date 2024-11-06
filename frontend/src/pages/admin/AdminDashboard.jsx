@@ -52,9 +52,7 @@ const AdminDashboard = () => {
           <h2>Dashboard</h2>
           <div className="admin-profile">
             <span>Xin chào, Admin</span>
-            <button className="btn btn-danger btn-sm" onClick={handleLogout}>
-              Đăng xuất
-            </button>
+            <button className="btn btn-danger btn-sm">Đăng xuất</button>
           </div>
         </div>
         <div className="admin-content">

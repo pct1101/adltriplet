@@ -3,7 +3,6 @@
     top: 0;
     align-items: center;
     justify-content: center;
-    
     width: 100%;
 }
 
@@ -37,3 +36,91 @@
   .form-date-time .col .date-picker{
     padding: 5px;
   }
+
+  /* css materiul form */
+  .css-1rv8zyt-MuiStack-root{
+    display: flex !important;
+    flex-direction: row !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 15px;
+    margin: 10px 0 10px 0;
+}
+.MuiStack-root.css-11a8txn-MuiStack-root{
+    margin-top: 0px !important;
+}
+
+
+.time-choose {
+    display: flex;
+    grid-gap: 8px;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+}
+.time-choose__item {
+    position: relative;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+.time-choose__item .title-time {
+    font-size: 12px;
+    font-weight: 700;
+    color: #666;
+    margin: 0;
+}   
+.time-choose__item .active-time {
+    position: relative;
+    font-weight: 600;
+    margin: 0;
+}
+.time-choose__item .active-time:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: url(../assets/arrow-down.d8b3609e.svg);
+    width: 24px;
+    height: 24px;
+}
+
+.time-choose .time-choose__item .dropdown-time {
+    background: #fff;
+    z-index: 10;
+}
+
+.time-choose__item .dropdown-time {
+    position: absolute;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding: 12px;
+    left: 0;
+    top: 100%;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 16px;
+    gap: 16px;
+    max-height: 173px;
+    overflow: auto;
+    background-color: #fff;
+    z-index: 1;
+}
+.custom-radio {
+    position: relative;
+}
+input[type=radio] {
+    position: absolute;
+    visibility: hidden;
+    width: auto;
+    box-shadow: none;
+}
+input:disabled {
+    background-color: #f6f6f6;
+    color: #333;
+    -webkit-text-fill-color: #333;
+    -webkit-opacity: 1;
+}   

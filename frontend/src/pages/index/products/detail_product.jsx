@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+// import component
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import "../../../css/home.css";
-import { getCarDetails, getCarImagesByCarId } from "../../../lib/Axiosintance";
 import Differen_Car from "../Slide_Banner/differen_Car";
-import { CDatePicker } from "@coreui/react-pro";
+// import api car
+import { getCarDetails, getCarImagesByCarId } from "../../../lib/Axiosintance";
+// import css
 import "../../../css/popup_product.css";
-import "@coreui/coreui-pro/dist/css/coreui.min.css";
+import "../../../css/home.css";
+// import popup calendar
+import dayjs from "dayjs";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 
 const Detail_product = () => {
   const { id } = useParams(); // Lấy ID từ URL
@@ -15,6 +22,7 @@ const Detail_product = () => {
   const [car, setCar] = useState(null); // State để lưu trữ chi tiết xe
   const [carImages, setCarImages] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false); // chỗ này pop up nè anh em
+  const [value, setValue] = React.useState(dayjs("2022-04-17"));
 
   useEffect(() => {
     // Gọi API để lấy thông tin chi tiết xe
@@ -782,18 +790,83 @@ const Detail_product = () => {
               <h5>Thời gian</h5>
               <button className="btn btn-close"></button>
             </div>
+            <div className="line-page"> </div>
 
-            <div className="form-date-time">
-              <div className="col d-flex">
-                <div className="col-sm-6 ">
-                  <CDatePicker locale="en-US" timepicker />
-                </div>
-                <div className="col-sm-6">
-                  <CDatePicker
-                    date="2023/03/15 02:22:13 PM"
-                    locale="en-US"
-                    timepicker
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DateCalendar", "DateCalendar"]}>
+                <DemoItem label="">
+                  <DateCalendar defaultValue={dayjs("2024-04-17")} />
+                </DemoItem>
+
+                <DemoItem label="">
+                  <DateCalendar
+                    value={value}
+                    onChange={(newValue) => setValue(newValue)}
                   />
+                </DemoItem>
+              </DemoContainer>
+            </LocalizationProvider>
+            <div className="time-choose ">
+              <div className="time-choose__item">
+                <div>
+                  <p className="title-time">Nhận xe</p>
+                  <p className="active-time">21:00</p>
+                </div>
+              </div>
+              <div className="wrap-svg">
+                <svg
+                  width="25"
+                  height="24"
+                  viewBox="0 0 25 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.63 21.2498H12.38C7.34001 21.2498 3.26001 17.1598 3.26001 12.1298V11.8798C3.26001 6.83977 7.35001 2.75977 12.38 2.75977H12.63C17.67 2.75977 21.75 6.84977 21.75 11.8798V12.1298C21.75 17.1598 17.66 21.2498 12.63 21.2498Z"
+                    stroke="#AAAAAA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M9.40991 12H15.5699"
+                    stroke="#AAAAAA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M15.5899 11.9993L13.1299 9.5293"
+                    stroke="#AAAAAA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M15.5899 12L13.1299 14.47"
+                    stroke="#AAAAAA"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </div>
+              <div className="time-choose__item">
+                <div>
+                  <p className="title-time">Trả xe</p>
+                  <p className="active-time">20:00</p>
+                </div>
+                <div className="dropdown-time">
+                  <div className="custom-radio" id="ast0">
+                    <input
+                      type="radio"
+                      id="rst0"
+                      name="r-startTime"
+                      disabled=""
+                      value="0"
+                    />
+                    <label for="rst0">00:00</label>
+                  </div>
                 </div>
               </div>
             </div>

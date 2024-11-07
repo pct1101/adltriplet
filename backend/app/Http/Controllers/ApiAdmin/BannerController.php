@@ -4,83 +4,89 @@ namespace App\Http\Controllers\ApiAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use App\Http\Requests\BannerRequest;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 
 class BannerController extends Controller
 {
     // Lấy danh sách tất cả các banner
     public function index()
     {
-        $banners = Banner::all();
-        return response()->json($banners);
-    }
-
-    // Tạo banner mới
-    public function store(Request $request)
-    {
-        // Xác thực dữ liệu
-        $request->validate([
-            'banner_url' => 'required|string|max:255',
-            'banner_status' => 'boolean',
-        ]);
-
-        // Tạo mới banner
-        $banner = Banner::create([
-            'banner_url' => $request->banner_url,
-            'banner_status' => $request->banner_status ?? 1, // Mặc định là 1
-        ]);
-
-        return response()->json(['message' => 'Banner created successfully', 'banner' => $banner], 201);
+        try {
+            $banners = Banner::all();
+            return $this->successResponse("Lấy danh sách banner thành công", $banners, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
+        }
     }
 
     // Lấy thông tin chi tiết một banner
     public function show($id)
     {
-        $banner = Banner::find($id);
-
-        if (!$banner) {
-            return response()->json(['message' => 'Banner not found'], 404);
+        try {
+            $banner = Banner::find($id);
+            if (!$banner) {
+                return $this->errorResponse("Không tìm thấy banner với ID: $id", 404);
+            }
+            return $this->successResponse("Lấy thông tin banner với ID: $id thành công", $banner, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        return response()->json($banner);
     }
+
+
+
+    // Tạo banner mới
+    public function store(Request $request)
+    {
+        try {
+            $bannerRequest = new BannerRequest($request->all());
+            $validatedData = $bannerRequest->validate();
+            $banner = Banner::create($validatedData);
+            return $this->successResponse("Tạo banner thành công", $banner, 201);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
+        }
+    }
+
+
+
 
     // Cập nhật banner
     public function update(Request $request, $id)
     {
-        $banner = Banner::find($id);
-
-        if (!$banner) {
-            return response()->json(['message' => 'Banner not found'], 404);
+        try {
+            $banner = Banner::findOrFail($id);
+            $bannerRequest = new BannerRequest($request->all());
+            $validatedData = $bannerRequest->validate();
+            $banner->update($validatedData);
+            return $this->successResponse("Cập nhật banner với ID: $id thành công", $banner, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy banner với ID: $id", 404);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        // Xác thực dữ liệu
-        $request->validate([
-            'banner_url' => 'sometimes|required|string|max:255',
-            'banner_status' => 'boolean',
-        ]);
-
-        // Cập nhật thông tin, giữ nguyên giá trị cũ nếu không có thay đổi
-        $banner->banner_url = $request->banner_url ?? $banner->banner_url;
-        $banner->banner_status = $request->banner_status ?? $banner->banner_status;
-
-        // Lưu lại thông tin
-        $banner->save();
-
-        return response()->json(['message' => 'Banner updated successfully', 'banner' => $banner]);
     }
+
 
     // Xóa banner
     public function destroy($id)
     {
-        $banner = Banner::find($id);
-
-        if (!$banner) {
-            return response()->json(['message' => 'Banner not found'], 404);
+        try {
+            $banner = Banner::findOrFail($id);
+            $banner->delete();
+            return $this->successResponse("Xóa banner thành công", null, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy banner với ID: $id", 404);
+        } catch (Exception $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        $banner->delete();
-
-        return response()->json(['message' => 'Banner deleted successfully']);
     }
 }

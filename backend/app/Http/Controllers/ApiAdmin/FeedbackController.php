@@ -2,116 +2,92 @@
 
 namespace App\Http\Controllers\ApiAdmin;
 
+use Exception;
+use App\Models\Feedback;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FeedbackRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Feedback;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 
 class FeedbackController extends Controller
 {
     // Phương thức lấy tất cả feedback
     public function index()
     {
-        // Lấy tất cả feedback từ bảng feedback
-        $feedback = Feedback::all();
-
-        // Trả về dữ liệu feedback dưới dạng JSON
-        return response()->json($feedback);
-    }
-    // Phương thức tạo feedback
-    public function store(Request $request)
-    {
-        // Xác thực dữ liệu đầu vào
-        $validator = Validator::make($request->all(), [
-            'content' => 'required|string',
-            'rating' => 'required|integer|min:1|max:5', // Rating từ 1-5
-            'car_id' => 'required|exists:car,car_id' // Đảm bảo car_id tồn tại trong bảng car
-        ]);
-
-        // Kiểm tra lỗi xác thực
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        try {
+            $feedbacks = Feedback::all();
+            if ($feedbacks->isEmpty()) {
+                return $this->errorResponse("Không có feedback nào", 404);
+            }
+            return $this->successResponse("Lấy danh sách feedback", $feedbacks, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        // Lấy ID của người dùng đang đăng nhập
-        $userId = Auth::id();
-
-        // Tạo feedback mới
-        $feedback = Feedback::create([
-            'content' => $request->input('content'),
-            'rating' => $request->input('rating'),
-            'feedback_date' => now(), // Lấy ngày hiện tại
-            'car_id' => $request->input('car_id'),
-            'user_id' => $userId // Gán user_id là ID của người dùng đang đăng nhập
-        ]);
-
-        // Trả về phản hồi thành công
-        return response()->json(['message' => 'Feedback created successfully!', 'feedback' => $feedback], 201);
     }
 
     // Phương thức lấy 1 feedback
     public function show($id)
     {
-        // Tìm feedback theo feedback_id
-        $feedback = Feedback::find($id);
-
-        // Kiểm tra xem feedback có tồn tại không
-        if (!$feedback) {
-            return response()->json(['message' => 'Feedback not found.'], 404);
+        try {
+            $feedback = Feedback::find($id);
+            if (!$feedback) {
+                return $this->errorResponse("Không tìm thấy feedback với ID: $id", 404);
+            }
+            return $this->successResponse("Lấy feedback với ID: $id", $feedback, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        // Trả về chi tiết feedback
-        return response()->json($feedback, 200);
     }
+
+    // Phương thức tạo feedback
+    public function store(Request $request)
+    {
+        try {
+            $feedbackRequest = new FeedbackRequest($request->all());
+            $validatedData = $feedbackRequest->validate();
+            $feedback = Feedback::create($validatedData);
+            return $this->successResponse("Thêm feedback với ID: $feedback->id", $feedback, 201);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
 
     // Phương thức cập nhật feedback
     public function update(Request $request, $id)
     {
-        $feedback = Feedback::find($id);
-
-        if (!$feedback) {
-            return response()->json(['message' => 'Feedback not found.'], 404);
+        try {
+            $feedback = Feedback::findOrFail($id);
+            $feedbackRequest = new FeedbackRequest($request->all());
+            $validatedData = $feedbackRequest->validate();
+            $feedback->update($validatedData);
+            return $this->successResponse("Cập nhật feedback với ID: $id thành công", $feedback, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy feedback với ID: $id", 404);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        $validator = Validator::make($request->all(), [
-            'content' => 'sometimes|required|string',
-            'rating' => 'sometimes|required|integer|min:1|max:5',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-        }
-
-        // Chỉ cập nhật nếu có giá trị mới từ yêu cầu
-        if ($request->has('content')) {
-            $feedback->content = $request->input('content');
-        }
-
-        if ($request->has('rating')) {
-            $feedback->rating = $request->input('rating');
-        }
-
-        // Lưu lại thông tin feedback
-        $feedback->save();
-
-        return response()->json(['message' => 'Feedback updated successfully!', 'feedback' => $feedback]);
     }
 
     // Phương thức xóa feedback
     public function destroy($id)
     {
-        // Tìm feedback theo feedback_id
-        $feedback = Feedback::where('id', $id)->first();
-
-        // Kiểm tra xem feedback có tồn tại hay không
-        if (!$feedback) {
-            return response()->json(['message' => 'Feedback not found.'], 404);
+        try {
+            $feedback = Feedback::findOrFail($id);
+            $feedback->delete();
+            return $this->successResponse("Xóa feedback với ID: $id", null, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy feedback với ID: $id", 404);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
-
-        // Xóa feedback
-        $feedback->delete();
-
-        return response()->json(['message' => 'Feedback deleted successfully.']);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\ApiAdmin;
 
+use Exception;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\CarRequest;
 use App\Models\Car;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CarController extends Controller
 {
@@ -14,109 +17,67 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
-        return response()->json($cars);
-    }
-
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // public function store(Request $request)
-    // {
-    //     // Xác thực đầu vào
-    //     $validator = Validator::make($request->all(), [
-    //         'car_name' => 'nullable|required|string|max:255',
-    //         'model' => 'nullable|required|string|max:10',
-    //         'license_plate' => 'required|string|max:20|unique:car', // Kiểm tra biển số có bị trùng không
-    //         'rental_price' => 'nullable|required|integer',
-    //         'car_status' => 'required|boolean',
-    //         'mileage' => 'nullable|required|integer',
-    //         'car_image' => 'nullable|string',
-    //         'car_description' => 'nullable|string',
-    //         'brandid' => 'required|integer',
-    //     ]);
-
-    //     // Kiểm tra nếu có lỗi trong việc xác thực
-    //     if ($validator->fails()) {
-    //         // Kiểm tra lỗi cụ thể liên quan đến license_plate
-    //         if ($validator->errors()->has('license_plate')) {
-    //             return response()->json(['message' => 'Xe đã tồn tại với biển số này.'], 422);
-    //         }
-
-    //         return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-    //     }
-
-    //     // Tạo xe mới
-    //     try {
-    //         $car = Car::create($request->all());
-    //         return response()->json(['message' => 'Car created successfully!', 'car' => $car], 201);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['message' => 'Failed to create car. Please try again.'], 500);
-    //     }
-    // }
-
-    public function store(Request $request)
-    {
-        // Xác thực biển số xe
-        $validator = Validator::make($request->all(), [
-            'license_plate' => 'required|string|max:20|unique:car', // Kiểm tra biển số có bị trùng không
-        ]);
-
-        // Kiểm tra nếu có lỗi trong việc xác thực
-        if ($validator->fails()) {
-            // Kiểm tra lỗi cụ thể liên quan đến license_plate
-            if ($validator->errors()->has('license_plate')) {
-                return response()->json(['message' => 'A car with this license plate already exists.'], 422);
-            }
-
-            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
-        }
-
-        // Tạo xe mới
         try {
-            $car = Car::create($request->all());
-            return response()->json(['message' => 'Car created successfully!', 'car' => $car], 201);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to create car. Please try again.'], 500);
+            $cars = Car::all();
+            return $this->successResponse("Lấy danh sách xe thành công", $cars, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
     }
-
-
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $car = Car::find($id);
-
-        if (!$car) {
-            return response()->json(['message' => 'Car not found'], 404);
+        try {
+            $car = Car::find($id);
+            if (!$car) {
+                return $this->errorResponse('Xe không tìm thấy', 404);
+            }
+            return $this->successResponse("Lấy thông tin xe với ID: $id thành công", $car, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
+    }
 
-        return response()->json($car);
+
+    /**
+     * Store a newly created resource in storage.
+     */
+
+    public function store(Request $request)
+    {
+        try {
+            $carRequest = new CarRequest($request->all());
+            $validatedData = $carRequest->validate();
+            $car = Car::create($validatedData);
+            return $this->successResponse("Thêm xe mới thành công", $car, 201);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
     }
 
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        // Tìm xe theo ID
-        $car = Car::find($id);
-
-        if (!$car) {
-            return response()->json(['message' => 'Car not found'], 404);
-        }
-
-        // Cập nhật xe mà không kiểm tra dữ liệu
         try {
-            $car->update($request->all());
-            return response()->json(['message' => 'Cập nhật thành công', 'car' => $car], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update car. Please try again.'], 500);
+            $car = Car::findOrFail($id);
+            $carRequest = new CarRequest($request->all(), $id);
+            $validatedData = $carRequest->validate();
+            $car->update($validatedData);
+            return $this->successResponse("Cập nhập thông tin xe với ID: $id thành công", $car, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy xe với ID: $id", 404);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
     }
 
@@ -124,15 +85,18 @@ class CarController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $car = Car::find($id);
-        if (!$car) {
-            return response()->json(['message' => 'Car not found'], 404);
+        try {
+            $car = Car::findOrFail($id);
+            $car->feedback()->delete();
+            $car->images()->delete();
+            $car->delete();
+            return $this->successResponse("Xóa thành công xe với ID: $id", null, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy xe với ID: $id", 404);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
-        $car->feedback()->delete();
-        $car->images()->delete();
-        $car->delete();
-        return response()->json(['message' => 'Car deleted successfully']);
     }
 }

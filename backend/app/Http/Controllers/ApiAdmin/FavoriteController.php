@@ -2,82 +2,76 @@
 
 namespace App\Http\Controllers\ApiAdmin;
 
+use Exception;
+use App\Models\Favorite;
+use App\Http\Requests\FavoriteRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Favorite;
-use App\Models\User;
-use App\Models\Car;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FavoriteController extends Controller
 {
     // Lấy tất cả yêu thích
     public function index()
     {
-        $favorites = Favorite::all();
-        return response()->json($favorites);
-    }
-    public function store(Request $request)
-    {
-        // Kiểm tra xem user_id và car_id có được gửi đến không
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'car_id' => 'required|exists:car,car_id',
-        ]);
-
-        // Kiểm tra nếu yêu thích đã tồn tại
-        $existingFavorite = Favorite::where('user_id', $request->user_id)
-            ->where('car_id', $request->car_id)
-            ->first();
-
-        if ($existingFavorite) {
-            return response()->json(['message' => 'This car is already in favorites.'], 409); // 409 Conflict
+        try {
+            $favorites = Favorite::all();
+            if ($favorites->isEmpty()) {
+                return $this->errorResponse("Không có yêu thích nào", 404);
+            }
+            return $this->successResponse("Lấy danh sách yêu thích thành công", $favorites, 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        // Tạo yêu thích mới
-        $favorite = Favorite::create([
-            'user_id' => $request->user_id,
-            'car_id' => $request->car_id,
-            'date_favorite' => now(), // Ngày yêu thích
-        ]);
-
-        return response()->json(['message' => 'Car added to favorites successfully!', 'favorite' => $favorite], 201);
     }
 
     public function show($userId, $carId)
     {
-        // Tìm yêu thích theo user_id và car_id
-        $favorite = Favorite::with(['car', 'user']) // Giả sử bạn đã thiết lập quan hệ 'car' và 'user' trong mô hình Favorite
-            ->where('user_id', $userId)
-            ->where('car_id', $carId)
-            ->first();
-
-        // Kiểm tra xem yêu thích có tồn tại hay không
-        if (!$favorite) {
-            return response()->json(['message' => 'Favorite not found.'], 404);
+        try {
+            $favorite = Favorite::with(['car', 'user'])
+                ->where('user_id', $userId)
+                ->where('car_id', $carId)
+                ->first();
+            if (!$favorite) {
+                return $this->errorResponse('Yêu thích không tồn tại.', 404);
+            }
+            return $this->successResponse('Lấy thông tin yêu thích thành công', [
+                'favorite' => $favorite,
+            ], 200);
+        } catch (\Throwable $th) {
+            return $this->errorResponse($th->getMessage(), 500);
         }
-
-        // Trả về thông tin yêu thích kèm theo thông tin về xe và người dùng
-        return response()->json([
-            'favorite' => $favorite,
-            'car' => $favorite->car, // Thông tin về xe
-            'user' => $favorite->user, // Thông tin về người dùng
-        ], 200);
     }
+
+
+    public function store(Request $request)
+    {
+        try {
+            $favoriteRequest = new FavoriteRequest($request->all());
+            $validatedData = $favoriteRequest->validate();
+            if ($validatedData instanceof Favorite) {
+                return $this->errorResponse('Xe đã được yêu thích bởi người dùng này.', 400);
+            }
+            $favorite = Favorite::create($validatedData);
+            return $this->successResponse("Thêm xe với ID xe: $favorite->car_id vào ID người dùng: $favorite->user_id thành công", $favorite, 201);
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->validator->errors()->all(), 400);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
     public function destroy($id)
     {
-        // Tìm yêu thích theo favorite_id
-        $favorite = Favorite::find($id);
-
-        // Kiểm tra xem yêu thích có tồn tại hay không
-        if (!$favorite) {
-            return response()->json(['message' => 'Favorite not found.'], 404);
+        try {
+            $favorite = Favorite::findOrFail($id);
+            $favorite->delete();
+            return $this->successResponse("Xóa yêu thích công xe với ID: $id", null, 200);
+        } catch (ModelNotFoundException $e) {
+            return $this->errorResponse("Không tìm thấy yêu thích với ID: $id", 404);
+        } catch (Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
         }
-
-        // Xóa yêu thích
-        $favorite->delete();
-
-        return response()->json(['message' => 'Favorite deleted successfully.'], 200);
     }
 }

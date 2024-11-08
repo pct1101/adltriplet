@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id('car_id');
             $table->string('car_name'); // Tên xe
             $table->integer('seats')->nullable(); //số ghế
+            $table->enum('transmission_type', ['Số sàn', 'Số tự động'])->nullable();
+            $table->enum('fuel_type', ['Xăng', 'Dầu', 'Điện'])->nullable();
             $table->year('model')->nullable(); // Năm sx
             $table->string('license_plate')->unique(); // biển số
             $table->double('rental_price')->nullable(); // Giá thuê

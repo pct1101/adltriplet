@@ -13,8 +13,8 @@ import "../../../css/home.css";
 import Booking from "../booking/booking";
 
 const Detail_product = () => {
-  const { id } = useParams(); // Lấy ID từ URL
-  const [car, setCar] = useState(null); // State để lưu trữ chi tiết xe
+  const { id } = useParams();
+  const [car, setCar] = useState(null);
   const [carImages, setCarImages] = useState([]);
 
   // Gọi API để lấy thông tin chi tiết xe
@@ -22,6 +22,7 @@ const Detail_product = () => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
+        console.log(response.data.car);
         setCar(response.data.car); // Cập nhật để lấy dữ liệu của thuộc tính car
         const imageResponse = await getCarImagesByCarId(
           response.data.car.car_id

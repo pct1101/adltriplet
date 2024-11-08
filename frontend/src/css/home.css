@@ -654,7 +654,7 @@ font-weight: 800;
 p.origin{
  margin-bottom: 0;
 }
-.detail-car .detail-container .sidebar-detail .rent-box .price .price-discount .tag-item {
+.price-discount .tag-item {
   padding: 0 4px;
 }
 span.tag-item.discount {
@@ -777,7 +777,10 @@ span.tag-item.discount {
 .btn.btn--m {
   padding: 16px 24px;
 }
-
+.price-item p.cost {
+  color: #000;
+  font-weight: 600;
+}
 
 /* Difference_Car */
 .related-car{

@@ -1,61 +1,140 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import { useParams } from "react-router-dom";
+
 // import data cho form booking
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+// api car
+import { getCarDetails } from "../../../lib/Axiosintance";
 
 function Booking() {
+  //    set time for days and time
+  const formattedToday = dayjs();
+  //    set value for booking
+  const [bookings, setBookings] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [startDate, setStartDate] = useState(dayjs("2024-04-17"));
-  const [endDate, setEndDate] = useState(dayjs("2024-04-17"));
+  //    set state for startday and enday
+  const [startDate, setStartDate] = useState(formattedToday);
+  const [endDate, setEndDate] = useState(formattedToday.add(1, "day"));
+  //   set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  //get data booking
-  useEffect(() => {
-    const apiToken = localStorage.getItem("authToken");
-    const getBookings = async () => {
-      try {
-        const data = await getBookings();
-        setBookings(data);
-      } catch (error) {
-        console.log("faile to load", error);
-      }
-    };
-  });
-  // set time none
+  //   set realtime
   const [selectedTimes, setSelectedTimes] = useState({
-    traXe: "20:00", // Thời gian mặc định cho trả xe
-    nhanXe: "08:00", // Thời gian mặc định cho nhận xe (nếu cần)
+    traXe: dayjs().add(4, "hour").format("HH:mm"), // Thời gian trả xe mặc định là sau 4 giờ
+    nhanXe: dayjs().add(1, "hour").format("HH:mm"), // Thời gian nhận xe mặc định là sau 1 giờ
   });
   // Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
     // open dropdown or none
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
-  // time track
-  const handleTimeSelect = (dropdown, time) => {
-    setSelectedTimes((prev) => ({
-      ...prev,
-      [dropdown]: time, // Cập nhật thời gian cho dropdown cụ thể
-    }));
-    setOpenDropdown(null); // Đóng dropdown sau khi chọn
-  };
-
   // set time
-  const generateTimeOptions = () => {
+  const generateTimeOptions = (startHour, startMinute) => {
     const times = [];
-    for (let hour = 0; hour <= 23; hour++) {
-      const time = `${hour}:00`;
-      times.push(time);
+    let hour = startHour;
+    let minute = startMinute >= 30 ? 30 : 0; // Bắt đầu từ mốc 00 hoặc 30 phút của giờ hiện tại
+
+    while (hour < 24) {
+      times.push(
+        `${hour < 10 ? "0" + hour : hour}:${minute === 0 ? "00" : "30"}`
+      );
+      if (minute === 0) {
+        minute = 30;
+      } else {
+        minute = 0;
+        hour += 1;
+      }
     }
+
     return times;
   };
+
   const timeOptions = generateTimeOptions();
+  //   xử lý realtime nhanXe
+  const currentTime = dayjs();
+
+  const nhanXeOptions = generateTimeOptions(
+    currentTime.hour(),
+    currentTime.minute() < 30 ? 0 : 30
+  ).filter((time) => dayjs(time, "HH:mm").isAfter(dayjs().subtract(1, "hour")));
+  //   xử lý realtime traXe
+  const traXeOptions = generateTimeOptions(0, 0).filter((time) =>
+    dayjs(time, "HH:mm").isAfter(
+      dayjs(selectedTimes.nhanXe, "HH:mm").add(4, "hour")
+    )
+  );
+  //   xử lý khi nhấn vào time
+  const handleTimeSelect = (dropdown, time) => {
+    if (dropdown === "nhanXe") {
+      setSelectedTimes((prev) => ({
+        ...prev,
+        nhanXe: time,
+        traXe: dayjs(time, "HH:mm").add(4, "hour").format("HH:mm"), // Cập nhật giờ trả xe tối thiểu
+      }));
+    } else {
+      setSelectedTimes((prev) => ({
+        ...prev,
+        traXe: time,
+      }));
+    }
+    setOpenDropdown(null); // Đóng dropdown sau khi chọn
+  };
+  //   set id
+  const { id } = useParams();
+  //   Gọi API để lấy thông tin chi tiết xe
+  useEffect(() => {
+    const fetchCarDetails = async () => {
+      try {
+        const response = await getCarDetails(id);
+        console.log(response.data.car);
+        setBookings(response.data.car); // Cập nhật để lấy dữ liệu của thuộc tính car
+      } catch (error) {
+        console.error("Error fetching car details", error);
+      }
+    };
+    fetchCarDetails();
+  }, [id]);
+
+  //    format days
+  const formatDate = (date) => {
+    const validDate = dayjs(date); // chuyển date thành đối tượng dayjs
+
+    // Kiểm tra xem đối tượng dayjs có hợp lệ không
+    if (validDate.isValid()) {
+      return validDate.format("DD/MM/YYYY"); // nếu hợp lệ, định dạng theo dạng DD/MM/YYYY
+    }
+
+    return "Ngày không hợp lệ"; // nếu không hợp lệ, trả về thông báo lỗi
+  };
   //   show data
-  const handleToggleDatePicker = () => {
+  const handleToggleDatePicker = (event) => {
     setShowDatePicker(!showDatePicker);
+
+    // Lấy giá trị từ input và chuyển đổi thành dayjs
+    const newStartDate = dayjs(event.target.value); // Chuyển chuỗi thành dayjs
+
+    // Kiểm tra nếu ngày bắt đầu hợp lệ
+    if (!newStartDate.isValid()) {
+      console.error("Invalid start date");
+      return;
+    }
+    setStartDate(newStartDate);
+    const nextDay = newStartDate.add(1, "day");
+
+    // Cập nhật ngày kết thúc
+    setEndDate(nextDay);
+  };
+
+  //   price
+  const formatPrice = (price) => {
+    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
+    if (price >= 1000) {
+      return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
+    }
+    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
 
   return (
@@ -63,13 +142,12 @@ function Booking() {
       <div className="price">
         <div className="price-discount">
           <p className="origin">
-            <span>1234</span>
+            <span>{bookings?.rental_price}</span>
           </p>
           <span className="tag-item discount">-14%</span>
         </div>
         <h4>
-          <span className="">844K</span>
-          <span className="inner-h"> /ngày</span>
+          <span className=""> {formatPrice(bookings?.rental_price ?? 0)}</span>
         </h4>
       </div>
       <div className="date-time-form " onClick={handleToggleDatePicker}>
@@ -77,7 +155,7 @@ function Booking() {
           <label>Nhận xe </label>
           <div className="wrap-date-time">
             <div className="wrap-date">
-              <span className="value">04/11/2024</span>
+              <span className="value">{formatDate(startDate)}</span>{" "}
             </div>
             <div className="wrap-time">
               <span className="value">{selectedTimes.nhanXe}</span>
@@ -89,7 +167,7 @@ function Booking() {
           <label>Trả xe</label>
           <div className="wrap-date-time">
             <div className="wrap-date">
-              <span className="value">05/11/2024</span>
+              <span className="value">{formatDate(endDate)}</span>{" "}
             </div>
             <div className="wrap-time">
               <span className="value">{selectedTimes.traXe}</span>
@@ -170,15 +248,17 @@ function Booking() {
               {" "}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DateCalendar", "DateCalendar"]}>
-                  <DemoItem label="">
+                  <DemoItem>
                     <DateCalendar
                       value={startDate}
+                      minDate={dayjs()} // Đặt ngày nhỏ nhất cho ngày nhận xe là hôm nay
                       onChange={(newValue) => setStartDate(newValue)}
                     />
                   </DemoItem>
-                  <DemoItem label="">
+                  <DemoItem>
                     <DateCalendar
                       value={endDate}
+                      minDate={startDate.add(1, "day")} // Đặt ngày trả xe không thể trước ngày nhận xe
                       onChange={(newValue) => setEndDate(newValue)}
                     />
                   </DemoItem>
@@ -198,20 +278,17 @@ function Booking() {
                       openDropdown === "nhanXe" ? "show" : "hide"
                     }`}
                   >
-                    {timeOptions.map((time, index) => (
+                    {nhanXeOptions.map((time, index) => (
                       <div className="custom-radio" key={index}>
                         <input
                           type="radio"
-                          id={`rst${index}`}
-                          name={`r-startTime-${index}`}
+                          id={`nhanXe${index}`}
+                          name="r-startTime-nhanXe"
                           value={time}
+                          checked={selectedTimes.nhanXe === time}
+                          onChange={() => handleTimeSelect("nhanXe", time)}
                         />
-                        <label
-                          htmlFor={`nhanXe${index}`}
-                          onClick={() => handleTimeSelect("nhanXe", time)}
-                        >
-                          {time}
-                        </label>
+                        <label htmlFor={`nhanXe${index}`}>{time}</label>
                       </div>
                     ))}
                   </div>
@@ -268,7 +345,7 @@ function Booking() {
                         openDropdown === "traXe" ? "show" : "hide"
                       }`}
                     >
-                      {timeOptions.map((time, index) => (
+                      {traXeOptions.map((time, index) => (
                         <div className="custom-radio" key={index}>
                           <input
                             type="radio"

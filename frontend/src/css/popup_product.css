@@ -50,7 +50,9 @@
 .MuiStack-root.css-11a8txn-MuiStack-root{
     margin-top: 0px !important;
 }
-
+.css-qct7wd-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected){
+  border: none !important;
+}
 .modal-body {
     max-height: calc(100dvh - 225px);
 }

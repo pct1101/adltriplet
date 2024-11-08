@@ -9,29 +9,180 @@ import AdminProducts from "./pages/admin/ControllerProduct/products.jsx";
 import AddCar from "./pages/admin/ControllerProduct/AddCar.jsx";
 import User from "./pages/index/user/user.jsx";
 import EditCar from "./pages/admin/ControllerProduct/EditCar.jsx";
+import User_favorite from "./pages/index/user/user_favorite.jsx";
+import User_change_password from "./pages/index/user/user_change_password.jsx";
+import PrivateRoute from "./pages/admin/Private/private_component.jsx";
+import { AuthProvider } from "./pages/admin/Private/Auth";
+import AdminBooking from "./pages/admin/Booking/Adminbooking.jsx";
+import AdminAddBooking from "./pages/admin/Booking/AddBooking.jsx";
+import EditBooking from "./pages/admin/Booking/EditBooking.jsx";
+import AdminFeedbacks from "./pages/admin/Feedbacks/Feedbacks.jsx";
+import AdminAddFeedback from "./pages/admin/Feedbacks/AddFeedbacks.jsx";
+import EditFeedback from "./pages/admin/Feedbacks/EditFeedbacks.jsx";
+import UserList from "./pages/admin/User/ManagerUser.jsx";
+import EditUser from "./pages/admin/User/EditUser.jsx";
+import AdminAddUser from "./pages/admin/User/AddUser.jsx";
 
 function App() {
   return (
-    <div>
-      <Router>
-        <Routes>
-          //Home
-          <Route path="/" exact element={<Home />} />
-          <Route path="/detai_product/:id" exact element={<Detail_product />} />
-          <Route path="/about_us" exact element={<Blog />} />
-          // login|signup
-          <Route path="/Login" exact element={<Login />} />
-          <Route path="/SignUp" exact element={<SignUp />} />
-          // admin
-          <Route path="/admin" exact element={<AdminDashboard />} />
-          <Route path="/admin/products" exact element={<AdminProducts />} />
-          <Route path="/admin/AddCar" exact element={<AddCar />} />
-          <Route path="/admin/EditCar/:id" exact element={<EditCar />} />
-          // user
-          <Route path="/user" exact element={<User />} />
-        </Routes>
-      </Router>
-    </div>
+    <AuthProvider>
+      <div>
+        <Router>
+          <Routes>
+            {/* Home */}
+            <Route path="/" element={<Home />} />
+            <Route path="/detai_product/:id" element={<Detail_product />} />
+            <Route path="/about_us" element={<Blog />} />
+
+            {/* Login | Signup */}
+            <Route path="/Login" element={<Login />} />
+            <Route path="/SignUp" element={<SignUp />} />
+
+            {/* Admin */}
+            <Route
+              path="/admin"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+            {/* edit, add, delete car */}
+            <Route
+              path="/admin/products"
+              element={
+                <PrivateRoute>
+                  <AdminProducts />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/AddCar"
+              element={
+                <PrivateRoute>
+                  <AddCar />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/EditCar/:id"
+              element={
+                <PrivateRoute>
+                  <EditCar />
+                </PrivateRoute>
+              }
+            />
+
+            {/* edit, add, delete booking */}
+            <Route
+              path="/admin/booking"
+              element={
+                <PrivateRoute>
+                  <AdminBooking />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/addbooking"
+              element={
+                <PrivateRoute>
+                  <AdminAddBooking />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/editbooking/:id"
+              element={
+                <PrivateRoute>
+                  <EditBooking />
+                </PrivateRoute>
+              }
+            />
+
+            {/* edit, add, delete feedback */}
+            <Route
+              path="/admin/booking"
+              element={
+                <PrivateRoute>
+                  <AdminBooking />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/addbooking"
+              element={
+                <PrivateRoute>
+                  <AdminAddBooking />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/editbooking/:id"
+              element={
+                <PrivateRoute>
+                  <EditBooking />
+                </PrivateRoute>
+              }
+            />
+            {/* edit, add, delete feedbacks */}
+            <Route
+              path="/admin/feedbacks"
+              element={
+                <PrivateRoute>
+                  <AdminFeedbacks />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/add_feedback"
+              element={
+                <PrivateRoute>
+                  <AdminAddFeedback />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/edit_feedback/:id"
+              element={
+                <PrivateRoute>
+                  <EditFeedback />
+                </PrivateRoute>
+              }
+            />
+            {/* edit, add, delete user */}
+            <Route
+              path="/admin/user"
+              element={
+                <PrivateRoute>
+                  <UserList />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/add_user"
+              element={
+                <PrivateRoute>
+                  <AdminAddUser />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/edit_user/:id"
+              element={
+                <PrivateRoute>
+                  <EditUser />
+                </PrivateRoute>
+              }
+            />
+
+            {/* User */}
+            <Route path="/user" element={<User />} />
+            <Route path="/user_favorite" element={<User_favorite />} />
+            <Route path="/user_repassword" element={<User_change_password />} />
+          </Routes>
+        </Router>
+      </div>
+    </AuthProvider>
   );
 }
 

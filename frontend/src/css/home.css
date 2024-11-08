@@ -1056,3 +1056,6 @@ a.btn.btn-primary.btn--l {
     display: block;
 }
 /* decor a */
+.nav-item a{
+  text-decoration: none;
+}

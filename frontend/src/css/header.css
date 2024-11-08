@@ -90,3 +90,6 @@ border-radius: 100%;
     font-size: .875rem;
     font-weight: 700;
 }
+.nav-link.login.active a:hover{
+  color: #ffffff;
+}

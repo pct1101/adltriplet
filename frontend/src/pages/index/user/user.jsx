@@ -1,116 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../footer/footer";
-import Headers from "../header/header";
+import Header from "../header/header";
 import "../../../css/user.css";
-function user() {
+import { format } from "date-fns";
+import { getUserProfile } from "../../../lib/Axiosintance";
+import Side_bar from "./side_bar";
+
+function User() {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUserProfile();
+        setUserData(data);
+      } catch (err) {
+        setError("Không thể tải thông tin người dùng");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Nếu đang tải, hiển thị loading
+  if (loading) {
+    return <div>Đang tải...</div>;
+  }
+
+  // Nếu có lỗi, hiển thị lỗi
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  const formatDate = (date) => {
+    // Kiểm tra nếu birth_date hợp lệ
+    if (date) {
+      try {
+        return format(new Date(date), "dd/MM/yyyy"); // Định dạng lại ngày
+      } catch (error) {
+        console.error("Error formatting date:", error);
+        return "Ngày không hợp lệ";
+      }
+    }
+    return "Chưa có thông tin"; // Trường hợp không có ngày sinh
+  };
   return (
     <div>
-      <Headers></Headers>
+      <Header></Header>
       <div className="container user">
         <div className="background-login-signup"></div>
         <div className="group-user">
           <div className="right-user">
-            <div className="sidebar flex-column flex-shrink-0 p-3 bg-light mb-3">
-              <a
-                href="/"
-                className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
-              >
-                <svg className="bi me-2" width="40" height="32">
-                  <use href="#bootstrap" />
-                </svg>
-                <span className="fs-4">Xin chào bạn !!!</span>
-              </a>
-              <hr />
-              <ul className="nav nav-pills flex-column mb-auto">
-                <li className="nav-item">
-                  <a href="#" className="nav-link active1" aria-current="page">
-                    <svg className="bi me-2" width="16" height="16">
-                      <use href="#home" />{" "}
-                    </svg>
-                    Tài khoản của tôi
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="nav-link link-dark">
-                    <svg className="bi me-2" width="16" height="16">
-                      <use href="#test 1" />{" "}
-                    </svg>
-                    Xe Yêu thích
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="nav-link link-dark">
-                    <svg className="bi me-2" width="16" height="16">
-                      <use href="#test2" />{" "}
-                    </svg>
-                    đơn hàng của tôi
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="nav-link link-dark">
-                    <svg className="bi me-2" width="16" height="16">
-                      <use href="#test3" />{" "}
-                    </svg>
-                    Đổi mật khẩu
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="nav-link link-dark">
-                    <svg className="bi me-2" width="16" height="16">
-                      <use href="#test 4" />{" "}
-                    </svg>
-                    Customers
-                  </a>
-                </li>
-              </ul>
-              <hr />
-              <div className="dropdown">
-                <a
-                  href="#"
-                  className="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
-                  id="dropdownUser2"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <img
-                    src="https://github.com/mdo.png"
-                    alt=""
-                    width="32"
-                    height="32"
-                    className="rounded-circle me-2"
-                  />
-                  <strong>mdo</strong>
-                </a>
-                <ul
-                  className="dropdown-menu text-small shadow"
-                  aria-labelledby="dropdownUser2"
-                >
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      New project...
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Profile
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+            <Side_bar></Side_bar>
           </div>
           <div className="left-user">
             <div className="content-item user-profile">
@@ -151,8 +96,8 @@ function user() {
                   </div>
                 </div>
                 <div className="info-user">
-                  <h6>Nguyễn Hoàng AN</h6>
-                  <p className="note">Tham gia: 04/11/2024</p>
+                  <h6> {userData?.name}</h6>
+                  <p className="note">Tham gia: {userData?.name}</p>
                   <div className="info-desc">
                     <div className="info-desc__item">
                       <div className="title-item">
@@ -176,7 +121,7 @@ function user() {
                         </div>
                       </div>
                       <div className="name">
-                        Thêm số điện thoại
+                        {userData?.phone}
                         <div className="wrap-svg">
                           <svg
                             width="16"
@@ -223,7 +168,7 @@ function user() {
                         </div>
                       </div>
                       <div className="name">
-                        hongocthinh1912004@gmail.com
+                        {userData?.email}
                         <div className="wrap-svg">
                           <svg
                             width="16"
@@ -457,4 +402,4 @@ function user() {
   );
 }
 
-export default user;
+export default User;

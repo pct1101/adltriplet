@@ -8,10 +8,6 @@ function Header() {
   const authToken = localStorage.getItem("authToken");
   const userRole = localStorage.getItem("userRole");
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/");
-  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container header">
@@ -89,6 +85,7 @@ function Header() {
                   <ul className="nav-item" style={{ marginBottom: "0" }}>
                     <span className="name ">{userRole}</span>
                   </ul>
+
                   <div className="wrap-svg">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

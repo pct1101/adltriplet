@@ -9,63 +9,23 @@ import { getCarDetails, getCarImagesByCarId } from "../../../lib/Axiosintance";
 // import css
 import "../../../css/popup_product.css";
 import "../../../css/home.css";
-// import popup calendar
-import dayjs from "dayjs";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+
+import Booking from "../booking/booking";
 
 const Detail_product = () => {
   const { id } = useParams(); // Lấy ID từ URL
-
   const [car, setCar] = useState(null); // State để lưu trữ chi tiết xe
   const [carImages, setCarImages] = useState([]);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  // set giá trị cho days
-  const [startDate, setStartDate] = useState(dayjs("2024-04-17"));
-  const [endDate, setEndDate] = useState(dayjs("2024-04-17"));
-  // chỗ này pop up nè anh em
-  const [value, setValue] = React.useState(dayjs("2022-04-17"));
-  //  set none/block cho time
-  const [openDropdown, setOpenDropdown] = useState(null);
-  // set time mặc định
-  const [selectedTimes, setSelectedTimes] = useState({
-    traXe: "20:00", // Thời gian mặc định cho trả xe
-    nhanXe: "08:00", // Thời gian mặc định cho nhận xe (nếu cần)
-  });
-  // Toggle để ẩn/hiện dropdown
-  const handleToggleDropdown = (dropdownName) => {
-    // Nếu dropdown đang mở là dropdown vừa nhấn, đóng nó lại; nếu không, mở dropdown mới khúc này hơi phức tạp ae xem kỹ
-    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
-  };
-  // Xử lý khi người dùng chọn thời gian
-  const handleTimeSelect = (dropdown, time) => {
-    setSelectedTimes((prev) => ({
-      ...prev,
-      [dropdown]: time, // Cập nhật thời gian cho dropdown cụ thể
-    }));
-    setOpenDropdown(null); // Đóng dropdown sau khi chọn
-  };
-
-  // set time
-  const generateTimeOptions = () => {
-    const times = [];
-    for (let hour = 0; hour <= 23; hour++) {
-      const time = `${hour}:00`;
-      times.push(time);
-    }
-    return times;
-  };
-  const timeOptions = generateTimeOptions();
 
   // Gọi API để lấy thông tin chi tiết xe
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
-        setCar(response.data); // Lưu trữ dữ liệu chi tiết xe vào state
-        const imageResponse = await getCarImagesByCarId(response.data.car_id);
+        setCar(response.data.car); // Cập nhật để lấy dữ liệu của thuộc tính car
+        const imageResponse = await getCarImagesByCarId(
+          response.data.car.car_id
+        ); // Cập nhật để lấy car_id từ response.data.car
         setCarImages(imageResponse.data); // Lưu trữ hình ảnh con vào state
       } catch (error) {
         console.error("Error fetching car details", error);
@@ -85,11 +45,6 @@ const Detail_product = () => {
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
 
-  // popup datepikertime
-  const handleToggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
-  };
-
   return (
     <div>
       <Header />
@@ -98,25 +53,27 @@ const Detail_product = () => {
           {" "}
           <div className="main-item">
             <div className="left">
-              <img className="scale-img" src="/upload/sp1.png" />
+              {/* Hiển thị ảnh chính của xe */}
+              <img
+                className="scale-img"
+                alt="Main Image"
+                src="../img/anh1-x1.jpg"
+              />
             </div>
             <div className="right">
-              <div className="right-item-car">
-                <img className="scale-img" src="/upload/sp1.png" />
-              </div>
-              <div className="right-item-car">
-                <img className="scale-img" src="/upload/sp1.png" />
-              </div>{" "}
-              <div className="right-item-car">
-                <img className="scale-img" src="/upload/sp1.png" />
-              </div>
+              {/* Hiển thị các ảnh con */}
+              {carImages.map((image, index) => (
+                <div className="right-item-car">
+                  <img className="scale-img" src="../img/anh1-x1.jpg" />
+                </div>
+              ))}
             </div>
           </div>
         </div>
         <div className="sub-item">
           <div className="group-left">
             <div className="title">
-              <h1>KIA SELTOS PREMIUM 2024</h1>
+              <h1>{car?.car_name}</h1>
             </div>
             <div className="group-total">
               <div className="wrap-svg">
@@ -276,7 +233,7 @@ const Detail_product = () => {
                     </div>
                     <div className="title">
                       <p className="sub">Số ghế</p>
-                      <p className="main">5 chỗ</p>
+                      <p className="main">{car?.seats}</p>
                     </div>
                   </div>
                   <div className="outstanding-features__item">
@@ -377,13 +334,7 @@ const Detail_product = () => {
                 <div className="line-page"></div>
                 <div className="info-car-desc">
                   <h6>Mô tả</h6>
-                  <pre className="">
-                    MAZDA 3 PREMIUM 2021 Full option - Xe trang bị thêm màn hình
-                    Android tích hợp điều khiển giọng nói, VIET MAP V2, CAM
-                    360độ, Youtube, Cam hành trình, áp suất lốp… - Xe dán full
-                    phim cách nhiệt - Xe gia đình, biển trắng, bảo dưỡng định kỳ
-                    thường xuyên , anh chủ xe nhiệt tình, thật thà 😝
-                  </pre>
+                  <pre className="">{car?.car_description}</pre>
                 </div>
                 <div className="line-page"></div>
                 <div className="info-car-desc">
@@ -715,263 +666,12 @@ const Detail_product = () => {
             </div>
           </div>
           <div className="group-right">
-            <div className="price">
-              <div className="price-discount">
-                <p className="origin">
-                  <span>964K</span>
-                </p>
-                <span className="tag-item discount">-14%</span>
-              </div>
-              <h4>
-                <span className="">844K</span>
-                <span className="inner-h"> /ngày</span>
-              </h4>
-            </div>
-            <div className="date-time-form " onClick={handleToggleDatePicker}>
-              <div className="form-item">
-                <label>Nhận xe </label>
-                <div className="wrap-date-time">
-                  <div className="wrap-date">
-                    <span className="value">04/11/2024</span>
-                  </div>
-                  <div className="wrap-time">
-                    <span className="value">{selectedTimes.nhanXe}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="line"></div>
-              <div className="form-item">
-                <label>Trả xe</label>
-                <div className="wrap-date-time">
-                  <div className="wrap-date">
-                    <span className="value">05/11/2024</span>
-                  </div>
-                  <div className="wrap-time">
-                    <span className="value">{selectedTimes.traXe}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="dropdown-form pointer ">
-              <label className="pointer">Địa điểm giao nhận xe</label>
-              <div className="wrap-form has-arrow">
-                <span className="value">Quận Bình Thạnh, TP. Hồ Chí Minh</span>
-              </div>
-            </div>
-            <div className="line-page"></div>
-            <div className="price-container">
-              <div className="price-item">
-                <p className="df-align-center">
-                  <span>Đơn giá thuê</span>
-                </p>
-                <p className="cost">
-                  <span>964 320đ/ ngày</span>
-                </p>
-              </div>
-              <div className="price-item">
-                <p className="df-align-center">
-                  {" "}
-                  <span>Bảo hiểm thuê xe</span>{" "}
-                </p>
-                <p className="cost">
-                  <span>86 520đ/ ngày</span>
-                </p>
-              </div>
-              <div className="line-page"></div>
-              <div className="price-item">
-                <p>Tổng cộng</p>
-                <p className="cost">
-                  <span>1 050 840đ </span>x 1 ngày
-                </p>
-              </div>
-              <div className="price-item">
-                <p>Mã giảm giá</p>
-              </div>
-              <div className="line-page"></div>
-              <div className="price-item total">
-                <p>Thành tiền</p>
-                <p className="cost">
-                  <span>930 840đ</span>
-                </p>
-              </div>
-              <a className="btn btn-primary btn--m width-100 d-flex">
-                <div className="wrap-svg">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.9733 7.70015L8.46667 14.2668C8.29334 14.5268 8.01335 14.6668 7.71335 14.6668C7.62002 14.6668 7.52667 14.6535 7.43334 14.6268C7.05334 14.5068 6.79335 14.1668 6.79335 13.7735V10.0135C6.79335 9.86015 6.64667 9.72682 6.46667 9.72682L3.78001 9.6935C3.44001 9.6935 3.12668 9.50016 2.97335 9.20682C2.82668 8.92016 2.84668 8.5735 3.03335 8.30017L7.53335 1.7335C7.76001 1.40016 8.18001 1.25349 8.56668 1.37349C8.94668 1.49349 9.20668 1.83349 9.20668 2.22682V5.98683C9.20668 6.14017 9.35335 6.2735 9.53335 6.2735L12.22 6.30682C12.56 6.30682 12.8733 6.49349 13.0267 6.79349C13.1733 7.08016 13.1533 7.42682 12.9733 7.70015Z"
-                      fill="#FFC634"
-                    ></path>
-                  </svg>
-                </div>
-                Thanh toán{" "}
-              </a>
-            </div>
+            <Booking></Booking>
           </div>
         </div>
       </div>
       <Differen_Car></Differen_Car>
       <Footer />
-      {/* Popup Date Picker */}
-      {showDatePicker && (
-        <div className="popup-overlay" onClick={() => setShowDatePicker(false)}>
-          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
-            <div className="group-title d-flex">
-              <h5>Thời gian</h5>
-              <button className="btn btn-close"></button>
-            </div>
-            <div className="line-page"> </div>
-            <div className="modal-calendar modal-body">
-              {" "}
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DateCalendar", "DateCalendar"]}>
-                  <DemoItem label="">
-                    <DateCalendar
-                      value={startDate}
-                      onChange={(newValue) => setStartDate(newValue)}
-                    />
-                  </DemoItem>
-                  <DemoItem label="">
-                    <DateCalendar
-                      value={endDate}
-                      onChange={(newValue) => setEndDate(newValue)}
-                    />
-                  </DemoItem>
-                </DemoContainer>
-              </LocalizationProvider>
-              <div className="time-choose ">
-                <div
-                  className="time-choose__item"
-                  onClick={() => handleToggleDropdown("nhanXe")}
-                >
-                  <div>
-                    <p className="title-time">Nhận xe</p>
-                    <p className="active-time">{selectedTimes.nhanXe}</p>
-                  </div>
-                  <div
-                    className={`dropdown-time ${
-                      openDropdown === "nhanXe" ? "show" : "hide"
-                    }`}
-                  >
-                    {timeOptions.map((time, index) => (
-                      <div className="custom-radio" key={index}>
-                        <input
-                          type="radio"
-                          id={`rst${index}`}
-                          name={`r-startTime-${index}`}
-                          value={time}
-                        />
-                        <label
-                          htmlFor={`nhanXe${index}`}
-                          onClick={() => handleTimeSelect("nhanXe", time)}
-                        >
-                          {time}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="wrap-svg">
-                  <svg
-                    width="25"
-                    height="24"
-                    viewBox="0 0 25 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M12.63 21.2498H12.38C7.34001 21.2498 3.26001 17.1598 3.26001 12.1298V11.8798C3.26001 6.83977 7.35001 2.75977 12.38 2.75977H12.63C17.67 2.75977 21.75 6.84977 21.75 11.8798V12.1298C21.75 17.1598 17.66 21.2498 12.63 21.2498Z"
-                      stroke="#AAAAAA"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                    <path
-                      d="M9.40991 12H15.5699"
-                      stroke="#AAAAAA"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                    <path
-                      d="M15.5899 11.9993L13.1299 9.5293"
-                      stroke="#AAAAAA"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                    <path
-                      d="M15.5899 12L13.1299 14.47"
-                      stroke="#AAAAAA"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
-                  </svg>
-                </div>
-                <div className="time-choose">
-                  <div
-                    className="time-choose__item"
-                    onClick={() => handleToggleDropdown("traXe")}
-                  >
-                    <div>
-                      <p className="title-time">Trả xe</p>
-                      <p className="active-time">{selectedTimes.traXe}</p>
-                    </div>
-                    <div
-                      className={`dropdown-time ${
-                        openDropdown === "traXe" ? "show" : "hide"
-                      }`}
-                    >
-                      {timeOptions.map((time, index) => (
-                        <div className="custom-radio" key={index}>
-                          <input
-                            type="radio"
-                            id={`traXe${index}`}
-                            name={`r-startTime-${index}`}
-                            value={time}
-                          />
-                          <label
-                            htmlFor={`traXe${index}`}
-                            onClick={() => handleTimeSelect("traXe", time)}
-                          >
-                            {time}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <div className="info-time">
-                <div className="info-time__item">
-                  <p className="time">14:00, 06/11 - 20:00, 07/11 </p>
-                  <p className="df-align-center total">
-                    Thời gian thuê:{" "}
-                    <span
-                      className="fontWeight-6 text-primary"
-                      style={{ margin: "0px 2px" }}
-                    >
-                      2 ngày
-                    </span>
-                  </p>
-                </div>
-                <div className="wrap-btn">
-                  <a className="btn btn--s btn-primary">Tiếp tục</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -4,8 +4,10 @@ import Footer from "../footer/footer";
 import { useNavigate } from "react-router-dom";
 import "../../../css/form-login-signup.css";
 import { login } from "../../../lib/Axiosintance";
+import { useAuth } from "../../../pages/admin/Private/Auth";
 
 const Login = () => {
+  const { setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,14 +23,26 @@ const Login = () => {
       const { token, user } = response.data; // Giả sử token là chuỗi bạn sẽ dùng để xác thực, còn user là đối tượng chứa thông tin người dùng
       const apiToken = user.api_token; // Lấy api_token từ đối tượng user
 
-      localStorage.setItem("authToken", apiToken); // Lưu api_token vào localStorage
-      localStorage.setItem("userRole", user.role); // Lưu vai trò vào localStorage
+      // Kiểm tra nếu có token và user
+      if (token && user) {
+        // Lưu token và role vào localStorayge
+        localStorage.setItem("authToken", apiToken);
+        localStorage.setItem("userRole", user.role);
 
+        // Điều hướng dựa trên role
+        navigate(user.role === "admin" ? "/admin" : "/");
+
+        // Lưu thông tin người dùng vào context (nếu có)
+        setUser(user);
+      } else {
+        // Nếu không có token hoặc user trong phản hồi, hiển thị thông báo lỗi
+        setError("Không có token trả về từ server.");
+      }
       // Kiểm tra vai trò người dùng để điều hướng
       if (user.role === "admin") {
-        navigate("/admin"); // Điều hướng đến trang admin nếu là admin
+        navigate("/admin");
       } else {
-        navigate("/"); // Điều hướng về trang chủ nếu là người dùng thông thường
+        navigate("/");
       }
     } catch (error) {
       console.error("Error during login:", error); // Kiểm tra lỗi

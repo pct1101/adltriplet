@@ -2,63 +2,36 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../../css/admin.css";
+import { useAuth } from "../../pages/admin/Private/Auth";
+import Footer from "../admin/component/footer";
+import Header from "../admin/component/header";
+import Side_bar from "./component/side_bar";
+//css
+import "../../css/admin/css/bootstrap.min.css";
+import "../../css/admin/css/main.css";
+import "../../css/admin/css/fullcalendar.css";
+import "../../css/admin/css/lineicons.css";
+import "../../css/admin/css/materialdesignicons.min.css";
+// import live
+import AdminProducts from "./ControllerProduct/products";
+import AdminBooking from "./Booking/Adminbooking";
 
 const AdminDashboard = () => {
-  const navigate = useNavigate(); // Sử dụng navigate để chuyển hướng
+  const { logout } = useAuth(); // Lấy hàm logout từ context
+  const navigate = useNavigate();
 
-  // Hàm xử lý đăng xuất
   const handleLogout = () => {
-    // Xóa token và thông tin người dùng khỏi localStorage
-    localStorage.removeItem("apiToken");
-    localStorage.removeItem("user");
-    localStorage.removeItem("admin");
-
-    // Điều hướng người dùng về trang đăng nhập
-    navigate("/");
+    logout(); // Gọi hàm logout
+    navigate("/login"); // Điều hướng người dùng về trang đăng nhập
   };
-  return (
-    <div className="admin-container">
-      <div className="admin-sidebar">
-        <h3 className="admin-logo">Admin Panel</h3>
-        <ul className="admin-menu">
-          <li>
-            <Link to="/admin/products">Quản lý sản phẩm</Link>
-          </li>{" "}
-          {/* Đường dẫn đúng đến trang Quản lý sản phẩm */}
-          <li>
-            <Link to="/admin/AddCar">Thêm sản phẩm</Link>
-          </li>{" "}
-          {/* Đường dẫn đúng đến trang Quản lý sản phẩm */}
-          <li>
-            <Link to="/admin/orders">Quản lý Đơn hàng</Link>
-          </li>
-          <li>
-            <Link to="/admin/users">Quản lý Người dùng</Link>
-          </li>
-          <li>
-            <Link to="/admin/analytics">Phân tích</Link>
-          </li>
-          <li>
-            <Link to="/admin/settings">Cài đặt</Link>
-          </li>
-          <li>
-            <Link to="/">Quay lại trang chủ</Link>
-          </li>
-        </ul>
-      </div>
 
-      <div className="admin-main-content">
-        <div className="admin-header">
-          <h2>Dashboard</h2>
-          <div className="admin-profile">
-            <span>Xin chào, Admin</span>
-            <button className="btn btn-danger btn-sm">Đăng xuất</button>
-          </div>
-        </div>
-        <div className="admin-content">
-          <h3>Chào mừng đến trang quản lý</h3>
-          <p>Chọn một mục bên trái để quản lý nội dung.</p>
-        </div>
+  return (
+    <div>
+      <Side_bar></Side_bar>
+      <div className="main-wrapper">
+        <Header></Header>
+        <AdminProducts></AdminProducts>
+        <Footer></Footer>
       </div>
     </div>
   );

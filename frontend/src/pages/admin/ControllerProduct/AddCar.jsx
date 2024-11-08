@@ -88,7 +88,7 @@ const AddCar = () => {
       }
       navigate("/admin");
     } catch (error) {
-      console.error("Error while adding/updating car:", error.message);
+      console.error("Error while adding/updating car:", error.response.data);
     }
   };
 

@@ -27,6 +27,7 @@ export const login = (email, password) => {
       // Lưu token vào localStorage
       localStorage.setItem("authToken", response.data.token); // Đảm bảo tên key là 'authToken'
       localStorage.setItem("userRole", response.data.user.role); // Lưu vai trò của người dùng
+      localStorage.setItem("remember_token", response.data.token);
       return response;
     })
     .catch((error) => {
@@ -118,22 +119,538 @@ export const updateCar = async (id, carData) => {
   }
 };
 
-// Lấy loại xe theo ID (loai/{id})
-// export const getKindOfCar = (id) => {
-//   return axios.get(`${API_URL}/loai/${id}`);
-// };
+// API lấy tất cả feedbacks
+export const getAllFeedbacks = async () => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.get(`${API_URL}/admin/feedback`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
 
-// // Lấy danh sách xe yêu thích (carfavorite)
-// export const getFavoriteCars = () => {
-//   return axios.get(`${API_URL}/carfavorite`);
-// };
+    // Kiểm tra dữ liệu trả về từ API
+    if (response.data && Array.isArray(response.data)) {
+      return response.data; // Trả về dữ liệu dạng mảng
+    } else {
+      console.error("Dữ liệu phản hồi không phải mảng:", response.data);
+      return []; // Trả về mảng rỗng nếu không phải mảng hợp lệ
+    }
+  } catch (error) {
+    console.error("Error fetching feedbacks:", error);
+    throw error;
+  }
+};
 
-// // Thêm xe vào danh sách yêu thích (carfavorite - POST)
-// export const addCarToFavorites = (carData) => {
-//   return axios.post(`${API_URL}/carfavorite`, carData);
-// };
+// API tạo mới một feedback
+export const addFeedback = async (feedbackData) => {
+  const apiToken = localStorage.getItem("authToken");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.post(
+      `${API_URL}/admin/feedback`,
+      feedbackData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error adding feedback:", error);
+    throw error;
+  }
+};
 
-// // Lấy feedback của xe (carfeedback/{car_id})
-// export const getCarFeedback = (car_id) => {
-//   return axios.get(`${API_URL}/carfeedback/${car_id}`);
-// };
+// API lấy chi tiết feedback theo ID
+export const getFeedbackById = async (id) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.get(`${API_URL}/admin/feedback/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching feedback by ID:", error);
+    throw error;
+  }
+};
+
+// API cập nhật một feedback theo ID
+export const updateFeedback = async (id, feedbackData) => {
+  const apiToken = localStorage.getItem("authToken");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.put(
+      `${API_URL}/admin/feedback/${id}`,
+      feedbackData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating feedback:", error);
+    throw error;
+  }
+};
+
+// API xóa một feedback theo ID
+export const deleteFeedbackById = async (id) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.delete(`${API_URL}/admin/feedback/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting feedback:", error);
+    throw error;
+  }
+};
+
+// Lấy thông tin người dùng
+export const getUserProfile = async () => {
+  const apiToken = localStorage.getItem("remember_token"); // Lấy api_token từ localStorage
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.get(`${API_URL}/auth/profile/`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi không hiển thị thông tin người dùng:", error);
+    throw error;
+  }
+};
+
+// Đăng xuất
+export const logout = async () => {
+  const authToken = localStorage.getItem("authToken"); // Lấy token phiên đăng nhập
+  if (!authToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/logout`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`, // Gửi token trong header Authorization
+        },
+      }
+    );
+    // Xử lý kết quả logout nếu cần
+    localStorage.removeItem("authToken"); // Xóa token khỏi localStorage sau khi đăng xuất
+    return response.data;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    throw error;
+  }
+};
+
+// Thêm booking admin
+export const addBooking = async (bookingData) => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("authToken");
+
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu POST đến API để thêm booking
+    const response = await axios.post(
+      `${API_URL}/admin/booking/`,
+      bookingData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+        },
+      }
+    );
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+
+      // Nếu là lỗi 401, có thể là do token không hợp lệ
+      if (error.response.status === 401) {
+        console.error(
+          "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
+        );
+      }
+
+      // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
+    } else if (error.request) {
+      // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      // Lỗi khác (ví dụ: cấu hình request sai)
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+    throw error;
+  }
+};
+
+// Lấy toàn bộ danh sách booking
+export const getAllBookings = async () => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/booking`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data; // Trả về dữ liệu phản hồi từ API
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách booking:", error);
+    throw error;
+  }
+};
+
+// Lấy chi tiết booking theo ID
+export const getBookingById = async (id) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/booking/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log("API response:", response); // Log để xem toàn bộ response từ API
+    return response.data; // Kiểm tra xem data có chứa chi tiết booking không
+  } catch (error) {
+    console.error(
+      "Lỗi khi lấy chi tiết booking:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+// Xóa 1 đơn đặt hàng
+export const deleteBookingById = async (id) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu DELETE để xóa booking theo ID
+    const response = await axios.delete(`${API_URL}/admin/booking/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    console.log("Booking đã được xóa thành công:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi xóa booking:", error);
+
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+    } else if (error.request) {
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+  }
+};
+
+// Sửa 1 đơn hàng theo ID
+export const updateBooking = async (id, updatedBookingData) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu PUT để cập nhật booking theo ID
+    const response = await axios.put(
+      `${API_URL}/admin/booking/${id}`,
+      updatedBookingData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+        },
+      }
+    );
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    console.log("Booking đã được cập nhật thành công:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật booking:", error);
+
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+    } else if (error.request) {
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+  }
+};
+
+// API lấy danh sách user
+export const getAllUsers = async () => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/user`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data; // Trả về dữ liệu phản hồi từ API
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách booking:", error);
+    throw error;
+  }
+};
+
+// API tạo mới một user
+export const addUser = async (userData) => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("authToken");
+
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu POST đến API để thêm user
+    const response = await axios.post(`${API_URL}/admin/user/`, userData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+
+      // Nếu là lỗi 401, có thể là do token không hợp lệ
+      if (error.response.status === 401) {
+        console.error(
+          "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
+        );
+      }
+
+      // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
+    } else if (error.request) {
+      // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      // Lỗi khác (ví dụ: cấu hình request sai)
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+    throw error;
+  }
+};
+// API lấy chi tiết một user
+export const getUserById = async (id) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log("API response:", response); // Log để xem toàn bộ response từ API
+    return response.data; // Kiểm tra xem data có chứa chi tiết booking không
+  } catch (error) {
+    console.error(
+      "Lỗi khi lấy chi tiết user:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+// API cập nhật một user
+export const updateUser = async (id, updatedUserData) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu PUT để cập nhật booking theo ID
+    const response = await axios.put(
+      `${API_URL}/admin/user/${id}`,
+      updatedUserData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+        },
+      }
+    );
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    console.log("Booking đã được cập nhật thành công:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật user:", error);
+
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+    } else if (error.request) {
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+  }
+};
+// API xóa một user
+export const deleteUser = async (userId) => {
+  const apiToken = localStorage.getItem("authToken");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.delete(`${API_URL}/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    throw error;
+  }
+};

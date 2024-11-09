@@ -22,6 +22,9 @@ import EditFeedback from "./pages/admin/Feedbacks/EditFeedbacks.jsx";
 import UserList from "./pages/admin/User/ManagerUser.jsx";
 import EditUser from "./pages/admin/User/EditUser.jsx";
 import AdminAddUser from "./pages/admin/User/AddUser.jsx";
+import AdminFavorite from "./pages/admin/Favorite/AdminFavorite.jsx";
+import AdminFavoriteDetails from "./pages/admin/Favorite/DetailFavorite.jsx";
+import AddFavorite from "./pages/admin/Favorite/AddFavorite.jsx";
 
 function App() {
   return (
@@ -171,6 +174,33 @@ function App() {
               element={
                 <PrivateRoute>
                   <EditUser />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/favorite"
+              element={
+                <PrivateRoute>
+                  <AdminFavorite />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/favorite/:userId/:carId"
+              element={
+                <PrivateRoute>
+                  <AdminFavoriteDetails />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/admin/addfavorite"
+              element={
+                <PrivateRoute>
+                  <AddFavorite />
                 </PrivateRoute>
               }
             />

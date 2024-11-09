@@ -706,3 +706,95 @@ export const deleteUser = async (userId) => {
     throw error;
   }
 };
+
+// Lấy tất cả yêu thích
+export const getAllFavorites = async () => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/favorite`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách yêu thích:", error);
+    throw error;
+  }
+};
+
+// Xóa yêu thích theo ID
+export const deleteFavoriteById = async (favoriteId, apiToken) => {
+  try {
+    const response = await axios.delete(`${API_URL}/admin/favorite/${favoriteId}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Lỗi khi xóa yêu thích với ID ${favoriteId}:`, error);
+    throw error;
+  }
+};
+
+// Tạo yêu thích mới
+export const addFavorite = async (userId, carId) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/admin/favorite`,
+      { user_id: userId, car_id: carId }, // Gửi thông tin userId và carId
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Lỗi khi thêm yêu thích cho userId ${userId} và carId ${carId}:`, error);
+    throw error;
+  }
+};
+
+// Cập nhật yêu thích
+export const updateFavorite = async (userId, carId, favoriteData) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  try {
+    const response = await axios.put(`${API_URL}/admin/favorite/${userId}/${carId}`, favoriteData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Lỗi khi cập nhật yêu thích cho userId ${userId} và carId ${carId}:`, error);
+    throw error;
+  }
+};
+
+// Lấy chi tiết favorite
+export const getFavoriteDetails = async (userId, carId) => {
+  const apiToken = localStorage.getItem("authToken");
+  try {
+    const response = await axios.get(`${API_URL}/admin/favorite/${userId}/${carId}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data.favorite; // Trả về dữ liệu favorite
+  } catch (error) {
+    console.error("Lỗi khi lấy chi tiết favorite:", error);
+    throw error;
+  }
+};
+

@@ -38,9 +38,6 @@ function Differen_Car() {
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
 
-  // Ví dụ sử dụng
-  const rentalPrice = 1126000;
-  console.log(formatPrice(rentalPrice)); // Output: "1,126K/ngày"
   return (
     <div>
       <div className="related-car space sec">

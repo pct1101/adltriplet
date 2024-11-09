@@ -73,9 +73,76 @@ const Detail_product = () => {
         </div>
         <div className="sub-item">
           <div className="group-left">
-            <div className="title">
+            <div className="group-name">
               <h1>{car?.car_name}</h1>
+              <div className="group-action d-flex-center-btw">
+                <div className="shared">
+                  <div className="wrap-svg wrap-ic share">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.99015 14.02C8.1389 14.02 9.07015 13.1156 9.07015 12C9.07015 10.8844 8.1389 9.97998 6.99015 9.97998C5.8414 9.97998 4.91016 10.8844 4.91016 12C4.91016 13.1156 5.8414 14.02 6.99015 14.02Z"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M17.0698 6.99995C18.1854 6.99995 19.0898 6.09557 19.0898 4.97995C19.0898 3.86433 18.1854 2.95996 17.0698 2.95996C15.9542 2.95996 15.0498 3.86433 15.0498 4.97995C15.0498 6.09557 15.9542 6.99995 17.0698 6.99995Z"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M17.0698 21.04C18.1854 21.04 19.0898 20.1356 19.0898 19.02C19.0898 17.9044 18.1854 17 17.0698 17C15.9542 17 15.0498 17.9044 15.0498 19.02C15.0498 20.1356 15.9542 21.04 17.0698 21.04Z"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M9.23047 10.44L14.8305 6.54004"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M14.8305 17.4601L9.23047 13.5601"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div className="fav-item wrap-ic wrap-svg">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M21.25 8.7196C21.25 9.8796 20.81 11.0496 19.92 11.9396L18.44 13.4196L12.07 19.7896C12.04 19.8196 12.03 19.8296 12 19.8496C11.97 19.8296 11.96 19.8196 11.93 19.7896L4.08 11.9396C3.19 11.0496 2.75 9.8896 2.75 8.7196C2.75 7.54961 3.19 6.37961 4.08 5.48961C5.86 3.71961 8.74 3.71961 10.52 5.48961L11.99 6.9696L13.47 5.48961C15.25 3.71961 18.12 3.71961 19.9 5.48961C20.81 6.37961 21.25 7.53961 21.25 8.7196Z"
+                        stroke="black"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <div className="group-total">
               <div className="wrap-svg">
                 <svg

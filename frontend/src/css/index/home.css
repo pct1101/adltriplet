@@ -446,6 +446,34 @@ top: 140px;
 .group-left{
   width: calc(68% - 16px);  
 }
+.group-name{
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  grid-gap: 8px;
+  gap: 8px;
+}
+.d-flex-center-btw {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.group-name .shared {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+  gap: 16px;
+}
+ .group-name .shared .wrap-ic {
+  padding: 12px;
+  border-radius: 100%;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+.group-name .shared .wrap-ic.active {
+  background-color: #effaf3;
+  border: 1px solid #5fcf86;
+}
 .group-total{
   display: flex;
   align-items: center;

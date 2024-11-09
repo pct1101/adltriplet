@@ -7,8 +7,8 @@ import Differen_Car from "../Slide_Banner/differen_Car";
 // import api car
 import { getCarDetails, getCarImagesByCarId } from "../../../lib/Axiosintance";
 // import css
-import "../../../css/popup_product.css";
-import "../../../css/home.css";
+import "../../../css/index/popup_product.css";
+import "../../../css/index/home.css";
 
 import Booking from "../booking/booking";
 

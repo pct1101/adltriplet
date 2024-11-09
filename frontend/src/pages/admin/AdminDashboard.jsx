@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import "../../css/admin.css";
+import "../../css/admin/css/admin.css";
 import { useAuth } from "../../pages/admin/Private/Auth";
 import Footer from "../admin/component/footer";
 import Header from "../admin/component/header";
@@ -14,7 +14,6 @@ import "../../css/admin/css/lineicons.css";
 import "../../css/admin/css/materialdesignicons.min.css";
 // import live
 import AdminProducts from "./ControllerProduct/products";
-import AdminBooking from "./Booking/Adminbooking";
 
 const AdminDashboard = () => {
   const { logout } = useAuth(); // Lấy hàm logout từ context

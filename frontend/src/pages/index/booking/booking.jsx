@@ -9,6 +9,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 // api car
 import { getCarDetails } from "../../../lib/Axiosintance";
+import LocationDropdown from "./district_province";
+// api post booking
+import { addBookingUser } from "../../../lib/Axiosintance";
 
 function Booking() {
   //    set time for days and time
@@ -26,6 +29,37 @@ function Booking() {
     traXe: dayjs().add(4, "hour").format("HH:mm"), // Thời gian trả xe mặc định là sau 4 giờ
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), // Thời gian nhận xe mặc định là sau 1 giờ
   });
+  const { id: carId } = useParams();
+  console.log(carId);
+  const formattedStartDate = startDate.toISOString().split("T")[0]; // YYYY-MM-DD
+  const formattedEndDate = endDate.toISOString().split("T")[0]; // YYYY-MM-DD
+  const handleBookingSubmit = async () => {
+    const apiToken = localStorage.getItem("remember_token");
+    console.log(apiToken);
+
+    if (!apiToken || apiToken.trim() === "") {
+      console.error("Token không hợp lệ hoặc hết hạn.");
+      // Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
+      return;
+    }
+    const bookingData = {
+      car_id: carId, // Lấy car_id từ URL
+      start_date: formattedStartDate,
+      end_date: formattedEndDate,
+      rental_price: total_cost,
+      booking_date: new Date().toISOString(),
+    };
+    console.log(bookingData);
+
+    try {
+      // Gọi hàm addBooking để thực hiện API call
+      const response = await addBookingUser(bookingData, apiToken);
+      console.log("Booking thành công:", response);
+    } catch (error) {
+      console.error("Lỗi khi đặt xe:", error);
+    }
+  };
+
   // Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
     // open dropdown or none
@@ -48,14 +82,12 @@ function Booking() {
         hour += 1;
       }
     }
-
+    console.log(times);
     return times;
   };
 
-  const timeOptions = generateTimeOptions();
   //   xử lý realtime nhanXe
   const currentTime = dayjs();
-
   const nhanXeOptions = generateTimeOptions(
     currentTime.hour(),
     currentTime.minute() < 30 ? 0 : 30
@@ -63,9 +95,10 @@ function Booking() {
   //   xử lý realtime traXe
   const traXeOptions = generateTimeOptions(0, 0).filter((time) =>
     dayjs(time, "HH:mm").isAfter(
-      dayjs(selectedTimes.nhanXe, "HH:mm").add(4, "hour")
+      dayjs(selectedTimes.traXe, "HH:mm").add(4, "hour")
     )
   );
+
   //   xử lý khi nhấn vào time
   const handleTimeSelect = (dropdown, time) => {
     if (dropdown === "nhanXe") {
@@ -127,7 +160,22 @@ function Booking() {
     // Cập nhật ngày kết thúc
     setEndDate(nextDay);
   };
+  //  tính toán các thứ
+  //  all days user book
 
+  const calculateTotalDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const differenceInTime = end - start;
+    const totalDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); // Số ngày giữa hai ngày
+    return totalDays > 0 ? totalDays : 0;
+  };
+
+  // Số ngày thuê
+  const totalDays = calculateTotalDays(startDate, endDate);
+
+  // Tính đơn giá thuê
+  const total_cost = (bookings?.rental_price || 0) * totalDays;
   //   price
   const formatPrice = (price) => {
     // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
@@ -135,6 +183,12 @@ function Booking() {
       return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
     }
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+  };
+  const formatPrice2 = (price) => {
+    if (typeof price === "number") {
+      return `${price.toLocaleString("vi-VN")}đ`;
+    }
+    return "0 VND"; // Hoặc trả về một giá trị khác nếu price không hợp lệ
   };
 
   return (
@@ -177,8 +231,11 @@ function Booking() {
       </div>
       <div className="dropdown-form pointer ">
         <label className="pointer">Địa điểm giao nhận xe</label>
-        <div className="wrap-form has-arrow">
-          <span className="value">Quận Bình Thạnh, TP. Hồ Chí Minh</span>
+        <div className="wrap-form">
+          <span className="value">
+            {" "}
+            <LocationDropdown />
+          </span>
         </div>
       </div>
       <div className="line-page"></div>
@@ -188,7 +245,7 @@ function Booking() {
             <span>Đơn giá thuê</span>
           </p>
           <p className="cost">
-            <span>964 320đ/ ngày</span>
+            <span>{formatPrice2(bookings?.rental_price)} / ngày</span>
           </p>
         </div>
         <div className="price-item">
@@ -214,10 +271,13 @@ function Booking() {
         <div className="price-item total">
           <p>Thành tiền</p>
           <p className="cost">
-            <span>930 840đ</span>
+            <span>{formatPrice2(total_cost)} / ngày</span>
           </p>
         </div>
-        <a className="btn btn-primary btn--m width-100 d-flex">
+        <a
+          className="btn btn-primary btn--m width-100 d-flex"
+          onClick={handleBookingSubmit}
+        >
           <div className="wrap-svg">
             <svg
               width="16"
@@ -232,7 +292,7 @@ function Booking() {
               ></path>
             </svg>
           </div>
-          Thanh toán{" "}
+          Chọn thuê{" "}
         </a>
       </div>
       {/* Popup Date Picker */}
@@ -352,13 +412,9 @@ function Booking() {
                             id={`traXe${index}`}
                             name={`r-startTime-${index}`}
                             value={time}
+                            onChange={() => handleTimeSelect("traXe", time)}
                           />
-                          <label
-                            htmlFor={`traXe${index}`}
-                            onClick={() => handleTimeSelect("traXe", time)}
-                          >
-                            {time}
-                          </label>
+                          <label htmlFor={`traXe${index}`}>{time}</label>
                         </div>
                       ))}
                     </div>
@@ -370,14 +426,18 @@ function Booking() {
             <div className="modal-footer">
               <div className="info-time">
                 <div className="info-time__item">
-                  <p className="time">14:00, 06/11 - 20:00, 07/11 </p>
+                  <p className="time">
+                    {" "}
+                    {selectedTimes.nhanXe}, {formatDate(startDate)} -{" "}
+                    {selectedTimes.traXe}, {formatDate(endDate)}{" "}
+                  </p>
                   <p className="df-align-center total">
                     Thời gian thuê:{" "}
                     <span
                       className="fontWeight-6 text-primary"
                       style={{ margin: "0px 2px" }}
                     >
-                      2 ngày
+                      {calculateTotalDays(startDate, endDate)} ngày
                     </span>
                   </p>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../../../css/home.css";
+import "../../../css/index/home.css";
 import { getAllCars } from "../../../lib/Axiosintance";
 
 const Productlist = () => {

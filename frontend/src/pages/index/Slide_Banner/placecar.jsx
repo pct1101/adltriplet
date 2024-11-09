@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import "../../../css/home.css";
+import "../../../css/index/home.css";
 import Card from "react-bootstrap/Card";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
 import { Autoplay } from "swiper/modules";

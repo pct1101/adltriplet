@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import { useNavigate } from "react-router-dom";
-import "../../../css/form-login-signup.css";
+import "../../../css/index/form-login-signup.css";
 import { login } from "../../../lib/Axiosintance";
 import { useAuth } from "../../../pages/admin/Private/Auth";
 

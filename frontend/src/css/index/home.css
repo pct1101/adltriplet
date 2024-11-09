@@ -151,7 +151,7 @@ color: white;
   max-height: 55px;
 }
 .news-date {
-  background: url('../assets/ic_date.png') no-repeat no-repeat center left;
+  background: url('../../assets/ic_date.png') no-repeat no-repeat center left;
   padding-left: 20px;
   margin-bottom: 7px;
   color: #000000;
@@ -736,7 +736,7 @@ span.tag-item.discount {
   cursor: pointer;
 }
 .dropdown-form .wrap-form.has-arrow:before {
-  content: url("../assets/arrow-down.d8b3609e.svg");
+  content: url("../../assets/arrow-down.d8b3609e.svg");
   position: absolute;
   right: 0;
   width: 24px;

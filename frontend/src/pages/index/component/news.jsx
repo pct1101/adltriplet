@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../css/home.css";
+import "../../../css/index/home.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";

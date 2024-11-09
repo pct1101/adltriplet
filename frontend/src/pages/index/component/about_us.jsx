@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import "../../../css/home.css";
+import "../../../css/index/home.css";
 import Banner_top from "../Slide_Banner/banner_top";
 import Endow from "./endow";
 

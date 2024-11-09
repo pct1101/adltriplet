@@ -1,12 +1,11 @@
 import React, { useRef, useState } from "react";
-import Card from "react-bootstrap/Card";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "../../../css/home.css";
+import "../../../css/index/home.css";
 
 function CarDelivery() {
   const [swiperRef, setSwiperRef] = useState(null);

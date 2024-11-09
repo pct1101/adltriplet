@@ -3,7 +3,7 @@ import Header from "./header/header";
 import Footer from "./footer/footer";
 import Saleoff from "./Slide_Banner/saleoff";
 import News from "./component/news";
-import "../../css/home.css";
+import "../../css/index/index.css";
 import Slider from "./Slide_Banner/slider";
 import Productlist from "./products/productslist";
 import CarDelivery from "./Slide_Banner/carDelivery";

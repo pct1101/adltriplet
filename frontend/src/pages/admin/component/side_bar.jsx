@@ -5,7 +5,7 @@ import "../../../css/admin/css/fullcalendar.css";
 import "../../../css/admin/css/lineicons.css";
 import "../../../css/admin/css/materialdesignicons.min.css";
 import { Link } from "react-router-dom";
-import "../../../css/home.css";
+import "../../../css/admin/css/admin.css";
 
 function Side_bar() {
   return (

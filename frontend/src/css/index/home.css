@@ -469,11 +469,21 @@ top: 140px;
   border-radius: 100%;
   border: 1px solid #e0e0e0;
   cursor: pointer;
+  transition: background-color 0.3s ease, border 0.3s ease;
 }
-.group-name .shared .wrap-ic.active {
+.group-name .shared .wrap-ic:hover {
   background-color: #effaf3;
   border: 1px solid #5fcf86;
+  
 }
+.group-name .shared .wrap-ic svg path {
+  transition: stroke 0.3s ease; /* Hiệu ứng chậm cho stroke */
+}
+.group-name .shared .wrap-ic:hover svg path {
+  stroke: #5fcf86 !important;
+
+}
+
 .group-total{
   display: flex;
   align-items: center;

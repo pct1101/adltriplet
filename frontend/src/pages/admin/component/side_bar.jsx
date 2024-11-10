@@ -55,6 +55,14 @@ function Side_bar() {
               </a>
             </li>
             <li className="nav-item">
+              <a href="/admin/favorite">
+                <span className="icon">
+                  <i className="fa-solid fa-table-list"></i>
+                </span>
+                <span className="text">favorite</span>
+              </a>
+            </li>
+            <li className="nav-item">
               <a href="/admin/order">
                 <span className="icon">
                   <i className="fa-solid fa-box-open"></i>

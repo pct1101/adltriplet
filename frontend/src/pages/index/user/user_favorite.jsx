@@ -9,12 +9,21 @@ function User_favorite() {
   const [favoriteCars, setFavoriteCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [carDetails, getCarDetails] = useState();
+  const [carIds] = useState();
   useEffect(() => {
     const fetchFavoriteCars = async () => {
       try {
         const cars = await getFavoriteUser(); // Gọi API lấy danh sách xe yêu thích
+        console.log("Dữ liệu trả về từ API:", cars);
+        // Lấy chi tiết xe từ carId
+        const carDetails = await Promise.all(
+          carIds.map((carId) => getCarDetails(carId)) // Gọi API để lấy chi tiết từng xe
+        );
+        console.log("Chi tiết các xe yêu thích:", carDetails);
+        setFavoriteCars(carDetails); // Lưu danh sách chi tiết xe yêu thích vào state
         setFavoriteCars(cars); // Lưu danh sách xe yêu thích vào state
+        console.log("Danh sách xe yêu thích sau khi set:", favoriteCars);
       } catch (err) {
         console.error("Lỗi khi lấy danh sách yêu thích:", err);
         setError("Không thể tải danh sách yêu thích.");
@@ -24,7 +33,8 @@ function User_favorite() {
     };
 
     fetchFavoriteCars();
-  }, []); // Gọi lại khi component mount
+    console.log("Cập nhật danh sách xe yêu thích:", favoriteCars);
+  }, [favoriteCars]); // Gọi lại khi component mount
 
   if (loading) {
     return <div>Loading...</div>;

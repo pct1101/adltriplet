@@ -1,13 +1,30 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import "../../../css/index/header.css";
 import "../../../css/index/index.css";
-
+import { useAuth } from "../../Private/Auth";
+import { getUserProfile } from "../../../lib/Axiosintance";
 function Header() {
-  const navigate = useNavigate();
-  const authToken = localStorage.getItem("authToken");
-  const userRole = localStorage.getItem("userRole");
+  const { user } = useAuth();
+  const [userData, setUserData] = useState(null);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUserProfile();
+        setUserData(data);
+      } catch (err) {
+        setError("Không thể tải thông tin người dùng");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Nếu có lỗi, hiển thị lỗi
+  if (error) {
+    return <div>{error}</div>;
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container header">
@@ -64,7 +81,7 @@ function Header() {
           </ul>
 
           <div className="login ms-auto">
-            {authToken ? (
+            {user ? (
               <>
                 <div className="tb" style={{ margin: "10px 15px 1px 1px" }}>
                   {" "}
@@ -83,7 +100,9 @@ function Header() {
                     />
                   </div>
                   <ul className="nav-item" style={{ marginBottom: "0" }}>
-                    <span className="name ">{userRole}</span>
+                    <span className="name ">
+                      {userData ? userData.name : "đang tải"}
+                    </span>
                   </ul>
 
                   <div className="wrap-svg">

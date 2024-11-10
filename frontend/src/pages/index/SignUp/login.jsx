@@ -4,7 +4,7 @@ import Footer from "../footer/footer";
 import { useNavigate } from "react-router-dom";
 import "../../../css/index/form-login-signup.css";
 import { login } from "../../../lib/Axiosintance";
-import { useAuth } from "../../../pages/admin/Private/Auth";
+import { useAuth } from "../../Private/Auth";
 
 const Login = () => {
   const { setUser } = useAuth();

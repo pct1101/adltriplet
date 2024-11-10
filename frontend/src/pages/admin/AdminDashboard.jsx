@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../../css/admin/css/admin.css";
-import { useAuth } from "../../pages/admin/Private/Auth";
+import { useAuth } from "../Private/Auth";
 import Footer from "../admin/component/footer";
 import Header from "../admin/component/header";
 import Side_bar from "./component/side_bar";

@@ -12,7 +12,8 @@ import { getCarDetails } from "../../../lib/Axiosintance";
 import LocationDropdown from "./district_province";
 // api post booking
 import { addBookingUser } from "../../../lib/Axiosintance";
-
+import { useAuth } from "../../Private/Auth";
+import { useNavigate } from "react-router-dom";
 function Booking() {
   const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
   const [modalMessage, setModalMessage] = useState(""); // Lưu trữ thông điệp modal
@@ -36,10 +37,16 @@ function Booking() {
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), // Thời gian nhận xe mặc định là sau 1 giờ
   });
   const { id: carId } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const formattedStartDate = startDate.toISOString().split("T")[0]; // YYYY-MM-DD
   const formattedEndDate = endDate.toISOString().split("T")[0]; // YYYY-MM-DD
   const handleBookingSubmit = async () => {
     const apiToken = localStorage.getItem("remember_token");
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     if (!apiToken || apiToken.trim() === "") {
       console.error("Token không hợp lệ hoặc hết hạn.");
       // Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.

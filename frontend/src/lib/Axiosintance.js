@@ -814,6 +814,7 @@ export const getFavoriteDetails = async (userId, carId) => {
   }
 };
 
+
 // user_favorite
 export const getFavoriteUser = async () => {
   const apiToken = localStorage.getItem("remember_token");

@@ -9,21 +9,15 @@ function User_favorite() {
   const [favoriteCars, setFavoriteCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [carDetails, getCarDetails] = useState();
-  const [carIds] = useState();
+  // const [carDetails, getCarDetails] = useState();
+  // const [carIds] = useState();
+
   useEffect(() => {
     const fetchFavoriteCars = async () => {
       try {
-        const cars = await getFavoriteUser(); // Gọi API lấy danh sách xe yêu thích
-        console.log("Dữ liệu trả về từ API:", cars);
-        // Lấy chi tiết xe từ carId
-        const carDetails = await Promise.all(
-          carIds.map((carId) => getCarDetails(carId)) // Gọi API để lấy chi tiết từng xe
-        );
-        console.log("Chi tiết các xe yêu thích:", carDetails);
-        setFavoriteCars(carDetails); // Lưu danh sách chi tiết xe yêu thích vào state
-        setFavoriteCars(cars); // Lưu danh sách xe yêu thích vào state
-        console.log("Danh sách xe yêu thích sau khi set:", favoriteCars);
+        const response = await getFavoriteUser(); // Gọi API lấy danh sách xe yêu thích
+        console.log("Dữ liệu trả về từ API:", response);
+        setFavoriteCars(response); // Lưu danh sách xe yêu thích vào state
       } catch (err) {
         console.error("Lỗi khi lấy danh sách yêu thích:", err);
         setError("Không thể tải danh sách yêu thích.");
@@ -60,7 +54,7 @@ function User_favorite() {
                   <h5>Xe yêu thích</h5>
                 </div>
               </div>
-              {favoriteCars.length > 0 ? (
+              {Array.isArray(favoriteCars) && favoriteCars.length > 0 ? (
                 <div className="card-car row">
                   {favoriteCars.map((car) => (
                     <div className="item-box" key={car.id}>
@@ -82,9 +76,12 @@ function User_favorite() {
                           <span className="tag-item transmission">
                             Số tự động
                           </span>
+                          <span className="tag-item transmission">
+                             {car.car ? car.car.seats : "Không có tên xe"} chỗ
+                          </span>
                         </div>
                         <div className="desc-name">
-                          <p>{car.user_id}</p>
+                          <p>{car.car ? car.car.car_name : "Không có tên xe"}</p>
                         </div>
                         <div className="desc-info">
                           <div className="wrap-svg">
@@ -142,8 +139,9 @@ function User_favorite() {
                               </defs>
                             </svg>
                           </div>
-                          <span className="info">Ngày đầu</span>
+                          <span className="info">20 chuyến </span>
                         </div>
+                          <span className="info">Quận 12, Thành phố Hồ Chí Minh</span>
                       </div>
                     </div>
                   ))}

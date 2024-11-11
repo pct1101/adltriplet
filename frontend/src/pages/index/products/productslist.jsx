@@ -48,8 +48,8 @@ const Productlist = () => {
                   {/* Sử dụng Link để điều hướng khi click vào ảnh */}
                   <Link to={`/detai_product/${car.car_id}`}>
                     <img
-                      src="../img/anh1-x1.jpg"
-                      // src={car.car_image}
+                      // src={`../../../../public`}
+                      src={`../img/${car.car_image}`}
                       className="card-img-top"
                       alt={car.car_name}
                     />

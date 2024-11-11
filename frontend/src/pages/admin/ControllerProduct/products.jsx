@@ -91,7 +91,8 @@ const AdminProducts = () => {
                   <td>{car.car_id}</td>
                   <td>
                     <img
-                      src="../img/anh1-x1.jpg"
+
+                      src={`../img/${car.car_image}`}
                       alt={car.car_name}
                       width="100"
                       height="100"

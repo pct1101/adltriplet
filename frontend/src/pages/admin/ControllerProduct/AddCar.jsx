@@ -10,10 +10,10 @@ const AddCar = () => {
   const [rentalPrice, setRentalPrice] = useState("");
   const [carStatus, setCarStatus] = useState(1);
   const [mileage, setMileage] = useState("");
-  const [carImage, setCarImage] = useState("");
+  const [carImage, setCarImage] = useState(null); // Thay đổi carImage thành null
   const [carDescription, setCarDescription] = useState("");
   const [carId, setCarId] = useState(null);
-  const [brandId, setBrandId] = useState(1); // Thêm state cho brandid
+  const [brandId, setBrandId] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -29,14 +29,13 @@ const AddCar = () => {
     const role = localStorage.getItem("userRole");
     const apiToken = localStorage.getItem("authToken");
 
-    // Debugging: log role and apiToken
     console.log("User Role from localStorage:", role);
     console.log("API Token from localStorage:", apiToken);
 
     if (!role || role !== "admin") {
       setIsAdmin(false);
       alert("Bạn không có quyền truy cập trang này!");
-      navigate("/"); // Điều hướng về trang chủ nếu không có quyền
+      navigate("/");
     } else {
       setIsAdmin(true);
     }
@@ -56,34 +55,35 @@ const AddCar = () => {
       setMileage(car.mileage);
       setCarImage(car.car_image);
       setCarDescription(car.car_description);
-      setBrandId(car.brandid); // Giả sử API trả về brandid
+      setBrandId(car.brandid);
     } catch (error) {
       console.error("Error fetching car data:", error.message);
     }
   };
 
+  const handleFileChange = (e) => {
+    setCarImage(e.target.files[0]); // Cập nhật carImage thành file ảnh
+  };
+
   const handleAddCar = async (e) => {
     e.preventDefault();
 
-    const carData = {
-      car_name: carName,
-      seats: Number(seats),
-      model: model,
-      license_plate: licensePlate,
-      rental_price: Number(rentalPrice),
-      car_status: Number(carStatus),
-      mileage: Number(mileage),
-      car_image: carImage,
-      car_description: carDescription,
-      brandid: Number(brandId), // Thêm brandid vào carData
-    };
+    const carData = new FormData(); // Sử dụng FormData để gửi file và dữ liệu khác
+    carData.append("car_name", carName);
+    carData.append("seats", Number(seats));
+    carData.append("model", model);
+    carData.append("license_plate", licensePlate);
+    carData.append("rental_price", Number(rentalPrice));
+    carData.append("car_status", Number(carStatus));
+    carData.append("mileage", Number(mileage));
+    carData.append("car_image", carImage); // Thêm file ảnh vào FormData
+    carData.append("car_description", carDescription);
+    carData.append("brandid", Number(brandId));
 
     try {
       if (carId) {
-        console.log("Updating car data:", carData);
         await addCar(carId, carData);
       } else {
-        console.log("Adding new car data:", carData);
         await addCar(carData);
       }
       navigate("/admin");
@@ -95,8 +95,8 @@ const AddCar = () => {
   return (
     <div className="container mt-5">
       <h2>{carId ? "Cập Nhật Xe" : "Thêm Sản Phẩm Mới"}</h2>
-      {isAdmin ? ( // Kiểm tra quyền
-        <form onSubmit={handleAddCar}>
+      {isAdmin ? (
+        <form onSubmit={handleAddCar} encType="multipart/form-data">
           <div className="mb-3">
             <label className="form-label">Tên Xe:</label>
             <input
@@ -137,7 +137,6 @@ const AddCar = () => {
             >
               <option value={1}>Hãng Xe 1</option>
               <option value={2}>Hãng Xe 2</option>
-              {/* Thêm các tùy chọn khác tại đây */}
             </select>
           </div>
           <div className="mb-3">
@@ -184,10 +183,9 @@ const AddCar = () => {
           <div className="mb-3">
             <label className="form-label">Hình Ảnh:</label>
             <input
-              type="text"
+              type="file"
               className="form-control"
-              value={carImage}
-              onChange={(e) => setCarImage(e.target.value)}
+              onChange={handleFileChange} // Xử lý sự kiện chọn file
               required
             />
           </div>
@@ -205,7 +203,7 @@ const AddCar = () => {
           </button>
         </form>
       ) : (
-        <p>Bạn không có quyền truy cập vào trang này.</p> // Thông báo không có quyền
+        <p>Bạn không có quyền truy cập vào trang này.</p>
       )}
     </div>
   );

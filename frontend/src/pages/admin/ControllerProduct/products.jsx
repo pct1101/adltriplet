@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllCars, deleteCarById } from "../../../lib/Axiosintance";
+import Side_bar from "../component/side_bar";
+import Header from "../component/header";
 
 const AdminProducts = () => {
   const [cars, setCars] = useState([]);
@@ -55,77 +57,75 @@ const AdminProducts = () => {
   };
 
   return (
-    <section className="section p-2">
-      <div className="container-fluid p-4"></div>
-      <div className="d-flex justify-content-between">
-        <h3 className="mb-4">Danh sách sản phẩm</h3>
-        <div>
-          <button>
+    <div>
+      <Side_bar></Side_bar>
+      <section className="main-wrapper section p-2">
+        <Header></Header>
+        <div className="d-flex">
+          <h1 className="ms-4">Danh sách sản phẩm</h1>
+          <button className=" btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddCar">
               Thêm sản phẩm
             </Link>
           </button>
         </div>
-      </div>
-      <div className="card rounded-0 border-0 shadow-sm">
-        <div className="card-body">
-          <table className="table text-center">
-            <thead>
-              <tr>
-                <th className="" colspan="">
-                  ID
-                </th>
-                <th>Ảnh xe</th>
-                <th>Tên xe</th>
-                <th>Giá thuê</th>
-                <th>Chỗ</th>
-                <th>Biển số</th>
-                <th>Đời xe</th>
-                <th>Số KM đã chạy</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody className="align-middle">
-              {cars.map((car) => (
-                <tr key={car.car_id}>
-                  <td>{car.car_id}</td>
-                  <td>
-                    <img
-                      src="../img/anh1-x1.jpg"
-                      alt={car.car_name}
-                      width="100"
-                      height="100"
-                    />
-                  </td>
-                  <td>{car.car_name}</td>
-                  <td>{car.rental_price}</td>
-                  <td>{car.seats}</td>
-                  <td>{car.license_plate}</td>
-                  <td>{car.model}</td>
-                  <td>{car.mileage}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning me-2"
-                      onClick={() => editCar(car.car_id)}
-                    >
-                      Sửa
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => deleteCar(car.car_id)} // Gọi hàm xóa
-                      disabled={!isAdmin} // Vô hiệu hóa nút xóa nếu không phải admin
-                    >
-                      Xóa
-                    </button>
-                  </td>
+        <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
+          <div className="card-body p-0">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="" colspan="">
+                    Sản phẩm
+                  </th>
+                  <th>Đơn giá</th>
+                  <th>Số lượng</th>
+                  <th>Rating</th>
+                  <th>Hành động</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="">
+                {cars.map((car) => (
+                  <tr key={car.car_id}>
+                    <td className="short-info-column">
+                      <div className="row">
+                        <div className="col-md-3">
+                          <img src="../img/anh1-x1.jpg" className="w-100" alt="" />
+                        </div>
+                        <div className="col-md-9">
+                          <h5>{car.car_name}</h5>
+                          <div className="">
+                            Mã: {car.car_id} | Danh Mục: <span className="text-primary">{car.brand_id}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{car.rental_price}</td>
+                    <td>{car.seats}</td>
+                    <td>{car.rating}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning me-2"
+                        onClick={() => editCar(car.car_id)}
+                      >
+                        Sửa
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => deleteCar(car.car_id)} // Gọi hàm xóa
+                        disabled={!isAdmin} // Vô hiệu hóa nút xóa nếu không phải admin
+                      >
+                        Xóa
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div className="pt-3 d-flex justify-content-center "></div>
-    </section>
+        <div className="pt-3 d-flex justify-content-center "></div>
+      </section>
+    </div>
   );
 };
 

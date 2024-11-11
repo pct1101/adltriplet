@@ -391,7 +391,47 @@ span.tag-item.non-mortgage {
 .card-price {
   padding-right: 10px;
 }
-
+.desc-info-price{
+  display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.desc-info-price .info {
+  display: flex;
+  align-items: center;
+  color: #767676;
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 16px;
+}
+.desc-info-price .wrap-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  grid-gap: 2px;
+  gap: 2px;
+}
+.desc-info-price .wrap-price .price {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  font-size: .75rem;
+  color: #767676;
+  font-weight: 500;
+  line-height: 16px;
+}
+.desc-info-price .wrap-price .price-origin {
+  font-size: .75rem;
+  font-weight: 500;
+  text-decoration: line-through;
+  color: #c6c6c6;
+}
+.desc-info-price .wrap-price .price-special {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 4px;
+  color: #5fcf86;
+}
 /* detail product */
 .container .product-detail{
 width: 100%;
@@ -446,6 +486,44 @@ top: 140px;
 .group-left{
   width: calc(68% - 16px);  
 }
+.group-name{
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  grid-gap: 8px;
+  gap: 8px;
+}
+.d-flex-center-btw {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.group-name .shared {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+  gap: 16px;
+}
+ .group-name .shared .wrap-ic {
+  padding: 12px;
+  border-radius: 100%;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+.group-name .shared .wrap-ic:hover {
+  background-color: #effaf3;
+  border: 1px solid #5fcf86;
+  
+}
+.group-name .shared .wrap-ic svg path {
+  transition: stroke 0.3s ease; /* Hiệu ứng chậm cho stroke */
+}
+.group-name .shared .wrap-ic:hover svg path {
+  stroke: #5fcf86 !important;
+
+}
+
 .group-total{
   display: flex;
   align-items: center;

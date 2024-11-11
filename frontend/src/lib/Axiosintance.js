@@ -732,11 +732,14 @@ export const getAllFavorites = async () => {
 // Xóa yêu thích theo ID
 export const deleteFavoriteById = async (favoriteId, apiToken) => {
   try {
-    const response = await axios.delete(`${API_URL}/admin/favorite/${favoriteId}`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
+    const response = await axios.delete(
+      `${API_URL}/admin/favorite/${favoriteId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error(`Lỗi khi xóa yêu thích với ID ${favoriteId}:`, error);
@@ -760,7 +763,10 @@ export const addFavorite = async (userId, carId) => {
     );
     return response.data;
   } catch (error) {
-    console.error(`Lỗi khi thêm yêu thích cho userId ${userId} và carId ${carId}:`, error);
+    console.error(
+      `Lỗi khi thêm yêu thích cho userId ${userId} và carId ${carId}:`,
+      error
+    );
     throw error;
   }
 };
@@ -770,14 +776,21 @@ export const updateFavorite = async (userId, carId, favoriteData) => {
   const apiToken = localStorage.getItem("authToken");
 
   try {
-    const response = await axios.put(`${API_URL}/admin/favorite/${userId}/${carId}`, favoriteData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
+    const response = await axios.put(
+      `${API_URL}/admin/favorite/${userId}/${carId}`,
+      favoriteData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
-    console.error(`Lỗi khi cập nhật yêu thích cho userId ${userId} và carId ${carId}:`, error);
+    console.error(
+      `Lỗi khi cập nhật yêu thích cho userId ${userId} và carId ${carId}:`,
+      error
+    );
     throw error;
   }
 };
@@ -786,11 +799,14 @@ export const updateFavorite = async (userId, carId, favoriteData) => {
 export const getFavoriteDetails = async (userId, carId) => {
   const apiToken = localStorage.getItem("authToken");
   try {
-    const response = await axios.get(`${API_URL}/admin/favorite/${userId}/${carId}`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
+    const response = await axios.get(
+      `${API_URL}/admin/favorite/${userId}/${carId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
     return response.data.favorite; // Trả về dữ liệu favorite
   } catch (error) {
     console.error("Lỗi khi lấy chi tiết favorite:", error);
@@ -798,3 +814,25 @@ export const getFavoriteDetails = async (userId, carId) => {
   }
 };
 
+
+// user_favorite
+export const getFavoriteUser = async () => {
+  const apiToken = localStorage.getItem("remember_token");
+  console.log(apiToken);
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/favorite`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách yêu thích:", error);
+    throw error;
+  }
+};

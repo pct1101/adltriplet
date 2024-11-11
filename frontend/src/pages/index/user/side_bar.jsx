@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "../../../css/user.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../pages/admin/Private/Auth";
+import { useAuth } from "../../Private/Auth";
 function Side_bar() {
   const [activeMenu, setActiveMenu] = useState("user");
 

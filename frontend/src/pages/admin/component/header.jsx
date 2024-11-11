@@ -4,7 +4,7 @@ import "../../../css/admin/css/main.css";
 import "../../../css/admin/css/fullcalendar.css";
 import "../../../css/admin/css/lineicons.css";
 import "../../../css/admin/css/materialdesignicons.min.css";
-import { useAuth } from "../../../pages/admin/Private/Auth";
+import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
 
 function Header() {

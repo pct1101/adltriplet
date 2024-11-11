@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
-
+import ModalPopup from "../event/popup";
 // import data cho form booking
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,8 +12,15 @@ import { getCarDetails } from "../../../lib/Axiosintance";
 import LocationDropdown from "./district_province";
 // api post booking
 import { addBookingUser } from "../../../lib/Axiosintance";
-
+import { useAuth } from "../../Private/Auth";
+import { useNavigate } from "react-router-dom";
 function Booking() {
+  const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
+  const [modalMessage, setModalMessage] = useState(""); // Lưu trữ thông điệp modal
+  const [modalType, setModalType] = useState("");
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
   //    set time for days and time
   const formattedToday = dayjs();
   //    set value for booking
@@ -30,13 +37,16 @@ function Booking() {
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), // Thời gian nhận xe mặc định là sau 1 giờ
   });
   const { id: carId } = useParams();
-  console.log(carId);
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const formattedStartDate = startDate.toISOString().split("T")[0]; // YYYY-MM-DD
   const formattedEndDate = endDate.toISOString().split("T")[0]; // YYYY-MM-DD
   const handleBookingSubmit = async () => {
     const apiToken = localStorage.getItem("remember_token");
-    console.log(apiToken);
-
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     if (!apiToken || apiToken.trim() === "") {
       console.error("Token không hợp lệ hoặc hết hạn.");
       // Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
@@ -49,17 +59,26 @@ function Booking() {
       rental_price: total_cost,
       booking_date: new Date().toISOString(),
     };
-    console.log(bookingData);
 
     try {
       // Gọi hàm addBooking để thực hiện API call
       const response = await addBookingUser(bookingData, apiToken);
       console.log("Booking thành công:", response);
+      // Kiểm tra nếu response.success là true thì là thành công
+
+      setModalMessage(response?.data?.message || "Bạn đã booking thành công"); // Thông báo thành công
+      setModalType("success"); // Loại thông báo thành công
+
+      setOpenModal(true); // Mở modal sau khi nhận kết quả API
     } catch (error) {
-      console.error("Lỗi khi đặt xe:", error);
+      console.error("Có lỗi khi đặt xe:", error);
+
+      // Lấy thông báo lỗi từ error (có thể từ error.response hoặc error.message)
+      setModalMessage(error.response?.data?.message);
+      setModalType("error"); // Loại thông báo lỗi
+      setOpenModal(true); // Mở modal khi có lỗi
     }
   };
-
   // Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
     // open dropdown or none
@@ -449,6 +468,13 @@ function Booking() {
           </div>
         </div>
       )}
+      {/* Hiển thị ModalPopup khi openModal là true */}
+      <ModalPopup
+        open={openModal}
+        handleClose={handleCloseModal}
+        message={modalMessage}
+        type={modalType}
+      />
     </div>
   );
 }

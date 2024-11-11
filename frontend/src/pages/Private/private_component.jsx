@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../../pages/admin/Private/Auth";
+import { useAuth } from "./Auth";
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();

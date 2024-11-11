@@ -58,14 +58,14 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src="../img/anh1-x1.jpg"
+                src={`/img/${car.car_image}`}
               />
             </div>
             <div className="right">
               {/* Hiển thị các ảnh con */}
               {carImages.map((image, index) => (
                 <div className="right-item-car">
-                  <img className="scale-img" src="../img/anh1-x1.jpg" />
+                  <img className="scale-img" src={`/img/${car.car_image}`} />
                 </div>
               ))}
             </div>

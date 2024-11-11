@@ -391,7 +391,47 @@ span.tag-item.non-mortgage {
 .card-price {
   padding-right: 10px;
 }
-
+.desc-info-price{
+  display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.desc-info-price .info {
+  display: flex;
+  align-items: center;
+  color: #767676;
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 16px;
+}
+.desc-info-price .wrap-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  grid-gap: 2px;
+  gap: 2px;
+}
+.desc-info-price .wrap-price .price {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  font-size: .75rem;
+  color: #767676;
+  font-weight: 500;
+  line-height: 16px;
+}
+.desc-info-price .wrap-price .price-origin {
+  font-size: .75rem;
+  font-weight: 500;
+  text-decoration: line-through;
+  color: #c6c6c6;
+}
+.desc-info-price .wrap-price .price-special {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 4px;
+  color: #5fcf86;
+}
 /* detail product */
 .container .product-detail{
 width: 100%;

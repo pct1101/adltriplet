@@ -54,7 +54,7 @@ function AdminFeedbacks () {
     };
 
     const editFeedback = (FeedbackId) => {
-        navigate(`/admin/EditFeedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
+        navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
     };
 
 
@@ -65,6 +65,8 @@ function AdminFeedbacks () {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Id xe</th>
+                        <th>Id người dùng</th>
                         <th>Nội dung phản hồi</th>
                         <th>Đánh giá</th>
                         <th>Ngày phản hồi</th>
@@ -78,6 +80,8 @@ function AdminFeedbacks () {
                         feedbacks.map(feedback => (
                             <tr key={feedback.id}>
                                 <td>{feedback.id}</td>
+                                <td>{feedback.car_id}</td>
+                                <td>{feedback.user_id}</td>
                                 <td>{feedback.content}</td>
                                 <td>{feedback.rating}</td>
                                 <td>{feedback.feedback_date}</td>

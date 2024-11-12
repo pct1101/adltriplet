@@ -835,3 +835,60 @@ export const getFavoriteUser = async () => {
     throw error;
   }
 };
+
+export const addToFavorites = async (carId) => {
+  const apiToken = localStorage.getItem("remember_token");
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gọi API với ID xe để thêm vào yêu thích
+    const response = await axios.post(
+      `${API_URL}/favorite/${carId}`, // Đảm bảo sử dụng đường dẫn đúng
+      {}, // Dữ liệu trống vì chúng ta chỉ truyền ID xe qua URL
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Thêm token vào header
+        },
+      }
+    );
+    return response.data; // Trả về dữ liệu từ API
+  } catch (error) {
+    console.error("Lỗi khi thêm vào danh sách yêu thích:", error);
+    throw error;
+  }
+};
+
+export const getFeedbackByCarId = async (carId) => {
+  const apiToken = localStorage.getItem("remember_token");
+  
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gọi API để lấy danh sách feedback của xe với carId
+    const response = await axios.get(
+      `${API_URL}/feedback/car/${carId}`, // Đảm bảo đường dẫn API chính xác
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Thêm token vào header
+        },
+      }
+    );
+
+    // Kiểm tra nếu dữ liệu trả về là một mảng hợp lệ
+    if (Array.isArray(response.data)) {
+      return response.data; // Trả về danh sách feedback
+    } else {
+      console.error("Dữ liệu trả về không phải là mảng.");
+      return []; // Trả về mảng rỗng nếu dữ liệu không hợp lệ
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách feedback:", error);
+    throw new Error("Không thể lấy feedback từ API.");
+  }
+};

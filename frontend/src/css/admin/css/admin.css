@@ -65,3 +65,19 @@
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.short-info-column {
+  width: 450px;
+  /* Bạn có thể thay đổi số này theo ý muốn */
+  white-space: nowrap;
+  /* Đảm bảo không xuống dòng trong cột */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Thêm dấu ba chấm nếu nội dung quá dài */
+}
+
+.short-info-column2 {
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

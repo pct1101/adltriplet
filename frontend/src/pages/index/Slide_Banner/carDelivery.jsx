@@ -62,13 +62,9 @@ function CarDelivery() {
             loop={true}
           >
             {slide.map((slideBanner, index) => (
-              <SwiperSlide
-                className="airports-slide"
-                key={slideBanner}
-                virtualIndex={index}
-              >
+              <SwiperSlide key={slideBanner} virtualIndex={index}>
                 <div className="airports-item">
-                  <div className="fix-img">
+                  <div className="fix-img2">
                     <img variant="" src={slideBanner} />
                   </div>
                   <p>Vịnh Hạ Long</p>

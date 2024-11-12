@@ -2,15 +2,15 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import ModalPopup from "../event/popup";
-// import data cho form booking
+// note:import data cho form booking
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-// api car
+// note: api car
 import { getCarDetails } from "../../../lib/Axiosintance";
 import LocationDropdown from "./district_province";
-// api post booking
+// note: api post booking
 import { addBookingUser } from "../../../lib/Axiosintance";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
@@ -21,26 +21,26 @@ function Booking() {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
-  //    set time for days and time
+  //note:    set time for days and time
   const formattedToday = dayjs();
-  //    set value for booking
+  //note:    set value for booking
   const [bookings, setBookings] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  //    set state for startday and enday
+  //note:    set state for startday and enday
   const [startDate, setStartDate] = useState(formattedToday);
   const [endDate, setEndDate] = useState(formattedToday.add(1, "day"));
-  //   set value for dropdown and time
+  // note:  set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
-  //   set realtime
+  //note:   set realtime
   const [selectedTimes, setSelectedTimes] = useState({
-    traXe: dayjs().add(4, "hour").format("HH:mm"), // Thời gian trả xe mặc định là sau 4 giờ
-    nhanXe: dayjs().add(1, "hour").format("HH:mm"), // Thời gian nhận xe mặc định là sau 1 giờ
+    traXe: dayjs().add(4, "hour").format("HH:mm"), //note: Thời gian trả xe mặc định là sau 4 giờ
+    nhanXe: dayjs().add(1, "hour").format("HH:mm"), //note: Thời gian nhận xe mặc định là sau 1 giờ
   });
   const { id: carId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const formattedStartDate = startDate.toISOString().split("T")[0]; // YYYY-MM-DD
-  const formattedEndDate = endDate.toISOString().split("T")[0]; // YYYY-MM-DD
+  const formattedStartDate = startDate.toISOString().split("T")[0]; // note:YYYY-MM-DD
+  const formattedEndDate = endDate.toISOString().split("T")[0]; //note: YYYY-MM-DD
   const handleBookingSubmit = async () => {
     const apiToken = localStorage.getItem("remember_token");
     if (!user) {
@@ -49,11 +49,11 @@ function Booking() {
     }
     if (!apiToken || apiToken.trim() === "") {
       console.error("Token không hợp lệ hoặc hết hạn.");
-      // Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
+      //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
       return;
     }
     const bookingData = {
-      car_id: carId, // Lấy car_id từ URL
+      car_id: carId,
       start_date: formattedStartDate,
       end_date: formattedEndDate,
       rental_price: total_cost,
@@ -61,34 +61,34 @@ function Booking() {
     };
 
     try {
-      // Gọi hàm addBooking để thực hiện API call
+      //note: Gọi hàm addBooking để thực hiện API call
       const response = await addBookingUser(bookingData, apiToken);
       console.log("Booking thành công:", response);
-      // Kiểm tra nếu response.success là true thì là thành công
+      //note: Kiểm tra nếu response.success là true thì là thành công
 
-      setModalMessage(response?.data?.message || "Bạn đã booking thành công"); // Thông báo thành công
-      setModalType("success"); // Loại thông báo thành công
+      setModalMessage(response?.data?.message || "Bạn đã booking thành công"); //note: Thông báo thành công
+      setModalType("success"); // note:Loại thông báo thành công
 
-      setOpenModal(true); // Mở modal sau khi nhận kết quả API
+      setOpenModal(true); //note: Mở modal sau khi nhận kết quả API
     } catch (error) {
       console.error("Có lỗi khi đặt xe:", error);
 
-      // Lấy thông báo lỗi từ error (có thể từ error.response hoặc error.message)
+      //note: Lấy thông báo lỗi từ error (có thể từ error.response hoặc error.message)
       setModalMessage(error.response?.data?.message);
-      setModalType("error"); // Loại thông báo lỗi
-      setOpenModal(true); // Mở modal khi có lỗi
+      setModalType("error"); //note: Loại thông báo lỗi
+      setOpenModal(true); // note:Mở modal khi có lỗi
     }
   };
-  // Toggle none/block dropdown
+  // note:Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
-    // open dropdown or none
+    //note: open dropdown or none
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
-  // set time
+  //note:set time
   const generateTimeOptions = (startHour, startMinute) => {
     const times = [];
     let hour = startHour;
-    let minute = startMinute >= 30 ? 30 : 0; // Bắt đầu từ mốc 00 hoặc 30 phút của giờ hiện tại
+    let minute = startMinute >= 30 ? 30 : 0; //note: Bắt đầu từ mốc 00 hoặc 30 phút của giờ hiện tại
 
     while (hour < 24) {
       times.push(
@@ -105,7 +105,7 @@ function Booking() {
     return times;
   };
 
-  //   xử lý realtime nhanXe
+  // note:  xử lý realtime nhanXe
   const currentTime = dayjs();
   const nhanXeOptions = generateTimeOptions(
     currentTime.hour(),
@@ -118,13 +118,13 @@ function Booking() {
     )
   );
 
-  //   xử lý khi nhấn vào time
+  // note:  xử lý khi nhấn vào time
   const handleTimeSelect = (dropdown, time) => {
     if (dropdown === "nhanXe") {
       setSelectedTimes((prev) => ({
         ...prev,
         nhanXe: time,
-        traXe: dayjs(time, "HH:mm").add(4, "hour").format("HH:mm"), // Cập nhật giờ trả xe tối thiểu
+        traXe: dayjs(time, "HH:mm").add(4, "hour").format("HH:mm"), // note:Cập nhật giờ trả xe tối thiểu
       }));
     } else {
       setSelectedTimes((prev) => ({
@@ -132,17 +132,17 @@ function Booking() {
         traXe: time,
       }));
     }
-    setOpenDropdown(null); // Đóng dropdown sau khi chọn
+    setOpenDropdown(null); // note:Đóng dropdown sau khi chọn
   };
   //   set id
   const { id } = useParams();
-  //   Gọi API để lấy thông tin chi tiết xe
+  // note:  Gọi API để lấy thông tin chi tiết xe
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
         console.log(response.data.car);
-        setBookings(response.data.car); // Cập nhật để lấy dữ liệu của thuộc tính car
+        setBookings(response.data.car); // note:Cập nhật để lấy dữ liệu của thuộc tính car
       } catch (error) {
         console.error("Error fetching car details", error);
       }
@@ -150,25 +150,25 @@ function Booking() {
     fetchCarDetails();
   }, [id]);
 
-  //    format days
+  // note:   format days
   const formatDate = (date) => {
-    const validDate = dayjs(date); // chuyển date thành đối tượng dayjs
+    const validDate = dayjs(date); //note: chuyển date thành đối tượng dayjs
 
-    // Kiểm tra xem đối tượng dayjs có hợp lệ không
+    //note: Kiểm tra xem đối tượng dayjs có hợp lệ không
     if (validDate.isValid()) {
-      return validDate.format("DD/MM/YYYY"); // nếu hợp lệ, định dạng theo dạng DD/MM/YYYY
+      return validDate.format("DD/MM/YYYY"); //note: nếu hợp lệ, định dạng theo dạng DD/MM/YYYY
     }
 
-    return "Ngày không hợp lệ"; // nếu không hợp lệ, trả về thông báo lỗi
+    return "Ngày không hợp lệ"; // note:nếu không hợp lệ, trả về thông báo lỗi
   };
-  //   show data
+  // note:  show data
   const handleToggleDatePicker = (event) => {
     setShowDatePicker(!showDatePicker);
 
-    // Lấy giá trị từ input và chuyển đổi thành dayjs
-    const newStartDate = dayjs(event.target.value); // Chuyển chuỗi thành dayjs
+    //note: Lấy giá trị từ input và chuyển đổi thành dayjs
+    const newStartDate = dayjs(event.target.value); //note: Chuyển chuỗi thành dayjs
 
-    // Kiểm tra nếu ngày bắt đầu hợp lệ
+    //note: Kiểm tra nếu ngày bắt đầu hợp lệ
     if (!newStartDate.isValid()) {
       console.error("Invalid start date");
       return;
@@ -176,17 +176,17 @@ function Booking() {
     setStartDate(newStartDate);
     const nextDay = newStartDate.add(1, "day");
 
-    // Cập nhật ngày kết thúc
+    //note: Cập nhật ngày kết thúc
     setEndDate(nextDay);
   };
-  //  tính toán các thứ
-  //  all days user book
+  // note: tính toán các thứ
+  //note:  all days user book
 
   const calculateTotalDays = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const differenceInTime = end - start;
-    const totalDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); // Số ngày giữa hai ngày
+    const totalDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); //note: Số ngày giữa hai ngày
     return totalDays > 0 ? totalDays : 0;
   };
 
@@ -212,7 +212,7 @@ function Booking() {
 
   return (
     <div>
-      <div className="price">
+      <div className="price-booking">
         <div className="price-discount">
           <p className="origin">
             <span>{bookings?.rental_price}</span>

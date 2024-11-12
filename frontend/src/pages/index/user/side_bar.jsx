@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../../../css/user.css";
+import "../../../css/user/user.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Private/Auth";
 function Side_bar() {
@@ -9,12 +9,12 @@ function Side_bar() {
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
   };
-  const { logout } = useAuth(); // Lấy hàm logout từ context
+  const { logout } = useAuth(); 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout(); // Gọi hàm logout
-    navigate("/login"); // Điều hướng người dùng về trang đăng nhập
+    logout(); 
+    navigate("/login");
   };
 
   return (

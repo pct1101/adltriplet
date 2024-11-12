@@ -68,11 +68,7 @@ function Header() {
                 Tin tức{" "}
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#">
-                Dịch Vụ
-              </a>
-            </li>
+
             <li className="nav-item">
               <a className="nav-link" href="#">
                 Liên Hệ

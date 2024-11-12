@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Side_bar from "./side_bar";
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import "../../../css/user.css";
+import "../../../css/user/user.css";
 import { getFavoriteUser } from "../../../lib/Axiosintance";
 
 function User_favorite() {
@@ -77,11 +77,13 @@ function User_favorite() {
                             Số tự động
                           </span>
                           <span className="tag-item transmission">
-                             {car.car ? car.car.seats : "Không có tên xe"} chỗ
+                            {car.car ? car.car.seats : "Không có tên xe"} chỗ
                           </span>
                         </div>
                         <div className="desc-name">
-                          <p>{car.car ? car.car.car_name : "Không có tên xe"}</p>
+                          <p>
+                            {car.car ? car.car.car_name : "Không có tên xe"}
+                          </p>
                         </div>
                         <div className="desc-info">
                           <div className="wrap-svg">
@@ -141,7 +143,9 @@ function User_favorite() {
                           </div>
                           <span className="info">20 chuyến </span>
                         </div>
-                          <span className="info">Quận 12, Thành phố Hồ Chí Minh</span>
+                        <span className="info">
+                          Quận 12, Thành phố Hồ Chí Minh
+                        </span>
                       </div>
                     </div>
                   ))}

@@ -271,9 +271,13 @@ border-radius: 15px;
   font-size: .875rem;
   font-weight: 700;
   color: #767676;
+  margin: 0;
 }
 
-
+.css-1umw9bq-MuiSvgIcon-root{
+  position: relative;
+  left: 150px;
+}
 
 
 .custom-input .wrap-input.disabled {

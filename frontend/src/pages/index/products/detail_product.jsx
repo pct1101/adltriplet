@@ -5,31 +5,41 @@ import Header from "../header/header";
 import Footer from "../footer/footer";
 import Differen_Car from "../Slide_Banner/differen_Car";
 // import api car
-import { getCarDetails, getCarImagesByCarId } from "../../../lib/Axiosintance";
+import { getCarDetails, getCarImagesByCarId, addToFavorites, getFeedbackByCarId } from "../../../lib/Axiosintance";
 // import css
 import "../../../css/index/popup_product.css";
 import "../../../css/index/home.css";
-
 import Booking from "../booking/booking";
 
 const Detail_product = () => {
   const { id } = useParams();
   const [car, setCar] = useState(null);
   const [carImages, setCarImages] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]); // Khởi tạo mảng trống thay vì null
 
-  // Gọi API để lấy thông tin chi tiết xe
+  // Gọi API để lấy thông tin chi tiết xe và feedbacks
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
-        console.log(response.data.car);
-        setCar(response.data.car); // Cập nhật để lấy dữ liệu của thuộc tính car
-        const imageResponse = await getCarImagesByCarId(
-          response.data.car.car_id
-        ); // Cập nhật để lấy car_id từ response.data.car
-        setCarImages(imageResponse.data); // Lưu trữ hình ảnh con vào state
+        console.log("Car details response:", response.data.car); // Kiểm tra phản hồi từ API
+        setCar(response.data.car);
+
+        const imageResponse = await getCarImagesByCarId(response.data.car.car_id);
+        setCarImages(imageResponse.data);
+
+        // Lấy feedback trực tiếp từ response.data.car.feedback
+        const feedbackData = response.data.car.feedback;
+        console.log("Feedback data:", feedbackData); // Kiểm tra dữ liệu phản hồi
+
+        if (feedbackData && feedbackData.length > 0) {
+          setFeedbacks(feedbackData); // Đặt feedbacks với dữ liệu đúng
+        } else {
+          console.log("No feedbacks found");
+          setFeedbacks([]); // Nếu không có phản hồi, đặt là mảng rỗng
+        }
       } catch (error) {
-        console.error("Error fetching car details", error);
+        console.error("Error fetching car details or feedbacks", error);
       }
     };
     fetchCarDetails();
@@ -38,13 +48,24 @@ const Detail_product = () => {
   if (!car) {
     return <div>Loading...</div>;
   }
+
   const formatPrice = (price) => {
-    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
     if (price >= 1000) {
       return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
     }
-    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+    return `${price.toLocaleString("vi-VN")} VND/ngày`;
   };
+
+  const handleAddToFavorites = async () => {
+    try {
+      await addToFavorites(car.car_id); // Gọi API thêm yêu thích
+      alert("Đã thêm yêu thích thành công!");
+    } catch (error) {
+      console.error("Error adding to favorites", error);
+      alert("Có lỗi xảy ra khi thêm vào danh sách yêu thích.");
+    }
+  };
+
 
   return (
     <div>
@@ -65,7 +86,11 @@ const Detail_product = () => {
               {/* Hiển thị các ảnh con */}
               {carImages.map((image, index) => (
                 <div className="right-item-car">
-                  <img className="scale-img" src={`/img/${car.car_image}`} />
+                  <img
+                    src={`../img/${car.images[0].carImage_url}`} // Hiển thị ảnh con đầu tiên
+                    className="card-img-top"
+                    alt={car.car_name}
+                  />
                 </div>
               ))}
             </div>
@@ -122,7 +147,7 @@ const Detail_product = () => {
                       ></path>
                     </svg>
                   </div>
-                  <div className="fav-item wrap-ic wrap-svg">
+                  <div className="fav-item wrap-ic wrap-svg" onClick={handleAddToFavorites}>
                     <svg
                       width="24"
                       height="24"
@@ -502,232 +527,242 @@ const Detail_product = () => {
                     </div>
                   </div>
 
+                  {/* BÌNH LUẬN */}
                   <div className="list-reviews">
-                    <div className="item-review">
+                  {feedbacks && feedbacks.length > 0 ? (
+                    feedbacks.map((feedback, index) => (
+                      <div className="item-review" key={index}>                   
                       <div className="profile">
-                        <div className="desc">
-                          <a href="#" className="avatar avatar--m">
-                            <img src="/upload/avatar-4.png" alt="" />
-                          </a>
-                          <div className="info">
-                            <a href="#" className="name-review">
-                              <h6>Hồ Ngọc Thịnh</h6>
+                          <div className="desc">
+                            <a href="#" className="avatar avatar--m">
+                              <img src="/upload/avatar-4.png" alt="" />
                             </a>
-                            <div className="rate">
-                              <div
-                                className="star-ratings"
-                                title="5 Stars"
-                                style={{
-                                  position: "relative",
-                                  boxSizing: "border-box",
-                                  display: "inline-block",
-                                }}
-                              >
-                                <svg
-                                  className="star-grad"
+                            <div className="info">
+                              <a href="#" className="name-review">
+                                <h6> ID người dùng : {feedback.user_id} </h6>
+                              </a>
+                              <div className="rate">
+                                <div
+                                  className="star-ratings"
+                                  
+                                  title="5 Stars"
                                   style={{
-                                    position: "absolute",
-                                    zIndex: "0",
-                                    width: "0px",
-                                    height: " 0px",
-                                    visibility: "hidden",
+                                    position: "relative",
+                                    boxSizing: "border-box",
+                                    display: "inline-block",
                                   }}
                                 >
-                                  <defs>
-                                    <linearGradient
-                                      id="starGrad720871329940590"
-                                      x1="0%"
-                                      y1="0%"
-                                      x2="100%"
-                                      y2="0%"
-                                    >
-                                      <stop
-                                        offset="0%"
-                                        className="stop-color-first"
-                                        style={{
-                                          stopColor: "rgb(255, 198, 52)",
-                                          stopOpacity: "1",
-                                        }}
-                                      ></stop>
-                                      <stop
-                                        offset="0%"
-                                        className="stop-color-first"
-                                        style={{
-                                          stopColor: "rgb(255, 198, 52)",
-                                          stopOpacity: "1",
-                                        }}
-                                      ></stop>
-                                      <stop
-                                        offset="0%"
-                                        className="stop-color-final"
-                                        style={{
-                                          stopColor: "rgb(255, 198, 52)",
-                                          stopOpacity: "1",
-                                        }}
-                                      ></stop>
-                                      <stop
-                                        offset="100%"
-                                        className="stop-color-final"
-                                        style={{
-                                          stopColor: "rgb(255, 198, 52)",
-                                          stopOpacity: "1",
-                                        }}
-                                      ></stop>
-                                    </linearGradient>
-                                  </defs>
-                                </svg>
+                                  <h6> </h6>
+                                  <svg
+                                    className="star-grad"
+                                    style={{
+                                      position: "absolute",
+                                      zIndex: "0",
+                                      width: "0px",
+                                      height: " 0px",
+                                      visibility: "hidden",
+                                    }}
+                                  >
+                                    <defs>
+                                      <linearGradient
+                                        id="starGrad720871329940590"
+                                        x1="0%"
+                                        y1="0%"
+                                        x2="100%"
+                                        y2="0%"
+                                      >
+                                        <stop
+                                          offset="0%"
+                                          className="stop-color-first"
+                                          style={{
+                                            stopColor: "rgb(255, 198, 52)",
+                                            stopOpacity: "1",
+                                          }}
+                                        ></stop>
+                                        <stop
+                                          offset="0%"
+                                          className="stop-color-first"
+                                          style={{
+                                            stopColor: "rgb(255, 198, 52)",
+                                            stopOpacity: "1",
+                                          }}
+                                        ></stop>
+                                        <stop
+                                          offset="0%"
+                                          className="stop-color-final"
+                                          style={{
+                                            stopColor: "rgb(255, 198, 52)",
+                                            stopOpacity: "1",
+                                          }}
+                                        ></stop>
+                                        <stop
+                                          offset="100%"
+                                          className="stop-color-final"
+                                          style={{
+                                            stopColor: "rgb(255, 198, 52)",
+                                            stopOpacity: "1",
+                                          }}
+                                        ></stop>
+                                      </linearGradient>
+                                    </defs>
+                                  </svg>
 
-                                <div
-                                  className="star-container"
-                                  style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    verticalAlign: "middle",
-                                    paddingRight: "1px",
-                                  }}
-                                >
-                                  <svg
-                                    viewBox="0 0 51 48"
-                                    className="widget-svg"
+                                  <div
+                                    className="star-container"
                                     style={{
-                                      width: "17px",
-                                      height: "17px",
-                                      transition: "transform 0.2s ease-in-out",
+                                      position: "relative",
+                                      display: "inline-block",
+                                      verticalAlign: "middle",
+                                      paddingRight: "1px",
                                     }}
                                   >
-                                    <path
-                                      className="star"
-                                      d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                    <svg
+                                      viewBox="0 0 51 48"
+                                      className="widget-svg"
                                       style={{
-                                        fill: "rgb(255, 198, 52)",
-                                        transition: "fill 0.2s ease-in-out",
+                                        width: "17px",
+                                        height: "17px",
+                                        transition: "transform 0.2s ease-in-out",
                                       }}
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div
-                                  className="star-container"
-                                  style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    verticalAlign: "middle",
-                                    paddingRight: "1px",
-                                  }}
-                                >
-                                  <svg
-                                    viewBox="0 0 51 48"
-                                    className="widget-svg"
+                                    >
+                                      <path
+                                        className="star"
+                                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                        style={{
+                                          fill: "rgb(255, 198, 52)",
+                                          transition: "fill 0.2s ease-in-out",
+                                        }}
+                                      ></path>
+                                    </svg>
+                                  </div>
+                                  <div
+                                    className="star-container"
                                     style={{
-                                      width: "17px",
-                                      height: "17px",
-                                      transition: "transform 0.2s ease-in-out",
+                                      position: "relative",
+                                      display: "inline-block",
+                                      verticalAlign: "middle",
+                                      paddingRight: "1px",
                                     }}
                                   >
-                                    <path
-                                      className="star"
-                                      d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                    <svg
+                                      viewBox="0 0 51 48"
+                                      className="widget-svg"
                                       style={{
-                                        fill: "rgb(255, 198, 52)",
-                                        transition: "fill 0.2s ease-in-out",
+                                        width: "17px",
+                                        height: "17px",
+                                        transition: "transform 0.2s ease-in-out",
                                       }}
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div
-                                  className="star-container"
-                                  style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    verticalAlign: "middle",
-                                    paddingRight: "1px",
-                                  }}
-                                >
-                                  <svg
-                                    viewBox="0 0 51 48"
-                                    className="widget-svg"
+                                    >
+                                      <path
+                                        className="star"
+                                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                        style={{
+                                          fill: "rgb(255, 198, 52)",
+                                          transition: "fill 0.2s ease-in-out",
+                                        }}
+                                      ></path>
+                                    </svg>
+                                  </div>
+                                  <div
+                                    className="star-container"
                                     style={{
-                                      width: "17px",
-                                      height: "17px",
-                                      transition: "transform 0.2s ease-in-out",
+                                      position: "relative",
+                                      display: "inline-block",
+                                      verticalAlign: "middle",
+                                      paddingRight: "1px",
                                     }}
                                   >
-                                    <path
-                                      className="star"
-                                      d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                    <svg
+                                      viewBox="0 0 51 48"
+                                      className="widget-svg"
                                       style={{
-                                        fill: "rgb(255, 198, 52)",
-                                        transition: "fill 0.2s ease-in-out",
+                                        width: "17px",
+                                        height: "17px",
+                                        transition: "transform 0.2s ease-in-out",
                                       }}
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div
-                                  className="star-container"
-                                  style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    verticalAlign: "middle",
-                                    paddingRight: "1px",
-                                  }}
-                                >
-                                  <svg
-                                    viewBox="0 0 51 48"
-                                    className="widget-svg"
+                                    >
+                                      <path
+                                        className="star"
+                                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                        style={{
+                                          fill: "rgb(255, 198, 52)",
+                                          transition: "fill 0.2s ease-in-out",
+                                        }}
+                                      ></path>
+                                    </svg>
+                                  </div>
+                                  <div
+                                    className="star-container"
                                     style={{
-                                      width: "17px",
-                                      height: "17px",
-                                      transition: "transform 0.2s ease-in-out",
+                                      position: "relative",
+                                      display: "inline-block",
+                                      verticalAlign: "middle",
+                                      paddingRight: "1px",
                                     }}
                                   >
-                                    <path
-                                      className="star"
-                                      d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                    <svg
+                                      viewBox="0 0 51 48"
+                                      className="widget-svg"
                                       style={{
-                                        fill: "rgb(255, 198, 52)",
-                                        transition: "fill 0.2s ease-in-out",
+                                        width: "17px",
+                                        height: "17px",
+                                        transition: "transform 0.2s ease-in-out",
                                       }}
-                                    ></path>
-                                  </svg>
-                                </div>
-                                <div
-                                  className="star-container"
-                                  style={{
-                                    position: "relative",
-                                    display: "inline-block",
-                                    verticalAlign: "middle",
-                                    paddingRight: "1px",
-                                  }}
-                                >
-                                  <svg
-                                    viewBox="0 0 51 48"
-                                    className="widget-svg"
+                                    >
+                                      <path
+                                        className="star"
+                                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                        style={{
+                                          fill: "rgb(255, 198, 52)",
+                                          transition: "fill 0.2s ease-in-out",
+                                        }}
+                                      ></path>
+                                    </svg>
+                                  </div>
+                                  <div
+                                    className="star-container"
                                     style={{
-                                      width: "17px",
-                                      height: "17px",
-                                      transition: "transform 0.2s ease-in-out",
+                                      position: "relative",
+                                      display: "inline-block",
+                                      verticalAlign: "middle",
+                                      paddingRight: "1px",
                                     }}
                                   >
-                                    <path
-                                      className="star"
-                                      d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                    <svg
+                                      viewBox="0 0 51 48"
+                                      className="widget-svg"
                                       style={{
-                                        fill: "rgb(255, 198, 52)",
-                                        transition: "fill 0.2s ease-in-out",
+                                        width: "17px",
+                                        height: "17px",
+                                        transition: "transform 0.2s ease-in-out",
                                       }}
-                                    ></path>
-                                  </svg>
+                                    >
+                                      <path
+                                        className="star"
+                                        d="m25,1 6,17h18l-14,11 5,17-15-10-15,10 5-17-14-11h18z"
+                                        style={{
+                                          fill: "rgb(255, 198, 52)",
+                                          transition: "fill 0.2s ease-in-out",
+                                        }}
+                                      ></path>
+                                    </svg>
+                                  </div>
                                 </div>
+                                <p className="time">{feedback.feedback_date}</p>
                               </div>
-                              <p className="time">09/08/2024</p>
                             </div>
                           </div>
                         </div>
+                        <pre className="main-review">
+                          <span>Nội dung đánh giá : <h6><b>{feedback.content}</b></h6></span>
+                        </pre>
                       </div>
-                      <pre className="main-review">
-                        Chủ xe nhiệt tình,thoải mái. Giá xe mềm, xe chạy khá
-                        okie😊
-                      </pre>
+                      ))
+                    ) : (
+                      <p>Chưa có đánh giá nào cho xe này.</p> // Hiển thị thông báo nếu không có feedback
+                    )}
                     </div>
+                  <div>
                   </div>
                 </div>
               </div>

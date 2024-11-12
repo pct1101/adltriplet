@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers } from "../../../lib/Axiosintance"; // Import API call
+import Side_bar from "../component/side_bar";
+import Header from "../component/header";
 
 function UserList() {
   const [users, setUsers] = useState([]); // Khởi tạo `users` với mảng rỗng
@@ -67,63 +69,86 @@ function UserList() {
   }
 
   return (
-    <div className="container mt-5">
-      <h1>Quản lý người dùng</h1>
-      <button>
-        <Link className="btn btn-primary" to="/admin/AddUser">
-          Thêm người dùng
-        </Link>
-      </button>
-      <table className="table table-bordered mt-3">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Tên</th>
-            <th>Email</th>
-            <th>Số điện thoại</th>
-            <th>Vai trò</th>
-            <th>Trạng thái</th>
-            <th>Ngày tạo</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length > 0 ? (
-            users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.phone || "Không có"}</td>
-                <td>{user.role}</td>
-                <td>{user.status === 1 ? "Hoạt động" : "Bị khóa"}</td>
-                <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                <td>
-                  <button
-                    className="btn btn-warning me-2"
-                    onClick={() => editUser(user.id)}
-                  >
-                    Sửa
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => deleteUser(user.id)}
-                    disabled={!isAdmin} // Vô hiệu hóa nút xóa nếu không phải admin
-                  >
-                    Xóa
-                  </button>
+    <div>
+      <Side_bar></Side_bar>
+      <div className="main-wrapper">
+        <Header></Header>
+        <div className="d-flex">
+          <h1 className="ms-4">Quản lý người dùng</h1>
+          <button className=" btn ms-auto">
+            <Link className="btn btn-primary" to="/admin/AddUser">
+              Thêm người dùng
+            </Link>
+          </button>
+        </div>
+        <table className="table mt-3 ms-4">
+          <thead>
+            <tr>
+              <th>Thông tin</th>
+              <th>Địa chỉ</th>
+              <th>Ngày sinh</th>
+              <th>Trạng thái</th>
+              <th>Ngày đăng ký</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user.id}>
+                  <td className="short-info-column">
+                    <div className="row">
+                      <div className="col-md-3">
+                        <img src="../img/anh1-x1.jpg" className="w-100 rounded-circle" alt="" />
+                        <div className="text-center"><span class="badge text-bg-danger">{user.gender == 'female' && ('Nữ')}</span></div>
+                        <div className="text-center"><span class="badge text-bg-warning">{user.gender == 'other' && ('Khác')}</span></div>
+                        <div className="text-center"><span class="badge text-bg-primary">{user.gender == 'male' && ('Nam')}</span></div>
+                        <div className="text-center"><span class="badge text-bg-secondary">{(!user.gender || user.gender === '') && 'Chưa cập nhật'}</span></div>
+                      </div>
+                      <div className="col-md-9">
+                        {user.name} | <span className={`badge ${user.role === 'user' ? 'text-bg-warning' : 'text-bg-danger'}`}>
+                          {user.role}
+                        </span>
+                        <div className="">
+                          Mã: {user.id} | .Số điện thoại: <span className="text-primary">{user.phone || "Chưa cập nhật"}</span>
+                        </div>
+                        <div className="">
+                          Mail: <span className="text-primary">{user.email || 'Chưa cập nhật'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="short-info-column2">{user.address || "Chưa cập nhật"}</td>
+                  <td>{user.birth_date || "Chưa cập nhật"}</td>
+                  <td>{user.status === 1 ? <span class='badge text-bg-primary'>On</span> : <span class='badge text-bg-dark'>Off</span>}</td>
+                  <td>{new Date(user.created_at).toLocaleDateString()}</td>
+                  <td>
+                    <button
+                      className="btn btn-warning me-2"
+                      onClick={() => editUser(user.id)}
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => deleteUser(user.id)}
+                      disabled={!isAdmin} // Vô hiệu hóa nút xóa nếu không phải admin
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  Không có người dùng nào
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="8" className="text-center">
-                Không có người dùng nào
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -70,7 +70,7 @@ function EditBooking() {
 
   return (
     <div className="container mt-5">
-      <h1>Chỉnh sửa Booking</h1>
+      <h1 className="ms-4">Chỉnh sửa Booking</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="user_id" className="form-label">

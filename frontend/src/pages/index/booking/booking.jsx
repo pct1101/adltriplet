@@ -14,12 +14,15 @@ import LocationDropdown from "./district_province";
 import { addBookingUser } from "../../../lib/Axiosintance";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
+import Payment_booking from "./payment_booking";
+
 function Booking() {
   const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
   const [modalMessage, setModalMessage] = useState(""); // Lưu trữ thông điệp modal
   const [modalType, setModalType] = useState("");
   const handleCloseModal = () => {
     setOpenModal(false);
+    setShowDatePicker(false);
   };
   //note:    set time for days and time
   const formattedToday = dayjs();
@@ -36,6 +39,9 @@ function Booking() {
     traXe: dayjs().add(4, "hour").format("HH:mm"), //note: Thời gian trả xe mặc định là sau 4 giờ
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), //note: Thời gian nhận xe mặc định là sau 1 giờ
   });
+  // note: set open popup payment
+  const [isBookingSuccessPopupOpen, setIsBookingSuccessPopupOpen] =
+    useState(false);
   const { id: carId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -65,11 +71,9 @@ function Booking() {
       const response = await addBookingUser(bookingData, apiToken);
       console.log("Booking thành công:", response);
       //note: Kiểm tra nếu response.success là true thì là thành công
-
-      setModalMessage(response?.data?.message || "Bạn đã booking thành công"); //note: Thông báo thành công
-      setModalType("success"); // note:Loại thông báo thành công
-
-      setOpenModal(true); //note: Mở modal sau khi nhận kết quả API
+      if (response?.data?.message || "Bạn đã booking thành công") {
+        setIsBookingSuccessPopupOpen(true);
+      }
     } catch (error) {
       console.error("Có lỗi khi đặt xe:", error);
 
@@ -293,7 +297,7 @@ function Booking() {
             <span>{formatPrice2(total_cost)} / ngày</span>
           </p>
         </div>
-        <a
+        <button
           className="btn btn-primary btn--m width-100 d-flex"
           onClick={handleBookingSubmit}
         >
@@ -312,7 +316,12 @@ function Booking() {
             </svg>
           </div>
           Chọn thuê{" "}
-        </a>
+        </button>
+        {isBookingSuccessPopupOpen && (
+          <Payment_booking
+            onClose={() => setIsBookingSuccessPopupOpen(false)}
+          />
+        )}
       </div>
       {/* Popup Date Picker */}
       {showDatePicker && (
@@ -320,7 +329,10 @@ function Booking() {
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <div className="group-title d-flex">
               <h5>Thời gian</h5>
-              <button className="btn btn-close"></button>
+              <button
+                className="btn btn-close"
+                onClick={handleCloseModal}
+              ></button>
             </div>
             <div className="line-page"> </div>
             <div className="modal-calendar modal-body">
@@ -461,7 +473,12 @@ function Booking() {
                   </p>
                 </div>
                 <div className="wrap-btn">
-                  <a className="btn btn--s btn-primary">Tiếp tục</a>
+                  <a
+                    className="btn btn--s btn-primary"
+                    onClick={handleCloseModal}
+                  >
+                    Tiếp tục
+                  </a>
                 </div>
               </div>
             </div>

@@ -4,13 +4,15 @@ import { DatePicker } from "@mui/x-date-pickers-pro";
 import { LocalizationProvider } from "@mui/x-date-pickers-pro";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-
+import "../../../css/user/user.css";
 function Gplx() {
   const [licenseNumber, setLicenseNumber] = useState("");
   const [licenseName, setLicenseName] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [birthDate, setBirthDate] = useState(null);
-  // todo: tạo giá trị các hàm
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // idea: tạo giá trị các hàm
   const handleLicenseNumberChange = (e) => setLicenseNumber(e.target.value);
   const handleLicenseNameChange = (e) => setLicenseName(e.target.value);
 
@@ -18,6 +20,17 @@ function Gplx() {
     setIsEditing(!isEditing);
   };
 
+  //  idea:Hàm xử lý khi người dùng chọn ảnh
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result); // Đặt base64 vào state
+      };
+      reader.readAsDataURL(file); // Chuyển đổi file sang base64
+    }
+  };
   return (
     <div>
       {" "}
@@ -60,14 +73,33 @@ function Gplx() {
             <div className="info-license__title">
               <p>Hình ảnh</p>
             </div>
-            <label className="info-license__img  ">
+            <label className="info-license__img has-edit">
               <div className="fix-img-content">
-                <img
-                  loading="lazy"
-                  className="img-license"
-                  src="/upload/upload.png"
-                />
+                {isEditing ? (
+                  <img
+                    loading="lazy"
+                    className="img-license-edit"
+                    src={selectedImage || "/upload/upload.png"}
+                    alt="Edited Upload"
+                  />
+                ) : (
+                  <img
+                    loading="lazy"
+                    className="img-license"
+                    src="/upload/upload.png"
+                    alt="upload"
+                  />
+                )}
               </div>
+              {isEditing && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  style={{ display: "none" }}
+                  id="fileInput"
+                />
+              )}
             </label>
           </div>
           <div className="info-license">

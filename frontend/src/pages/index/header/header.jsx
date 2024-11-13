@@ -21,10 +21,6 @@ function Header() {
     fetchData();
   }, []);
 
-  // Nếu có lỗi, hiển thị lỗi
-  if (error) {
-    return <div>{error}</div>;
-  }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container header">

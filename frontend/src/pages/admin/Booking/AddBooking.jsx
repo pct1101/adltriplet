@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { addBooking } from "../../../lib/Axiosintance"; // Giả sử bạn đã có API này
+import Side_bar from "../component/side_bar";
+import Header from "../component/header";
+import Footer from "../component/footer";
 
 function AdminAddBooking() {
   const [bookingDate, setBookingDate] = useState("");
@@ -64,120 +67,125 @@ function AdminAddBooking() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>{id ? "Cập Nhật Booking" : "Thêm Booking Mới"}</h2>
-      {isAdmin ? (
-        <form onSubmit={handleAddBooking}>
-          <div className="mb-3">
-            <label className="form-label">Ngày Đặt:</label>
-            <input
-              type="date"
-              className="form-control"
-              value={bookingDate}
-              onChange={(e) => setBookingDate(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Ngày Bắt Đầu:</label>
-            <input
-              type="date"
-              className="form-control"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Ngày Kết Thúc:</label>
-            <input
-              type="date"
-              className="form-control"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Tổng Chi Phí:</label>
-            <input
-              type="number"
-              className="form-control"
-              value={totalCost}
-              onChange={(e) => setTotalCost(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Trạng Thái:</label>
-            <select
-              className="form-select"
-              value={bookingStatus}
-              onChange={(e) => setBookingStatus(e.target.value)}
-            >
-              <option value="1">Đang xử lý</option>
-              <option value="2">Hoàn thành</option>
-              <option value="3">Hủy</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">ID Người Dùng:</label>
-            <input
-              type="number"
-              className="form-control"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">ID Xe:</label>
-            <input
-              type="number"
-              className="form-control"
-              value={carId}
-              onChange={(e) => setCarId(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Địa Chỉ:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Thành Phố:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Tình Trạng:</label>
-            <select
-              className="form-select"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-            >
-              <option value="1">Chưa giao</option>
-              <option value="2">Đã giao</option>
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {id ? "Cập Nhật Booking" : "Thêm Booking"}
-          </button>
-        </form>
-      ) : (
-        <p>Bạn không có quyền truy cập vào trang này.</p>
-      )}
+    <div>
+      <Side_bar></Side_bar>
+      <div className="container mb-4">
+        <Header></Header>
+        <h2 className="ms-4">{id ? "Cập Nhật Booking" : "Thêm Booking Mới"}</h2>
+        {isAdmin ? (
+          <form onSubmit={handleAddBooking}>
+            <div className="mb-3">
+              <label className="form-label">Ngày Đặt:</label>
+              <input
+                type="date"
+                className="form-control"
+                value={bookingDate}
+                onChange={(e) => setBookingDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Ngày Bắt Đầu:</label>
+              <input
+                type="date"
+                className="form-control"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Ngày Kết Thúc:</label>
+              <input
+                type="date"
+                className="form-control"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Tổng Chi Phí:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={totalCost}
+                onChange={(e) => setTotalCost(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Trạng Thái:</label>
+              <select
+                className="form-select"
+                value={bookingStatus}
+                onChange={(e) => setBookingStatus(e.target.value)}
+              >
+                <option value="1">Đang xử lý</option>
+                <option value="2">Hoàn thành</option>
+                <option value="3">Hủy</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">ID Người Dùng:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">ID Xe:</label>
+              <input
+                type="number"
+                className="form-control"
+                value={carId}
+                onChange={(e) => setCarId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Địa Chỉ:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Thành Phố:</label>
+              <input
+                type="text"
+                className="form-control"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Tình Trạng:</label>
+              <select
+                className="form-select"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+              >
+                <option value="1">Chưa giao</option>
+                <option value="2">Đã giao</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary">
+              {id ? "Cập Nhật Booking" : "Thêm Booking"}
+            </button>
+          </form>
+        ) : (
+          <p>Bạn không có quyền truy cập vào trang này.</p>
+        )}
+      </div>
+      <Footer></Footer>
     </div>
   );
 }

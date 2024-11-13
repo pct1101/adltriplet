@@ -55,17 +55,15 @@ function User_favorite() {
                 </div>
               </div>
               {Array.isArray(favoriteCars) && favoriteCars.length > 0 ? (
-                <div className="card-car row">
-                  {favoriteCars.map((car) => (
-                    <div className="item-box" key={car.id}>
-                      {" "}
-                      {/* Thêm key để React có thể theo dõi từng phần tử */}
+                favoriteCars.map((car) => (
+                  <div className="card-car row" key={car.id}>
+                    <div className="item-box">
                       <a href="#">
                         <div className="img-car">
                           <div className="car-img">
                             <img
                               className="scale-img"
-                              src="/img/anh1-x1.jpg"
+                              src="../img/mitsubishi-3-anhchinh.jpg"
                               alt="Car"
                             />
                           </div>
@@ -126,7 +124,7 @@ function User_favorite() {
                                   fill="#5FCF86"
                                 ></path>
                                 <path
-                                  d="M14.9062 3.83154H7.40625C6.80316 3.83154 6.3125 4.3222 6.3125 4.92529V13.9686C6.3125 14.5186 6.72066 14.9749 7.25 15.051V15.5309C7.25 15.7898 7.45987 15.9997 7.71875 15.9997C7.97763 15.9997 8.1875 15.7898 8.1875 15.5309V15.0623H14.125V15.5309C14.125 15.7898 14.3349 15.9997 14.5938 15.9997C14.8526 15.9997 15.0625 15.7898 15.0625 15.5309V15.051C15.5918 14.9749 16 14.5186 16 13.9686V4.92529C16 4.32217 15.5093 3.83154 14.9062 3.83154ZM9.125 13.3436C9.125 13.6024 8.91513 13.8123 8.65625 13.8123C8.39737 13.8123 8.1875 13.6024 8.1875 13.3436V5.55029C8.1875 5.29142 8.39737 5.08154 8.65625 5.08154C8.91513 5.08154 9.125 5.29142 9.125 5.55029V13.3436ZM13.6562 13.8123C13.3974 13.8123 13.1875 13.6024 13.1875 13.3436V5.55029C13.1875 5.29142 13.3974 5.08154 13.6562 5.08154C13.9151 5.08154 14.125 5.29142 14.125 5.55029V13.3436C14.125 13.6024 13.9151 13.8123 13.6562 13.8123Z"
+                                  d="M14.9062 3.83154H7.40625C6.80316 3.83154 6.3125 4.3222 6.3125 4.92529V13.9686C6.3125 14.5186 6.72066 14.9749 7.25 15.051V15.5309C7.25 15.7898 7.45987 15.9997 7.71875 15.9997C7.97763 15.9997 8.1875 15.7898 8.1875 15.5309V15.0623H14.125V15.5309C14.125 15.7898 14.3349 15.9997 14.5938 15.9997C14.8526 15.9997 15.0625 15.7898 15.0625 15.5309V15.051C15.5918 14.9749 16 14.5186 16 13.9686V4.92529C16 4.32217 15.5093 3.83154 14.9062 3.83154ZM9.125 13.3436C9.125 13.6024 8.91513 13.8123 8.65625 13.8123C8.39737 13.8123 8.1875 13.6024 8.1875 13.3436V5.55029C8.1875 5.29142 8.39737 5.08154 8.65625 5.08154C8.91513 5.08154 9.125 5.29142 9.125 5.55029V13.3436ZM13.6562 13.8123C13.3974 13.8123 13.1875 13.6024 13.1875 13.3436V8.65967C13.1875 8.40079 13.3974 8.19092 13.6562 8.19092C13.9151 8.19092 14.125 8.40079 14.125 8.65967V13.3436C14.125 13.6024 13.9151 13.8123 13.6562 13.8123Z"
                                   fill="#5FCF86"
                                 ></path>
                               </g>
@@ -141,17 +139,36 @@ function User_favorite() {
                               </defs>
                             </svg>
                           </div>
-                          <span className="info">20 chuyến </span>
+                          <span className="info">Quận 1</span>
                         </div>
-                        <span className="info">
-                          Quận 12, Thành phố Hồ Chí Minh
-                        </span>
+                      </div>
+                      <div className="profile">
+                        <div className="avatar avatar--s has-five-star">
+                          <img
+                            loading="lazy"
+                            src="https://n1-astg.mioto.vn/g/2024/07/26/15/56q_jNBZ7lXK_FW4c2B3cQ.jpg"
+                          />
+                        </div>
+                        <div className="price">
+                          <span className="price-origin">976K</span>
+                          <span className="price-special">
+                            {car.car ? car.car.rental_price : "Không có tên xe"}{" "}
+                          </span>
+                        </div>
+                        <a className="btn btn--s btn-primary">Bỏ thích</a>
+                        <a
+                          className="btn "
+                          href="/car/toyota-fortuner-legender-2012/KK67F7"
+                        >
+                          {" "}
+                          Xem chi tiết
+                        </a>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))
               ) : (
-                <div className="alert alert-danger">Chưa có xe yêu thích!</div>
+                <div>Danh sách xe yêu thích trống</div>
               )}
             </div>
           </div>

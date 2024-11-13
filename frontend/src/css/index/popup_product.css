@@ -1,7 +1,8 @@
 
 .group-title {
     display: flex;            
-    justify-content: space-between;     align-items: center;     
+    justify-content: space-between; 
+    align-items: center;     
     width: 100%;        
     padding: 15px;    
   }
@@ -210,4 +211,12 @@ input:disabled {
 .fontWeight-6.text-primary {
     color: #5fcf86 !important;
     font-weight: 600;
+}
+
+
+/* note:payment.css */
+
+
+.inputBox span{
+  color: black;
 }

@@ -40,8 +40,14 @@ function Booking() {
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), //note: Thời gian nhận xe mặc định là sau 1 giờ
   });
   // note: set open popup payment
-  const [isBookingSuccessPopupOpen, setIsBookingSuccessPopupOpen] =
-    useState(false);
+  const [showpopup_payment, setshowpopup_payment] = useState(false);
+  // note: toggle off popup form payment
+  const togglePopup = () => {
+    setshowpopup_payment(!showpopup_payment);
+  };
+  const closePopup = () => {
+    showpopup_payment(false);
+  };
   const { id: carId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -72,7 +78,7 @@ function Booking() {
       console.log("Booking thành công:", response);
       //note: Kiểm tra nếu response.success là true thì là thành công
       if (response?.data?.message || "Bạn đã booking thành công") {
-        setIsBookingSuccessPopupOpen(true);
+        setshowpopup_payment(true);
       }
     } catch (error) {
       console.error("Có lỗi khi đặt xe:", error);
@@ -223,7 +229,7 @@ function Booking() {
           </p>
           <span className="tag-item discount">-14%</span>
         </div>
-        <h4>
+        <h4 style={{ fontWeight: "600" }}>
           <span className=""> {formatPrice(bookings?.rental_price ?? 0)}</span>
         </h4>
       </div>
@@ -317,9 +323,10 @@ function Booking() {
           </div>
           Chọn thuê{" "}
         </button>
-        {isBookingSuccessPopupOpen && (
+        {showpopup_payment && (
           <Payment_booking
-            onClose={() => setIsBookingSuccessPopupOpen(false)}
+            showpopup_payment={showpopup_payment}
+            closePopup={togglePopup}
           />
         )}
       </div>

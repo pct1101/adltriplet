@@ -230,8 +230,6 @@ const Detail_product = () => {
                 </svg>
               </div>
               <span className="info">34 chuyến</span>
-              <span className="dot">•</span>
-              <span className="info">Quận 1, TP. Hồ Chí Minh</span>
             </div>
             <div className="group-tag">
               <span className="tag-item transmission">Số tự động</span>

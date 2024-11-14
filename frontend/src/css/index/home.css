@@ -790,6 +790,10 @@ p.origin{
 }
 .price-discount .tag-item {
   padding: 0 4px;
+  margin: 0px;
+}
+.item-box .discount{
+  position: absolute;
 }
 span.tag-item.discount-booking {
   background: #f26a2b;
@@ -978,7 +982,7 @@ h1.airport-head {
   position: relative;
 }
 .discount{
-  position: absolute; 
+   
   margin-top: 215px;
   margin-left: 190px;
 }

@@ -14,6 +14,7 @@ import "../../css/admin/css/lineicons.css";
 import "../../css/admin/css/materialdesignicons.min.css";
 // import live
 import AdminProducts from "./ControllerProduct/products";
+import Dashboarh from "./dashboarh/dashboard";
 
 const AdminDashboard = () => {
   const { logout } = useAuth(); // Lấy hàm logout từ context
@@ -29,7 +30,7 @@ const AdminDashboard = () => {
       <Side_bar></Side_bar>
       <div className="main-wrapper">
         <Header></Header>
-        <AdminProducts></AdminProducts>
+        <Dashboarh></Dashboarh>
         <Footer></Footer>
       </div>
     </div>

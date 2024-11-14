@@ -238,10 +238,9 @@ height: 123px !important;
 
 /* Search Car */
 .search-option{
-  bottom: 115px;
+  bottom: 150px;
   z-index: 3;
   position: relative;
-  
 }
 .option {
   display: flex;
@@ -273,7 +272,7 @@ height: 123px !important;
 .search {
   display: flex;
   flex-direction: column;
-  margin: 0 150px;
+  margin: 0 300px;
   padding: 16px;
   border-radius: 16px;
   background-color: #fff;
@@ -845,6 +844,9 @@ span.tag-item.discount-booking {
 
 .line {
   border-right: 1px solid #e0e0e0;
+}
+.search-option .search-form .line{
+  margin: 4px 12px;
 }
 .dropdown-form {
   position: relative;

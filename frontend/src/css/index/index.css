@@ -1,30 +1,46 @@
-@import url(https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap);
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-*{
-    margin: 0;
+* {
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
-    font-family: 'Roboto', sans-serif;
-    font-size: 18px; /* Kích thước chữ mặc định */
-    line-height: 1.5; /* Khoảng cách dòng */
-  
-  }
-  h1 {
-    font-size: 3rem;
-  }
-  
-  h2 {
-    font-size: 2.5rem;
-  }
-  
-  h3 {
-    font-size: 2rem;
-  }
-  
-  p {
-    font-size: 1rem; /* Paragraph với kích thước bình thường */
-    color: #444;
-    margin-bottom: 1.5rem;
-  }
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px; /* Kích thước chữ mặc định */
+  line-height: 1.6; /* Khoảng cách dòng */
+  color: #333; /* Màu chữ */
+  background-color: #f9f9f9; /* Màu nền nhẹ nhàng */
+}
+
+h1 {
+  font-family: 'Arimo', sans-serif;
+  font-size: 2.5rem; /* Kích thước chữ cho tiêu đề h1 */
+  margin-bottom: 1.5rem; /* Khoảng cách dưới tiêu đề */
+  color: #2c3e50; /* Màu chữ tiêu đề */
+}
+
+h2 {
+  font-family: 'Arimo', sans-serif;
+  font-size: 2rem; /* Kích thước chữ cho tiêu đề h2 */
+  margin-bottom: 1rem; /* Khoảng cách dưới tiêu đề */
+  color: #34495e; /* Màu chữ tiêu đề */
+}
+
+h3 {
+  font-family: 'Arimo', sans-serif;
+  font-size: 1.75rem; /* Kích thước chữ cho tiêu đề h3 */
+  margin-bottom: 0.75rem; /* Khoảng cách dưới tiêu đề */
+  color: #4f5b66; /* Màu chữ tiêu đề */
+}
+
+p {
+  font-size: 1rem; /* Paragraph với kích thước bình thường */
+  color: #444; /* Màu chữ của đoạn văn */
+  margin-bottom: 1rem; /* Khoảng cách dưới đoạn văn */
+}
+
+span {
+  font-size: 1rem; /* Kích thước chữ cho span */
+}

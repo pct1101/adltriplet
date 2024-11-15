@@ -21,7 +21,7 @@ const AdminProducts = () => {
     } catch (error) {
       console.error("Failed to fetch cars", error);
     }
-  };
+  };  
 
   const checkUserRole = () => {
     const role = localStorage.getItem("userRole");
@@ -59,7 +59,7 @@ const AdminProducts = () => {
   return (
     <div>
       <Side_bar></Side_bar>
-      <section className="main-wrapper section p-2">
+      <section className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
           <h1 className="ms-4">Danh sách sản phẩm</h1>
@@ -89,12 +89,17 @@ const AdminProducts = () => {
                     <td className="short-info-column">
                       <div className="row">
                         <div className="col-md-3">
-                          <img src="../img/anh1-x1.jpg" className="w-100" alt="" />
+                          <img
+                            src="../img/anh1-x1.jpg"
+                            className="w-100"
+                            alt=""
+                          />
                         </div>
                         <div className="col-md-9">
                           <h5>{car.car_name}</h5>
                           <div className="">
-                            Mã: {car.car_id} | Danh Mục: <span className="text-primary">{car.brand_id}</span>
+                            Mã: {car.car_id} | Danh Mục:{" "}
+                            <span className="text-primary">{car.brand_id}</span>
                           </div>
                         </div>
                       </div>

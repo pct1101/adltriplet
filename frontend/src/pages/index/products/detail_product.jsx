@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-// import component
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import Differen_Car from "../Slide_Banner/differen_Car";
-// import api car
 import {
   getCarDetails,
   getCarImagesByCarId,
   addToFavorites,
+  deleteFavorite,
+  addFeedbackCarUser
 } from "../../../lib/Axiosintance";
-// import css
 import "../../../css/index/popup_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
@@ -19,31 +18,29 @@ const Detail_product = () => {
   const { id } = useParams();
   const [car, setCar] = useState(null);
   const [carImages, setCarImages] = useState([]);
-  const [feedbacks, setFeedbacks] = useState([]); // Khởi tạo mảng trống thay vì null
+  const [feedbacks, setFeedbacks] = useState([]);
+  const [newFeedback, setNewFeedback] = useState('');
 
-  // Gọi API để lấy thông tin chi tiết xe và feedbacks
+  const [isSubmitting, setIsSubmitting] = useState(false); // Để tránh gửi nhiều lần khi đang submit
+  const [isFavorite, setIsFavorite] = useState(false); // Kiểm tra xe có được yêu thích không
+  const navigate = useNavigate(); // Dùng để điều hướng sau khi lưu yêu thích
+
+  // Gọi API để lấy thông tin chi tiết xe và kiểm tra yêu thích
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
-        console.log("Car details response:", response.data.car); // Kiểm tra phản hồi từ API
         setCar(response.data.car);
 
-        const imageResponse = await getCarImagesByCarId(
-          response.data.car.car_id
-        );
+        const imageResponse = await getCarImagesByCarId(response.data.car.car_id);
         setCarImages(imageResponse.data);
 
-        // Lấy feedback trực tiếp từ response.data.car.feedback
         const feedbackData = response.data.car.feedback;
-        console.log("Feedback data:", feedbackData); // Kiểm tra dữ liệu phản hồi
+        setFeedbacks(feedbackData && feedbackData.length > 0 ? feedbackData : []);
 
-        if (feedbackData && feedbackData.length > 0) {
-          setFeedbacks(feedbackData); // Đặt feedbacks với dữ liệu đúng
-        } else {
-          console.log("No feedbacks found");
-          setFeedbacks([]); // Nếu không có phản hồi, đặt là mảng rỗng
-        }
+        // Kiểm tra yêu thích
+        const favoriteStatus = localStorage.getItem(`favorite_${id}`) === "true";
+        setIsFavorite(favoriteStatus);  // Gọi hook không có điều kiện
       } catch (error) {
         console.error("Error fetching car details or feedbacks", error);
       }
@@ -64,23 +61,74 @@ const Detail_product = () => {
 
   const handleAddToFavorites = async () => {
     try {
-      await addToFavorites(car.car_id); // Gọi API thêm yêu thích
-      alert("Đã thêm yêu thích thành công!");
+      if (isFavorite) {
+        const confirm = window.confirm("Bạn có muốn bỏ yêu thích không?");
+        if (confirm) {
+          await deleteFavorite(car.car_id); // Gọi API xóa yêu thích
+          alert("Đã bỏ yêu thích thành công!");
+          localStorage.setItem(`favorite_${car.car_id}`, "false"); // Lưu vào localStorage
+          setIsFavorite(false); // Cập nhật trạng thái
+        }
+      } else {
+        await addToFavorites(car.car_id); // Gọi API thêm yêu thích
+        alert("Đã thêm yêu thích thành công!");
+        localStorage.setItem(`favorite_${car.car_id}`, "true"); // Lưu vào localStorage
+        setIsFavorite(true); // Cập nhật trạng thái
+      }
+
+      // Sau khi thêm vào yêu thích, chuyển hướng lại trang sản phẩm để đảm bảo trạng thái đúng
+      navigate(`/detai_product/${id}`);
     } catch (error) {
-      console.error("Error adding to favorites", error);
-      alert("Có lỗi xảy ra khi thêm vào danh sách yêu thích.");
+      console.error("Error handling favorites", error);
+      alert("Có lỗi xảy ra khi cập nhật danh sách yêu thích.");
     }
   };
+
+    // Hàm thay đổi giá trị trong form feedback
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setNewFeedback((prevFeedback) => ({
+        ...prevFeedback,
+        [name]: value,
+      }));
+    };
+  
+    // Hàm gửi feedback
+    const handleSubmitFeedback = async (e) => {
+      e.preventDefault();
+      if (isSubmitting) return; // Tránh gửi nhiều lần khi đang gửi
+  
+      setIsSubmitting(true);
+  
+      try {
+        const feedbackData = {
+          content: newFeedback.content,
+          rating: newFeedback.rating,
+          feedback_date: new Date().toISOString(), // Thêm ngày đánh giá
+        };
+  
+        // Gửi feedback tới API
+        const response = await addFeedbackCarUser(id, feedbackData);
+  
+        // Cập nhật lại feedbacks sau khi gửi thành công
+        setFeedbacks((prevFeedbacks) => [response.feedback, ...prevFeedbacks]);
+        setNewFeedback({ content: "", rating: 5 }); // Reset form
+      } catch (error) {
+        console.error("Error adding feedback", error);
+      } finally {
+        setIsSubmitting(false); // Cho phép gửi lại feedback
+      }
+    };
+
+
 
   return (
     <div>
       <Header />
       <div className="container">
-        <div className=" product-detail">
-          {" "}
+        <div className="product-detail">
           <div className="main-item">
             <div className="left">
-              {/* Hiển thị ảnh chính của xe */}
               <img
                 className="scale-img"
                 alt="Main Image"
@@ -88,11 +136,10 @@ const Detail_product = () => {
               />
             </div>
             <div className="right">
-              {/* Hiển thị các ảnh con */}
               {carImages.map((image, index) => (
-                <div className="right-item-car">
+                <div className="right-item-car" key={index}>
                   <img
-                    src={`../img/${car.images[0].carImage_url}`} // Hiển thị ảnh con đầu tiên
+                    src={`../img/${image.carImage_url}`}
                     className="card-img-top"
                     alt={car.car_name}
                   />
@@ -101,6 +148,7 @@ const Detail_product = () => {
             </div>
           </div>
         </div>
+
         <div className="sub-item">
           <div className="group-left">
             <div className="group-name">
@@ -153,23 +201,23 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className="fav-item wrap-ic wrap-svg"
+                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""}`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg
                       width="24"
                       height="24"
                       viewBox="0 0 24 24"
-                      fill="none"
+                      fill={isFavorite ? "green" : "none"} // Nếu đã yêu thích, màu xanh sẽ xuất hiện
+                      stroke={isFavorite ? "green" : "black"} // Đổi màu viền
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M21.25 8.7196C21.25 9.8796 20.81 11.0496 19.92 11.9396L18.44 13.4196L12.07 19.7896C12.04 19.8196 12.03 19.8296 12 19.8496C11.97 19.8296 11.96 19.8196 11.93 19.7896L4.08 11.9396C3.19 11.0496 2.75 9.8896 2.75 8.7196C2.75 7.54961 3.19 6.37961 4.08 5.48961C5.86 3.71961 8.74 3.71961 10.52 5.48961L11.99 6.9696L13.47 5.48961C15.25 3.71961 18.12 3.71961 19.9 5.48961C20.81 6.37961 21.25 7.53961 21.25 8.7196Z"
-                        stroke="black"
+                        d="M21.25 8.7196C21.25 9.8796 20.81 11.0496 19.92 11.9396L18.44 13.4196L12.07 19.7896C12.04 19.8196 12.03 19.8296 12 19.8496C11.97 19.8296 11.96 19.8196 11.93 19.7896L4.08 11.9396C3.19 11.0496 2.75 9.8896 2.75 8.7196C2.75 7.54961 3.19 6.37961 4.08 5.48961C5.86 3.71961 8.74 3.71961 10.52 5.48961L11.99 6.9696L13.47 5.48961C15.25 3.71961 18.13 3.71961 19.91 5.48961C20.81 6.37961 21.25 7.5496 21.25 8.7196Z"
                         stroke-width="1.5"
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                      ></path>
+                      />
                     </svg>
                   </div>
                 </div>
@@ -779,8 +827,45 @@ const Detail_product = () => {
                       <p>Chưa có đánh giá nào cho xe này.</p> // Hiển thị thông báo nếu không có feedback
                     )}
                   </div>
+                  <div className="add-feedback">
+                    <h3>Thêm Đánh Giá</h3>
+                    <form onSubmit={handleSubmitFeedback}>
+                      <div className="form-group">
+                        <label htmlFor="content">Nội dung đánh giá:</label>
+                        <textarea
+                          id="content"
+                          name="content"
+                          value={newFeedback.content}
+                          onChange={handleInputChange}
+                          required
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <label htmlFor="rating">Đánh giá (sao):</label>
+                        <select
+                          id="rating"
+                          name="rating"
+                          value={newFeedback.rating}
+                          onChange={handleInputChange}
+                          required
+                        >
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <option key={star} value={star}>
+                              {star} sao
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <button type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? "Đang gửi..." : "Gửi đánh giá"}
+                      </button>
+                    </form>
+                  </div>
                   <div></div>
                 </div>
+
               </div>
             </div>
           </div>

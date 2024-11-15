@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Side_bar from "./side_bar";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import "../../../css/user/user.css";
-import { getFavoriteUser } from "../../../lib/Axiosintance";
+import { getFavoriteUser, deleteFavorite } from "../../../lib/Axiosintance";
 
 function User_favorite() {
   const [favoriteCars, setFavoriteCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Dùng để điều hướng sau khi lưu yêu thích
   // const [carDetails, getCarDetails] = useState();
   // const [carIds] = useState();
 
@@ -27,8 +29,28 @@ function User_favorite() {
     };
 
     fetchFavoriteCars();
-    console.log("Cập nhật danh sách xe yêu thích:", favoriteCars);
-  }, [favoriteCars]); // Gọi lại khi component mount
+  }, []); // Chỉ gọi khi component mount, không sử dụng favoriteCars làm phụ thuộc
+
+  const handleRemoveFavorite = async (id) => {
+    try {
+      // Gọi API xóa xe yêu thích, sử dụng favorite_id thay vì car_id
+      await deleteFavorite(id); 
+      
+      // Sau khi xóa, cập nhật danh sách yêu thích
+      setFavoriteCars((prevCars) => 
+        prevCars.filter((car) => car.favorite_id !== id) // Dùng favorite_id để so sánh
+      );
+      
+      // Thông báo người dùng
+      alert("Xóa xe yêu thích thành công.");
+    } catch (err) {
+      console.error("Lỗi khi xóa xe yêu thích:", err);
+      
+      // Xử lý lỗi hiển thị cho người dùng
+      alert("Không thể xóa xe yêu thích. Vui lòng thử lại.");
+    }
+    navigate(`/user_favorite`);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -63,7 +85,7 @@ function User_favorite() {
                           <div className="car-img">
                             <img
                               className="scale-img"
-                              src="../img/mitsubishi-3-anhchinh.jpg"
+                              src={car.car && car.car.car_image ? `/img/${car.car.car_image}` : '/img/default-image.jpg'}
                               alt="Car"
                             />
                           </div>
@@ -155,7 +177,12 @@ function User_favorite() {
                             {car.car ? car.car.rental_price : "Không có tên xe"}{" "}
                           </span>
                         </div>
-                        <a className="btn btn--s btn-primary">Bỏ thích</a>
+                        <button
+                          className="btn btn--s btn-primary"
+                          onClick={() => handleRemoveFavorite(car.car_id)} // Xử lý bỏ thích
+                        >
+                          Bỏ thích
+                        </button>
                         <a
                           className="btn "
                           href="/car/toyota-fortuner-legender-2012/KK67F7"

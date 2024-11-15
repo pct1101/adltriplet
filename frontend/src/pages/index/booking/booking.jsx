@@ -98,9 +98,8 @@ function Booking() {
   const generateTimeOptions = (startHour, startMinute) => {
     const times = [];
     let hour = startHour;
-    let minute = startMinute >= 30 ? 30 : 0; //note: Bắt đầu từ mốc 00 hoặc 30 phút của giờ hiện tại
-
-    while (hour < 24) {
+    let minute = startMinute >= 30 ? 30 : 0;
+    while (hour < 21 || (hour === 21 && minute === 0)) {
       times.push(
         `${hour < 10 ? "0" + hour : hour}:${minute === 0 ? "00" : "30"}`
       );
@@ -111,38 +110,41 @@ function Booking() {
         hour += 1;
       }
     }
-    console.log(times);
     return times;
   };
 
   // note:  xử lý realtime nhanXe
-  const currentTime = dayjs();
-  const nhanXeOptions = generateTimeOptions(
-    currentTime.hour(),
-    currentTime.minute() < 30 ? 0 : 30
-  ).filter((time) => dayjs(time, "HH:mm").isAfter(dayjs().subtract(1, "hour")));
+  const nhanXeOptions = generateTimeOptions(9, 0);
   //   xử lý realtime traXe
-  const traXeOptions = generateTimeOptions(0, 0).filter((time) =>
-    dayjs(time, "HH:mm").isAfter(
-      dayjs(selectedTimes.traXe, "HH:mm").add(4, "hour")
-    )
-  );
+  const traXeOptions = generateTimeOptions(9, 0).map((time) => ({
+    time,
+    disabled:
+      dayjs(time, "HH:mm").isBefore(
+        dayjs(selectedTimes.nhanXe, "HH:mm").add(2, "hour")
+      ) || dayjs(time, "HH:mm").isAfter(dayjs("21:00", "HH:mm")),
+  }));
 
   // note:  xử lý khi nhấn vào time
   const handleTimeSelect = (dropdown, time) => {
+    const selectedTime = dayjs(time, "HH:mm");
+    const startTime = dayjs("09:00", "HH:mm");
+    const endTime = dayjs("21:00", "HH:mm");
+    if (selectedTime.isBefore(startTime) || selectedTime.isAfter(endTime)) {
+      alert(
+        "Xe chỉ hỗ trợ giao nhận từ 09:00-21:00. Vui lòng điều chỉnh lại giờ nhận trả xe thích hợp."
+      );
+      return;
+    }
     if (dropdown === "nhanXe") {
       setSelectedTimes((prev) => ({
         ...prev,
         nhanXe: time,
-        traXe: dayjs(time, "HH:mm").add(4, "hour").format("HH:mm"), // note:Cập nhật giờ trả xe tối thiểu
+        traXe: dayjs(time, "HH:mm").add(2, "hour").format("HH:mm"),
       }));
     } else {
-      setSelectedTimes((prev) => ({
-        ...prev,
-        traXe: time,
-      }));
+      setSelectedTimes((prev) => ({ ...prev, traXe: time }));
     }
-    setOpenDropdown(null); // note:Đóng dropdown sau khi chọn
+    setOpenDropdown(null);
   };
   //   set id
   const { id } = useParams();

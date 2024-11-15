@@ -21,7 +21,7 @@ const AdminProducts = () => {
     } catch (error) {
       console.error("Failed to fetch cars", error);
     }
-  };  
+  };
 
   const checkUserRole = () => {
     const role = localStorage.getItem("userRole");

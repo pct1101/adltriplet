@@ -93,7 +93,6 @@ const Detail_product = () => {
                 <div className="right-item-car">
                   <img
                     src={`../img/${car.images[0].carImage_url}`} // Hiển thị ảnh con đầu tiên
-                    className="card-img-top"
                     alt={car.car_name}
                   />
                 </div>

@@ -196,14 +196,7 @@
     pointer-events: none;
 }
 
-.main {
-    position: absolute;
-    width: calc(100% - 300px);
-    left: 300px;
-    min-height: 100vh;
-    background: var(--white);
-    transition: 0.5s;
-}
+
 
 .main.active {
     width: calc(100% - 80px);
@@ -230,11 +223,7 @@
     cursor: pointer;
 }
 
-.search {
-    position: relative;
-    width: 400px;
-    margin: 0 10px;
-}
+
 
 .search label {
     position: relative;
@@ -259,7 +248,7 @@
     font-size: 1.2em;
 }
 
-.user {
+.user-admin {
     position: relative;
     width: 40px;
     height: 40px;
@@ -268,7 +257,8 @@
     cursor: pointer;
 }
 
-.user img {
+
+.user-admin img {
     position: absolute;
     top: 0;
     left: 0;
@@ -567,7 +557,8 @@
         font-size: 20px;
     }
 
-    .user {
+    
+.user-admin {
         min-width: 40px;
     }
 

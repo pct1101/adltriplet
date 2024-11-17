@@ -10,7 +10,7 @@ import {
   deleteFavorite,
   addFeedbackCarUser,
 } from "../../../lib/Axiosintance";
-import "../../../css/index/popup_product.css";
+import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
 

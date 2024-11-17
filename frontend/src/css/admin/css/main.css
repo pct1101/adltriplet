@@ -90,10 +90,10 @@ ol {
 }
 
 p {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 25px;
-  margin: 0px;
+  margin: 0px !important;
 }
 
 .img-bg {
@@ -306,7 +306,6 @@ h6,
 .h5,
 .h6 {
   color: #1A2142;
-  margin: 0;
 }
 
 h1,
@@ -1913,12 +1912,11 @@ h6,
 }
 
 .table tbody tr:first-child>* {
-  padding-top: 20px;
+  padding: .5rem .5rem;
 }
 
 .table tbody tr:last-child>* {
   border-bottom-color: transparent;
-  padding-bottom: 0px;
 }
 
 .table th h6 {
@@ -3086,7 +3084,7 @@ h6,
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color:#5fcf86;
+  background-color: #5fcf86;
 }
 
 .header .header-left .header-search form {
@@ -3298,6 +3296,7 @@ h6,
   border-radius: 6px;
   padding: 10px 8px;
   color: rgba(26, 33, 66, 0.5);
+  text-decoration: none;
 }
 
 .header .header-right .profile-box .dropdown-menu li a i {

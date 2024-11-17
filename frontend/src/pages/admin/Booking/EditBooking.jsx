@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getBookingById, updateBooking } from "../../../lib/Axiosintance";
+import Side_bar from "../component/side_bar";
+import Header from "../component/header";
 
 function EditBooking() {
   const { id } = useParams();
@@ -69,128 +71,136 @@ function EditBooking() {
   }
 
   return (
-    <div className="container mt-5">
-      <h1 className="ms-4">Chỉnh sửa Booking</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="user_id" className="form-label">
-            Id người dùng
-          </label>
-          <input
-            type="text"
-            id="user_id"
-            name="user_id"
-            className="form-control"
-            value={booking.user_id || ""}
-            onChange={handleChange}
-            required
-          />
+    <div>
+      {" "}
+      <Side_bar></Side_bar>
+      <div className="main-wrapper section">
+        <Header></Header>
+        <h1 className="title">Chỉnh sửa Booking</h1>
+        <div className="container-m">
+          {" "}
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="user_id" className="form-label">
+                Id người dùng
+              </label>
+              <input
+                type="text"
+                id="user_id"
+                name="user_id"
+                className="form-control"
+                value={booking.user_id || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="car_id" className="form-label">
+                Id Xe
+              </label>
+              <input
+                type="text"
+                id="car_id"
+                name="car_id"
+                className="form-control"
+                value={booking.car_id || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="booking_date" className="form-label">
+                Ngày Đặt
+              </label>
+              <input
+                type="date"
+                id="booking_date"
+                name="booking_date"
+                className="form-control"
+                value={booking.booking_date || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="start_date" className="form-label">
+                Ngày Bắt Đầu
+              </label>
+              <input
+                type="date"
+                id="start_date"
+                name="start_date"
+                className="form-control"
+                value={booking.start_date || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="end_date" className="form-label">
+                Ngày Kết Thúc
+              </label>
+              <input
+                type="date"
+                id="end_date"
+                name="end_date"
+                className="form-control"
+                value={booking.end_date || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="booking_status" className="form-label">
+                Trạng thái
+              </label>
+              <select
+                id="booking_status"
+                name="booking_status"
+                className="form-control"
+                value={booking.booking_status || ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="pending">Chờ xác nhận</option>
+                <option value="confirmed">Đã xác nhận</option>
+                <option value="cancelled">Đã hủy</option>
+              </select>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="city" className="form-label">
+                Thành phố
+              </label>
+              <input
+                type="text"
+                id="city"
+                name="city"
+                className="form-control"
+                value={booking.city || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="address" className="form-label">
+                Địa chỉ
+              </label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                className="form-control"
+                value={booking.address || ""}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-primary">
+              Lưu thay đổi
+            </button>
+          </form>
         </div>
-        <div className="mb-3">
-          <label htmlFor="car_id" className="form-label">
-            Id Xe
-          </label>
-          <input
-            type="text"
-            id="car_id"
-            name="car_id"
-            className="form-control"
-            value={booking.car_id || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="booking_date" className="form-label">
-            Ngày Đặt
-          </label>
-          <input
-            type="date"
-            id="booking_date"
-            name="booking_date"
-            className="form-control"
-            value={booking.booking_date || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="start_date" className="form-label">
-            Ngày Bắt Đầu
-          </label>
-          <input
-            type="date"
-            id="start_date"
-            name="start_date"
-            className="form-control"
-            value={booking.start_date || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="end_date" className="form-label">
-            Ngày Kết Thúc
-          </label>
-          <input
-            type="date"
-            id="end_date"
-            name="end_date"
-            className="form-control"
-            value={booking.end_date || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="booking_status" className="form-label">
-            Trạng thái
-          </label>
-          <select
-            id="booking_status"
-            name="booking_status"
-            className="form-control"
-            value={booking.booking_status || ""}
-            onChange={handleChange}
-            required
-          >
-            <option value="pending">Chờ xác nhận</option>
-            <option value="confirmed">Đã xác nhận</option>
-            <option value="cancelled">Đã hủy</option>
-          </select>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="city" className="form-label">
-            Thành phố
-          </label>
-          <input
-            type="text"
-            id="city"
-            name="city"
-            className="form-control"
-            value={booking.city || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="address" className="form-label">
-            Địa chỉ
-          </label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            className="form-control"
-            value={booking.address || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Lưu thay đổi
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

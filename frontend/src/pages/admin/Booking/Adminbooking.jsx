@@ -66,11 +66,11 @@ function AdminBooking() {
   return (
     <div>
       <Side_bar></Side_bar>
-      <div className="main-wrapper section p-2">
+      <div className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
           {" "}
-          <h1 className="ms-4">Quản lý Booking</h1>
+          <h1 className="title">Quản lý Booking</h1>
           <button className="btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddBooking">
               Thêm Booking

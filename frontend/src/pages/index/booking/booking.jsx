@@ -14,9 +14,11 @@ import LocationDropdown from "./district_province";
 import { addBookingUser } from "../../../lib/Axiosintance";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
-import Payment_booking from "./payment_booking";
+import Loading from "../event/loading";
 
 function Booking() {
+  // note: loadding
+  const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
   const [modalMessage, setModalMessage] = useState(""); // Lưu trữ thông điệp modal
   const [modalType, setModalType] = useState("");
@@ -39,21 +41,15 @@ function Booking() {
     traXe: dayjs().add(4, "hour").format("HH:mm"), //note: Thời gian trả xe mặc định là sau 4 giờ
     nhanXe: dayjs().add(1, "hour").format("HH:mm"), //note: Thời gian nhận xe mặc định là sau 1 giờ
   });
-  // note: set open popup payment
-  const [showpopup_payment, setshowpopup_payment] = useState(false);
-  // note: toggle off popup form payment
-  const togglePopup = () => {
-    setshowpopup_payment(!showpopup_payment);
-  };
-  const closePopup = () => {
-    showpopup_payment(false);
-  };
+
   const { id: carId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const formattedStartDate = startDate.toISOString().split("T")[0]; // note:YYYY-MM-DD
   const formattedEndDate = endDate.toISOString().split("T")[0]; //note: YYYY-MM-DD
   const handleBookingSubmit = async () => {
+    // note: bắt đầu trạng thái tải
+    setIsLoading(true);
     const apiToken = localStorage.getItem("remember_token");
     if (!user) {
       navigate("/login");
@@ -76,9 +72,11 @@ function Booking() {
       //note: Gọi hàm addBooking để thực hiện API call
       const response = await addBookingUser(bookingData, apiToken);
       console.log("Booking thành công:", response);
-      //note: Kiểm tra nếu response.success là true thì là thành công
-      if (response?.data?.message || "Bạn đã booking thành công") {
-        setshowpopup_payment(true);
+      if (response.message === "Booking thành công") {
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate("/payment_car");
+        }, 3000);
       }
     } catch (error) {
       console.error("Có lỗi khi đặt xe:", error);
@@ -87,6 +85,7 @@ function Booking() {
       setModalMessage(error.response?.data?.message);
       setModalType("error"); //note: Loại thông báo lỗi
       setOpenModal(true); // note:Mở modal khi có lỗi
+      setIsLoading(false); // note: kết thúc tải
     }
   };
   // note:Toggle none/block dropdown
@@ -119,9 +118,8 @@ function Booking() {
   const traXeOptions = generateTimeOptions(9, 0).map((time) => ({
     time,
     disabled:
-      dayjs(time, "HH:mm").isBefore(
-        dayjs(selectedTimes.nhanXe, "HH:mm").add(2, "hour")
-      ) || dayjs(time, "HH:mm").isAfter(dayjs("21:00", "HH:mm")),
+      dayjs(time, "HH:mm").isBefore(dayjs("09:00", "HH:mm")) ||
+      dayjs(time, "HH:mm").isAfter(dayjs("21:00", "HH:mm")),
   }));
 
   // note:  xử lý khi nhấn vào time
@@ -139,7 +137,6 @@ function Booking() {
       setSelectedTimes((prev) => ({
         ...prev,
         nhanXe: time,
-        traXe: dayjs(time, "HH:mm").add(2, "hour").format("HH:mm"),
       }));
     } else {
       setSelectedTimes((prev) => ({ ...prev, traXe: time }));
@@ -305,6 +302,7 @@ function Booking() {
             <span>{formatPrice2(total_cost)} / ngày</span>
           </p>
         </div>
+        {isLoading && <Loading />}
         <button
           className="btn btn-primary btn--m width-100 d-flex"
           onClick={handleBookingSubmit}
@@ -325,12 +323,6 @@ function Booking() {
           </div>
           Chọn thuê{" "}
         </button>
-        {showpopup_payment && (
-          <Payment_booking
-            showpopup_payment={showpopup_payment}
-            closePopup={togglePopup}
-          />
-        )}
       </div>
       {/* Popup Date Picker */}
       {showDatePicker && (
@@ -445,16 +437,20 @@ function Booking() {
                         openDropdown === "traXe" ? "show" : "hide"
                       }`}
                     >
-                      {traXeOptions.map((time, index) => (
+                      {traXeOptions.map((option, index) => (
                         <div className="custom-radio" key={index}>
+                          {" "}
                           <input
                             type="radio"
                             id={`traXe${index}`}
                             name={`r-startTime-${index}`}
-                            value={time}
-                            onChange={() => handleTimeSelect("traXe", time)}
-                          />
-                          <label htmlFor={`traXe${index}`}>{time}</label>
+                            value={option.time}
+                            disabled={option.disabled}
+                            onChange={() =>
+                              handleTimeSelect("traXe", option.time)
+                            }
+                          />{" "}
+                          <label htmlFor={`traXe${index}`}>{option.time}</label>{" "}
                         </div>
                       ))}
                     </div>

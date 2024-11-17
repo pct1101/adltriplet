@@ -3,10 +3,14 @@ import "../../../css/index/header.css";
 import "../../../css/index/index.css";
 import { useAuth } from "../../Private/Auth";
 import { getUserProfile } from "../../../lib/Axiosintance";
+import { useNavigate } from "react-router-dom";
+
 function Header() {
   const { user } = useAuth();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const { logout } = useAuth(); // Lấy hàm logout từ context
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +24,10 @@ function Header() {
 
     fetchData();
   }, []);
-
+  const handleLogout = () => {
+    logout(); // Gọi hàm logout
+    navigate("/login"); // Điều hướng người dùng về trang đăng nhập
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container header">
@@ -74,45 +81,80 @@ function Header() {
 
           <div className="login ms-auto">
             {user ? (
-              <>
-                <div className="tb" style={{ margin: "10px 15px 1px 1px" }}>
-                  {" "}
-                  <img className="scale-img" src="/upload/tb.png" />
-                </div>
-                <a
-                  href="/user"
-                  className="dropdown-profile"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <div className="avatar avatar--s">
-                    <img
-                      loading="lazy"
-                      src="https://n1-astg.mioto.vn/g/2024/10/04/17/aA9ESIVq66pc84S2PGAPgA.jpg"
-                      alt="Thịnh Hồ"
-                    />
-                  </div>
-                  <ul className="nav-item" style={{ marginBottom: "0" }}>
-                    <span className="name ">
-                      {userData ? userData.name : "đang tải"}
-                    </span>
+              <div className="header-right">
+                <div className="profile-box ml-15">
+                  <button
+                    className="dropdown-toggle bg-transparent border-0"
+                    type="button"
+                    id="profile"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <div className="profile-info">
+                      <div className="info">
+                        <div className="image">
+                          <img
+                            src="https://n1-astg.mioto.vn/g/2024/10/04/17/aA9ESIVq66pc84S2PGAPgA.jpg"
+                            alt=""
+                          />
+                        </div>
+                        <div>
+                          <h6
+                            style={{ margin: "0px" }}
+                            className="text-start fw-500"
+                          >
+                            {" "}
+                            {userData ? userData.name : "đang tải"}
+                          </h6>
+                          <p>Xin chào bạn</p>
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                  <ul
+                    className="dropdown-menu dropdown-menu-end"
+                    aria-labelledby="profile"
+                  >
+                    <li className="divider"></li>
+                    <li>
+                      <a href="/user">
+                        <i className="lni lni-user"></i>
+                        Thông tin
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#0">
+                        <i className="lni lni-alarm"></i>
+                        Thông báo
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#0">
+                        <i className="lni lni-inbox"></i>
+                        Tin nhắn
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#0">
+                        <i className="lni lni-cog"></i> Cài đặt
+                      </a>
+                    </li>
+                    <li className="divider"></li>
+                    <li>
+                      <a href="#" onclick="" onClick={handleLogout}>
+                        <i className="lni lni-exit"></i>
+                        Đăng xuất
+                      </a>
+                      <form
+                        className="d-none"
+                        id="logout-form"
+                        action="{{ route('logout') }}"
+                        method="POST"
+                      ></form>
+                    </li>
                   </ul>
-
-                  <div className="wrap-svg">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                    >
-                      <path
-                        d="M16.8998 9.20039C16.4998 8.80039 15.8998 8.80039 15.4998 9.20039L11.9998 12.7004L8.4998 9.20039C8.0998 8.80039 7.4998 8.80039 7.0998 9.20039C6.6998 9.60039 6.6998 10.2004 7.0998 10.6004L11.2998 14.8004C11.4998 15.0004 11.6998 15.1004 11.9998 15.1004C12.2998 15.1004 12.4998 15.0004 12.6998 14.8004L16.8998 10.6004C17.2998 10.2004 17.2998 9.60039 16.8998 9.20039Z"
-                        fill="black"
-                      ></path>
-                    </svg>
-                  </div>
-                </a>
-              </>
+                </div>
+              </div>
             ) : (
               <>
                 <ul className="signup-icon mb-2 mb-lg-0">

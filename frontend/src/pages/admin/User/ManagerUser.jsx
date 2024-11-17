@@ -71,12 +71,12 @@ function UserList() {
   return (
     <div>
       <Side_bar></Side_bar>
-      <div className="main-wrapper">
+      <div className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
-          <h1 className="ms-4">Quản lý người dùng</h1>
+          <h2 className="title">Quản lý người dùng</h2>
           <button className=" btn ms-auto">
-            <Link className="btn btn-primary" to="/admin/AddUser">
+            <Link className="btn btn-primary" to="/admin/add_user">
               Thêm người dùng
             </Link>
           </button>
@@ -99,28 +99,70 @@ function UserList() {
                   <td className="short-info-column">
                     <div className="row">
                       <div className="col-md-3">
-                        <img src="../img/anh1-x1.jpg" className="w-100 rounded-circle" alt="" />
-                        <div className="text-center"><span class="badge text-bg-danger">{user.gender == 'female' && ('Nữ')}</span></div>
-                        <div className="text-center"><span class="badge text-bg-warning">{user.gender == 'other' && ('Khác')}</span></div>
-                        <div className="text-center"><span class="badge text-bg-primary">{user.gender == 'male' && ('Nam')}</span></div>
-                        <div className="text-center"><span class="badge text-bg-secondary">{(!user.gender || user.gender === '') && 'Chưa cập nhật'}</span></div>
+                        <img
+                          src="../img/anh1-x1.jpg"
+                          className="w-100 rounded-circle"
+                          alt=""
+                        />
+                        <div className="text-center">
+                          <span class="badge text-bg-danger">
+                            {user.gender == "female" && "Nữ"}
+                          </span>
+                        </div>
+                        <div className="text-center">
+                          <span class="badge text-bg-warning">
+                            {user.gender == "other" && "Khác"}
+                          </span>
+                        </div>
+                        <div className="text-center">
+                          <span class="badge text-bg-primary">
+                            {user.gender == "male" && "Nam"}
+                          </span>
+                        </div>
+                        <div className="text-center">
+                          <span class="badge text-bg-secondary">
+                            {(!user.gender || user.gender === "") &&
+                              "Chưa cập nhật"}
+                          </span>
+                        </div>
                       </div>
                       <div className="col-md-9">
-                        {user.name} | <span className={`badge ${user.role === 'user' ? 'text-bg-warning' : 'text-bg-danger'}`}>
+                        {user.name} |{" "}
+                        <span
+                          className={`badge ${
+                            user.role === "user"
+                              ? "text-bg-warning"
+                              : "text-bg-danger"
+                          }`}
+                        >
                           {user.role}
                         </span>
                         <div className="">
-                          Mã: {user.id} | .Số điện thoại: <span className="text-primary">{user.phone || "Chưa cập nhật"}</span>
+                          Mã: {user.id} | .Số điện thoại:{" "}
+                          <span className="text-primary">
+                            {user.phone || "Chưa cập nhật"}
+                          </span>
                         </div>
                         <div className="">
-                          Mail: <span className="text-primary">{user.email || 'Chưa cập nhật'}</span>
+                          Mail:{" "}
+                          <span className="text-primary">
+                            {user.email || "Chưa cập nhật"}
+                          </span>
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td className="short-info-column2">{user.address || "Chưa cập nhật"}</td>
+                  <td className="short-info-column2">
+                    {user.address || "Chưa cập nhật"}
+                  </td>
                   <td>{user.birth_date || "Chưa cập nhật"}</td>
-                  <td>{user.status === 1 ? <span class='badge text-bg-primary'>On</span> : <span class='badge text-bg-dark'>Off</span>}</td>
+                  <td>
+                    {user.status === 1 ? (
+                      <span class="badge text-bg-primary">On</span>
+                    ) : (
+                      <span class="badge text-bg-dark">Off</span>
+                    )}
+                  </td>
                   <td>{new Date(user.created_at).toLocaleDateString()}</td>
                   <td>
                     <button

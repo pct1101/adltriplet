@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { addUser } from "../../../lib/Axiosintance"; // Import API thêm user
+import Side_bar from "../component/side_bar";
+import Header from "../component/header";
 
 function AdminAddUser() {
   const [name, setName] = useState("");
@@ -87,142 +89,152 @@ function AdminAddUser() {
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Thêm Người Dùng Mới</h2>
-      {isAdmin ? (
-        <form onSubmit={handleAddUser}>
-          <div className="mb-3">
-            <label className="form-label">Tên Người Dùng:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Email:</label>
-            <input
-              type="email"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Số Điện Thoại:</label>
-            <input
-              type="tel"
-              className="form-control"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Địa Chỉ:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Giới Tính:</label>
-            <select
-              className="form-select"
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-            >
-              <option value="male">Nam</option>
-              <option value="female">Nữ</option>
-            </select>
-          </div>
-          {/* <div className="mb-3">
-            <label className="form-label">Ngày Sinh:</label>
-            <input
-              type="date"
-              className="form-control"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-              required
-            />
-          </div> */}
-          <div className="mb-3">
-            <label className="form-label">Hình Ảnh:</label>
-            <input
-              type="file"
-              className="form-control"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files[0])}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Mật Khẩu:</label>
-            <div className="input-group">
-              <input
-                type={passwordVisible ? "text" : "password"}
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                className="input-group-text"
-                onClick={() => setPasswordVisible(!passwordVisible)}
-                style={{ cursor: "pointer" }}
-              >
-                <i
-                  className={passwordVisible ? "bi bi-eye-slash" : "bi bi-eye"}
-                ></i>{" "}
-                {/* Icon mắt */}
+    <div>
+      {" "}
+      <Side_bar></Side_bar>
+      <div className="main-wrapper section">
+        <Header></Header>
+        <h2 className="title">Thêm Người Dùng Mới</h2>
+        {isAdmin ? (
+          <div className="container-m">
+            {" "}
+            <form onSubmit={handleAddUser}>
+              <div className="mb-3">
+                <label className="form-label">Tên Người Dùng:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Email:</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Số Điện Thoại:</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Địa Chỉ:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Giới Tính:</label>
+                <select
+                  className="form-select"
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+                </select>
+              </div>
+              {/* <div className="mb-3">
+        <label className="form-label">Ngày Sinh:</label>
+        <input
+          type="date"
+          className="form-control"
+          value={birthDate}
+          onChange={(e) => setBirthDate(e.target.value)}
+          required
+        />
+      </div> */}
+              <div className="mb-3">
+                <label className="form-label">Hình Ảnh:</label>
+                <input
+                  type="file"
+                  className="form-control"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Mật Khẩu:</label>
+                <div className="input-group">
+                  <input
+                    type={passwordVisible ? "text" : "password"}
+                    className="form-control"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="input-group-text"
+                    onClick={() => setPasswordVisible(!passwordVisible)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <i
+                      className={
+                        passwordVisible ? "bi bi-eye-slash" : "bi bi-eye"
+                      }
+                    ></i>{" "}
+                    {/* Icon mắt */}
+                  </button>
+                </div>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Xác Nhận Mật Khẩu:</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Vai Trò:</label>
+                <select
+                  className="form-select"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <option value="user">Người dùng</option>
+                  <option value="admin">Quản trị viên</option>
+                </select>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Trạng Thái:</label>
+                <select
+                  className="form-select"
+                  value={status}
+                  onChange={(e) => setStatus(Number(e.target.value))}
+                >
+                  <option value="1">Hoạt động</option>
+                  <option value="0">Không hoạt động</option>
+                </select>
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Thêm Người Dùng
               </button>
-            </div>
+            </form>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Xác Nhận Mật Khẩu:</label>
-            <input
-              type="password"
-              className="form-control"
-              value={passwordConfirmation}
-              onChange={(e) => setPasswordConfirmation(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Vai Trò:</label>
-            <select
-              className="form-select"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">Người dùng</option>
-              <option value="admin">Quản trị viên</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Trạng Thái:</label>
-            <select
-              className="form-select"
-              value={status}
-              onChange={(e) => setStatus(Number(e.target.value))}
-            >
-              <option value="1">Hoạt động</option>
-              <option value="0">Không hoạt động</option>
-            </select>
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Thêm Người Dùng
-          </button>
-        </form>
-      ) : (
-        <p>Bạn không có quyền truy cập trang này.</p>
-      )}
+        ) : (
+          <p>Bạn không có quyền truy cập trang này.</p>
+        )}
+      </div>
     </div>
   );
 }

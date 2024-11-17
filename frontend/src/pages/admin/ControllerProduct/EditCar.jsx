@@ -91,117 +91,121 @@ const EditCar = () => {
   return (
     <div>
       <Side_bar></Side_bar>{" "}
-      <div className="container mb-4">
+      <div className="main-wrapper section">
         <Header></Header>
-        <h2 className="ms-4">Cập Nhật Xe</h2>
+
+        <h2 className="title">Cập Nhật Xe</h2>
         {isAdmin ? ( // Kiểm tra quyền admin
-          <form onSubmit={handleUpdateCar}>
-            <div className="mb-3">
-              <label className="form-label">Tên Xe:</label>
-              <input
-                type="text"
-                className="form-control"
-                value={carName}
-                onChange={(e) => setCarName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Số Ghế:</label>
-              <input
-                type="number"
-                className="form-control"
-                value={seats}
-                onChange={(e) => setSeats(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Mẫu Xe:</label>
-              <input
-                type="text"
-                className="form-control"
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Hãng Xe:</label>
-              <select
-                className="form-select"
-                value={brandId}
-                onChange={(e) => setBrandId(e.target.value)}
-                required
-              >
-                <option value={1}>Hãng Xe 1</option>
-                <option value={2}>Hãng Xe 2</option>
-              </select>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Biển Số:</label>
-              <input
-                type="text"
-                className="form-control"
-                value={licensePlate}
-                onChange={(e) => setLicensePlate(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Giá Thuê:</label>
-              <input
-                type="number"
-                className="form-control"
-                value={rentalPrice}
-                onChange={(e) => setRentalPrice(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Trạng Thái:</label>
-              <select
-                className="form-select"
-                value={carStatus}
-                onChange={(e) => setCarStatus(e.target.value)}
-              >
-                <option value={1}>Còn Hàng</option>
-                <option value={0}>Hết Hàng</option>
-              </select>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Số Km đã đi:</label>
-              <input
-                type="number"
-                className="form-control"
-                value={mileage}
-                onChange={(e) => setMileage(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Hình Ảnh:</label>
-              <input
-                type="text"
-                className="form-control"
-                value={carImage}
-                onChange={(e) => setCarImage(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Mô Tả:</label>
-              <textarea
-                className="form-control"
-                value={carDescription}
-                onChange={(e) => setCarDescription(e.target.value)}
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Cập Nhật Xe
-            </button>
-          </form>
+          <div className="container-m">
+            {" "}
+            <form onSubmit={handleUpdateCar}>
+              <div className="mb-3">
+                <label className="form-label">Tên Xe:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={carName}
+                  onChange={(e) => setCarName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Số Ghế:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={seats}
+                  onChange={(e) => setSeats(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Mẫu Xe:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Hãng Xe:</label>
+                <select
+                  className="form-select"
+                  value={brandId}
+                  onChange={(e) => setBrandId(e.target.value)}
+                  required
+                >
+                  <option value={1}>Hãng Xe 1</option>
+                  <option value={2}>Hãng Xe 2</option>
+                </select>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Biển Số:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={licensePlate}
+                  onChange={(e) => setLicensePlate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Giá Thuê:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={rentalPrice}
+                  onChange={(e) => setRentalPrice(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Trạng Thái:</label>
+                <select
+                  className="form-select"
+                  value={carStatus}
+                  onChange={(e) => setCarStatus(e.target.value)}
+                >
+                  <option value={1}>Còn Hàng</option>
+                  <option value={0}>Hết Hàng</option>
+                </select>
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Số Km đã đi:</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={mileage}
+                  onChange={(e) => setMileage(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Hình Ảnh:</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  value={carImage}
+                  onChange={(e) => setCarImage(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Mô Tả:</label>
+                <textarea
+                  className="form-control"
+                  value={carDescription}
+                  onChange={(e) => setCarDescription(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Cập Nhật Xe
+              </button>
+            </form>
+          </div>
         ) : (
           <p>Bạn không có quyền truy cập vào trang này.</p>
         )}

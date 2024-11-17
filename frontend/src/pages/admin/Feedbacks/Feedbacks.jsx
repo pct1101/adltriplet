@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { getAllFeedbacks, deleteFeedbackById } from "../../../lib/Axiosintance"; // Import API liên quan đến feedbacks
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
@@ -70,12 +70,12 @@ function AdminFeedbacks() {
           {" "}
           <div className="d-flex">
             {" "}
-            <h1>Phản hồi khách hàng</h1>
+            <h1 className="title">Phản hồi khách hàng</h1>
             <button className="btn ms-auto">
-            <Link className="btn btn-primary" to="/admin/add_feedback">
-              Thêm Feedback
-            </Link>
-          </button>
+              <Link className="btn btn-primary" to="/admin/add_feedback">
+                Thêm Feedback
+              </Link>
+            </button>
           </div>
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">

@@ -25,6 +25,7 @@ import AdminAddUser from "./pages/admin/User/AddUser.jsx";
 import AdminFavorite from "./pages/admin/Favorite/AdminFavorite.jsx";
 import AdminFavoriteDetails from "./pages/admin/Favorite/DetailFavorite.jsx";
 import AddFavorite from "./pages/admin/Favorite/AddFavorite.jsx";
+import Payment_booking from "./pages/index/booking/payment_booking.jsx";
 
 function App() {
   return (
@@ -209,6 +210,8 @@ function App() {
             <Route path="/user" element={<User />} />
             <Route path="/user_favorite" element={<User_favorite />} />
             <Route path="/user_repassword" element={<User_change_password />} />
+            {/* Payment */}
+            <Route path="/payment_car" element={<Payment_booking />} />
           </Routes>
         </Router>
       </div>

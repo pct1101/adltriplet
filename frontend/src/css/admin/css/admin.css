@@ -1,85 +1,97 @@
+.container-m {
+
+    background-color: #ffff;
+    padding: 25px;
+    margin: 0 25px;
+    border-radius: 15px;
+}
+
+.main-wrapper .title {
+    padding: 25px;
+}
+
 .admin-container {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
 .admin-sidebar {
-  width: 250px;
-  background-color: #343a40;
-  padding: 20px;
-  color: #fff;
+    width: 250px;
+    background-color: #343a40;
+    padding: 20px;
+    color: #fff;
 }
 
 .admin-logo {
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 30px;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 30px;
 }
 
 .admin-menu {
-  list-style: none;
-  padding: 0;
+    list-style: none;
+    padding: 0;
 }
 
 .admin-menu li {
-  margin: 15px 0;
+    margin: 15px 0;
 }
 
 .admin-menu li a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1rem;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
 }
 
 .admin-menu li a:hover {
-  color: #17a2b8;
+    color: #17a2b8;
 }
 
 .admin-main-content {
-  flex: 1;
-  padding: 20px;
-  background-color: #f8f9fa;
+    flex: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
 }
 
 .admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
 }
 
 .admin-profile {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .admin-profile span {
-  margin-right: 15px;
-  font-size: 1rem;
+    margin-right: 15px;
+    font-size: 1rem;
 }
 
 .admin-content {
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .short-info-column {
-  width: 450px;
-  /* Bạn có thể thay đổi số này theo ý muốn */
-  white-space: nowrap;
-  /* Đảm bảo không xuống dòng trong cột */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* Thêm dấu ba chấm nếu nội dung quá dài */
+    width: 450px;
+    /* Bạn có thể thay đổi số này theo ý muốn */
+    white-space: nowrap;
+    /* Đảm bảo không xuống dòng trong cột */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Thêm dấu ba chấm nếu nội dung quá dài */
 }
 
 .short-info-column2 {
-  width: 250px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* note: css dashboarh */
@@ -306,14 +318,16 @@
 }
 
 .cardBox .card:hover {
-  background: #5fcf86; transform: scale(1.05); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  color: white;
+    background: #5fcf86;
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    color: white;
 }
 
 .cardBox .card:hover .numbers,
 .cardBox .card:hover .cardName,
 .cardBox .card:hover .iconBx {
-  background: var(--green);
+    background: var(--green);
 }
 
 /* charts */
@@ -557,8 +571,8 @@
         font-size: 20px;
     }
 
-    
-.user-admin {
+
+    .user-admin {
         min-width: 40px;
     }
 

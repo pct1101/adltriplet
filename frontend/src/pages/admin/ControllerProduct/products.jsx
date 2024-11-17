@@ -62,7 +62,7 @@ const AdminProducts = () => {
       <section className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
-          <h1 className="ms-4">Danh sách sản phẩm</h1>
+          <h1 className="title">Danh sách sản phẩm</h1>
           <button className=" btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddCar">
               Thêm sản phẩm

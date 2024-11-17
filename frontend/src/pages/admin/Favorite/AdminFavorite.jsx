@@ -61,11 +61,11 @@ function AdminFavorite() {
   return (
     <div>
       <Side_bar></Side_bar>{" "}
-      <div className="main-wrapper section p-2">
+      <div className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
           {" "}
-          <h1 className="ms-4">Quản lý Yêu thích</h1>
+          <h1 className="title">Quản lý Yêu thích</h1>
           <button className="btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddFavorite">
               Thêm Yêu thích

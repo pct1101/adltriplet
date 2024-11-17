@@ -69,8 +69,9 @@ function Register() {
             </div>
             <div className="row">
               <div className="col">
-                <span className="form-control-wrap file-4">
+                <label className="form-control-wrap file-4 custom-file-upload">
                   <input
+                    style={{ margin: "0px", height: "37px" }}
                     type="file"
                     name="file-4"
                     size="40"
@@ -78,7 +79,7 @@ function Register() {
                     accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.ppt,.pptx,.odt,.avi,.ogg,.m4a,.mov,.mp3,.mp4,.mpg,.wav,.wmv"
                     aria-invalid="false"
                   />
-                </span>
+                </label>
               </div>
               <div className="col">
                 <input

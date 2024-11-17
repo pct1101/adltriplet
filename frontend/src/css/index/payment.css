@@ -1,86 +1,193 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
 
-*{
+* {
   font-family: 'Poppins', sans-serif;
-  margin:0; padding:0;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
-  outline: none; border:none;
+  outline: none;
+  border: none;
   text-transform: capitalize;
   transition: all .2s linear;
 }
 
-
-
- form.payment-form{
-  padding:20px;
-  width:700px;
-  background: #fff;
-  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+.container-background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  min-height: 100vh;
+  background: linear-gradient(90deg, #2ecc71 60%, #27ae60 40.1%);
 }
 
-form.payment-form .row{
+.form-group-payment {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  gap: 16px;
+  margin-top: 45px;
+  justify-content: center;
+}
+
+.form-group-payment .left-user {
+  width: 30%;
+  flex-direction: column;
+  height: 100%;
+}
+
+.payment-form {
+  width: 70%;
+}
+
+.form-group-payment .left-user .content-item {
+  flex: 5;
+}
+
+.form-group-payment .left-user .content-payment {
+  flex: 5;
+}
+
+.content-payment {
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px #5ECD7F;
+  border-radius: 15px;
+}
+
+.form-group-payment .left-user .item-box {
+  padding: 0px;
+}
+
+.form-group-payment .left-user .item-box .desc-car {
+  width: 80%;
+}
+
+.form-group-payment .left-user .item-box .desc-car .desc-days {
+  display: flex;
+  padding: 5px 0px 5px 0;
+}
+
+.desc-car .days .desc-days span {
+  margin-left: 7px;
+}
+
+.form-group-payment .left-user .item-box .desc-car .desc-name p {
+  overflow: visible;
+}
+
+.form-group-payment .left-user .car-img {
+  width: 200px;
+}
+
+.total-price-car {
+  display: flex;
+  gap: 10px;
+  padding: 5px 0 5px 0;
+
+}
+
+.total-price-car h6 {
+  margin: 0px;
+  font-size: 1rem;
+  padding: 2px 0;
+  font-weight: 600;
+}
+
+.total-price-car span {
+  margin: 0px;
+  font-size: 1rem;
+  color: #2ecc71;
+  font-weight: 600;
+}
+
+form.payment-form {
+
+  border-radius: 15px;
+  padding: 20px;
+  width: 700px;
+  background: #fff;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
+}
+
+form.payment-form .row {
   display: flex;
   flex-wrap: wrap;
-  gap:15px;
+  gap: 15px;
 }
 
- form.payment-form .row .col{
-  flex:1 1 250px;
+form.payment-form .row .col {
+  flex: 1 1 250px;
 }
 
- form.payment-form .row .col .title{
+form.payment-form .row .col .title {
   font-size: 20px;
-  color:#333;
+  color: #333;
   padding-bottom: 5px;
   text-transform: uppercase;
 }
 
- form.payment-form .row .col .inputBox{
-  margin:15px 0;
+form.payment-form .row .col .inputBox {
+  margin: 15px 0;
 }
 
- form.payment-form .row .col .inputBox span{
+form.payment-form .row .col .inputBox span {
   margin-bottom: 10px;
   display: block;
 }
 
- form.payment-form .row .col .inputBox input{
+form.payment-form .row .col .inputBox input {
   width: 100%;
-  border:1px solid #ccc;
-  padding:10px 15px;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
   font-size: 15px;
   text-transform: none;
 }
 
-form.payment-form .row .col .inputBox input:focus{
-  border:1px solid #000;
+form.payment-form .row .col .inputBox input:focus {
+  border: 1px solid #000;
 }
 
-form.payment-form .row .col .flex{
+form.payment-form .row .col .flex {
   display: flex;
-  gap:15px;
+  gap: 15px;
 }
 
-form.payment-form .row .col .flex .inputBox{
+form.payment-form .row .col .flex .inputBox {
   margin-top: 5px;
 }
 
-form.payment-form .row .col .inputBox img{
+form.payment-form .row .col .inputBox img {
   height: 39px;
   margin-top: 5px;
   filter: drop-shadow(0 0 1px #000);
 }
 
-form.payment-form .submit-btn{
+form.payment-form .submit-btn {
   width: 100%;
-  padding:12px;
+  padding: 12px;
   font-size: 17px;
   background: #27ae60;
-  color:#fff;
+  color: #fff;
   margin-top: 5px;
   cursor: pointer;
 }
 
-form.payment-form .submit-btn:hover{
+form.payment-form .submit-btn:hover {
   background: #2ecc71;
+}
+
+.inputBox {
+  margin: 10px 0;
+}
+
+.inputBox select {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.inputBox option {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
 }

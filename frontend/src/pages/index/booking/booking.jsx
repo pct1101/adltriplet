@@ -49,7 +49,6 @@ function Booking() {
   const formattedStartDate = startDate.toISOString().split("T")[0]; // note:YYYY-MM-DD
   const formattedEndDate = endDate.toISOString().split("T")[0]; //note: YYYY-MM-DD
   const handleBookingSubmit = async () => {
-    // note: bắt đầu trạng thái tải
     setIsLoading(true);
     const apiToken = localStorage.getItem("remember_token");
     if (!user) {

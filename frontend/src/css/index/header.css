@@ -1,29 +1,33 @@
-.logo img{
+.logo img {
   width: 100%;
   max-width: 179px;
   height: 100px;
 }
-  .container.header{
-    height: 100px;
-  }
 
-.navbar.navbar-expand-lg.navbar-light.bg-light{
+.container.header {
+  height: 100px;
+}
+
+.navbar.navbar-expand-lg.navbar-light.bg-light {
   width: 100%;
   position: fixed;
   z-index: 9999;
-background: #ffffff !important;
+  background: #ffffff !important;
 }
-#navbarNav.collapse.navbar-collapse{
+
+#navbarNav.collapse.navbar-collapse {
   justify-content: center;
   font-weight: bold;
 }
+
 .navbar-nav {
-justify-content:space-between ;
-font-size: 18px;
-gap: 20px;
+  justify-content: space-between;
+  font-size: 18px;
+  gap: 20px;
 }
-.signin-icon{
-  width:100%;
+
+.signin-icon {
+  width: 100%;
   max-width: 146px;
   border: 1px solid;
   border-radius: 19px;
@@ -33,15 +37,17 @@ gap: 20px;
   align-items: center;
   padding: 0;
 }
-.signin-icon:hover{
-  background-color:#A2FDBF;
+
+.signin-icon:hover {
+  background-color: #A2FDBF;
   transition: cubic-bezier(0.075, 0.82, 0.165, 7);
   cursor: pointer;
 
 }
-.signup-icon{
- 
-  width:100%;
+
+.signup-icon {
+
+  width: 100%;
   max-width: 100px;
   height: 53px;
   display: flex;
@@ -53,43 +59,52 @@ gap: 20px;
 
 
 /* Login */
-.login{
+.login {
   display: flex;
   width: 100%;
   max-width: 200px;
 }
 
-.nav-admin{
+.nav-admin {
   text-decoration: none;
   color: black;
   font-size: 1.3rem;
   text-align: center;
   justify-content: center;
 }
+
 .avatar--s {
   width: 40px;
   height: 40px;
   line-height: 40px;
 }
+
 .avatar--s img {
-border-radius: 100%;
+  border-radius: 100%;
 }
-.dropdown-profile{
-    display: flex;
-    align-items: center;
-    grid-gap: 12px;
-    gap: 12px;
-    cursor: pointer;
-    padding: 0;
-  }
-  .dropdown-profile .name {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: .875rem;
-    font-weight: 700;
+
+.dropdown-profile {
+  display: flex;
+  align-items: center;
+  grid-gap: 12px;
+  gap: 12px;
+  cursor: pointer;
+  padding: 0;
 }
-.nav-link.login.active a:hover{
+
+.dropdown-profile .name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .875rem;
+  font-weight: 700;
+}
+
+.nav-link.login.active a:hover {
   color: #ffffff;
+}
+
+.info-user-header p {
+  margin: 0px;
 }

@@ -98,7 +98,7 @@ function Header() {
                             alt=""
                           />
                         </div>
-                        <div>
+                        <div className="info-user-header">
                           <h6
                             style={{ margin: "0px" }}
                             className="text-start fw-500"

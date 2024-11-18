@@ -180,18 +180,44 @@ form.payment-form .submit-btn:hover {
   background: #2ecc71;
 }
 
-.inputBox {
-  margin: 10px 0;
+/* note: thanh toán */
+.custom-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
 }
 
-.inputBox select {
-  padding: 5px;
+.custom-select select {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-.inputBox option {
+.select-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.custom-select {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+}
+
+.select-icons img {
+  width: 44px;
+  position: relative;
+  top: 5px;
+  left: 19rem;
+  /* Kích thước hình ảnh */
 }

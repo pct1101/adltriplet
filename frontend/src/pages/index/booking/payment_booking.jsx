@@ -5,6 +5,8 @@ import Footer from "../footer/footer";
 import Next_step from "../event/next_step";
 import { useBooking } from "../../Private/bookingContext";
 import dayjs from "dayjs";
+import { useAuth } from "../../Private/Auth";
+import { useNavigate } from "react-router-dom";
 
 const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
 
@@ -34,6 +36,22 @@ export default function Payment_booking() {
     }
     return "0 VND"; // Hoặc trả về một giá trị khác nếu price không hợp lệ
   };
+
+  // note: confirm user
+  const { user } = useAuth();
+  const apiToken = localStorage.getItem("remember_token");
+  const navigate = useNavigate();
+
+  if (!user) {
+    navigate("/login");
+    return;
+  }
+  if (!apiToken || apiToken.trim() === "") {
+    console.error("Token không hợp lệ hoặc hết hạn.");
+    //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
+    return;
+  }
+
   return (
     <div>
       {" "}
@@ -42,34 +60,34 @@ export default function Payment_booking() {
         <div className="form-group-payment">
           {" "}
           <form className="payment-form" action="">
-            <div class="row">
-              <div class="col">
-                <h3 class="title">Thanh toán và hoàn tất</h3>
+            <div className="row">
+              <div className="col">
+                <h1 className="title">Thông tin người dùng</h1>
                 <Next_step></Next_step>
-                <div class="inputBox">
+                <div className="inputBox">
                   <span>Họ và tên :</span>
                   <input type="text" />
                 </div>
-                <div class="inputBox">
+                <div className="inputBox">
                   <span>Di động :</span>
                   <input type="number" />
                 </div>
-                <div class="inputBox">
+                <div className="inputBox">
                   <span>Email :</span>
                   <input type="email" />
                 </div>
-                <div class="inputBox">
+                <div className="inputBox">
                   <span>Thành phố :</span>
                   <input type="text" />
                 </div>
-                <div class="inputBox">
+                <div className="inputBox">
                   <span>Địa chỉ :</span>
                   <input type="text" />
                 </div>
               </div>
             </div>
 
-            <input type="submit" value="Xác nhận" class="submit-btn" />
+            <input type="submit" value="Xác nhận" className="submit-btn" />
           </form>
           <div className="left-user">
             <div className="content-item">
@@ -154,19 +172,27 @@ export default function Payment_booking() {
               </div>
               <div className="inputBox">
                 {" "}
-                <select
-                  id="mySelect"
-                  onChange={handleSelectChange}
-                  value={selectedOption}
-                >
+                <div className="custom-select">
                   {" "}
-                  <option value="1">
-                    Thanh toán trực tiếp {selectedOption === "1" && "✔"}
-                  </option>{" "}
-                  <option value="2">
-                    Thanh toán qua VNPAY {selectedOption === "2" && "✔"}
-                  </option>{" "}
-                </select>{" "}
+                  <select
+                    id="mySelect"
+                    onChange={handleSelectChange}
+                    value={selectedOption}
+                  >
+                    {" "}
+                    <option value="1">Thanh toán trực tiếp</option>{" "}
+                    <option value="2">Thanh toán qua VNPAY</option>{" "}
+                  </select>{" "}
+                  <div className="select-icons">
+                    {" "}
+                    {selectedOption === "1" && (
+                      <img src="../upload/tructiep.png" alt="Selected" />
+                    )}{" "}
+                    {selectedOption === "2" && (
+                      <img src="../upload/vnpay.png" alt="Selected" />
+                    )}{" "}
+                  </div>{" "}
+                </div>
               </div>
             </div>
           </div>

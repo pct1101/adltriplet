@@ -1,25 +1,27 @@
-
-.container.user{
+.container.user {
   padding-top: 10px;
   display: flex;
-  min-height: 100vh;   
+  min-height: 100vh;
 }
-.group-user{
+
+.group-user {
   width: 100%;
   margin-top: 140px;
   display: flex;
   gap: 20px;
 }
-.right-user{
+
+.right-user {
   position: relative;
   z-index: 2;
   width: 25%;
   height: 900px;
 }
-.right-user .sidebar{
-display: flex;
-border: 1px #5ECD7F;
-border-radius: 15px;
+
+.right-user .sidebar {
+  display: flex;
+  border: 1px #5ECD7F;
+  border-radius: 15px;
 }
 
 /* a.nav-link{
@@ -28,47 +30,53 @@ border-radius: 15px;
 } */
 
 
-.left-user{
+.left-user {
   width: 75%;
   z-index: 2;
   gap: 24px;
   display: flex;
   flex-direction: column;
 }
-.left-user .content-item{
+
+.left-user .content-item {
   background-color: #ffffff;
   padding: 20px;
   border: 1px #5ECD7F;
-border-radius: 15px;
+  border-radius: 15px;
 }
-.content-item .title-edit{
+
+.content-item .title-edit {
   display: flex;
   gap: 8px;
 }
-.title-edit h5{
+
+.title-edit h5 {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0;
-  
-}
-.title-edit .wrap-svg {
-    padding: 6px;
-    border-radius: 100%;
-    border: 1px solid #e0e0e0;
-    cursor: pointer;
+
 }
 
-.left-user .content{
+.title-edit .wrap-svg {
+  padding: 6px;
+  border-radius: 100%;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.left-user .content {
   display: flex;
   gap: 36px;
 }
-.left-user .content .avatar-box{
+
+.left-user .content .avatar-box {
   width: 30%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
 }
+
 .avatar-box .has-edit {
   cursor: pointer;
 }
@@ -83,13 +91,15 @@ border-radius: 15px;
   font-size: 1.25rem;
   font-weight: 600;
 }
-.info-desc{
+
+.info-desc {
   display: flex;
-    flex-direction: column;
-    grid-gap: 16px;
-    gap: 16px;
+  flex-direction: column;
+  grid-gap: 16px;
+  gap: 16px;
 }
- .info-desc__item {
+
+.info-desc__item {
   width: 100%;
   display: flex;
   align-items: center;
@@ -97,6 +107,7 @@ border-radius: 15px;
   grid-gap: 4px;
   gap: 50px;
 }
+
 .info-desc__item .title-item {
   display: flex;
   flex-wrap: wrap;
@@ -107,11 +118,12 @@ border-radius: 15px;
   font-weight: 500;
   color: #6f6f6f;
 }
+
 .title-item .note.success {
   background: #cff1db;
 }
 
- .info-desc__item .title-item .note {
+.info-desc__item .title-item .note {
   display: flex;
   align-items: center;
   grid-gap: 4px;
@@ -122,7 +134,8 @@ border-radius: 15px;
   font-weight: 500;
   color: #262626;
 }
- .info-desc__item .name {
+
+.info-desc__item .name {
   font-size: 1rem;
   font-weight: 600;
   color: #000;
@@ -138,6 +151,7 @@ border-radius: 15px;
   grid-gap: 24px;
   gap: 24px;
 }
+
 .driver-license .title {
   display: flex;
   align-items: center;
@@ -145,6 +159,7 @@ border-radius: 15px;
   grid-gap: 8px;
   gap: 8px;
 }
+
 .driver-license .title .title-item {
   display: flex;
   align-items: center;
@@ -153,13 +168,13 @@ border-radius: 15px;
   gap: 8px;
 }
 
-.title-item h6{
-    font-size: 1.25rem;
-    font-weight: 600;
+.title-item h6 {
+  font-size: 1.25rem;
+  font-weight: 600;
   margin-bottom: 0;
 }
 
-.content-item{
+.content-item {
   display: flex;
   flex-direction: column;
   grid-gap: 24px;
@@ -181,9 +196,11 @@ border-radius: 15px;
   font-weight: 500;
   color: #262626;
 }
+
 .driver-license .title .btn {
   font-size: .75rem;
 }
+
 .btn.btn--s {
   padding: 12px 20px;
   position: relative;
@@ -202,6 +219,7 @@ border-radius: 15px;
   background-color: #5ECD7F;
   border-radius: 8px;
 }
+
 .driver-license .note-license {
   display: flex;
   flex-direction: column;
@@ -209,18 +227,21 @@ border-radius: 15px;
   padding: 8px;
   background-color: #ffd0cd;
 }
+
 .driver-license .note-license p {
   font-size: 12px;
   margin-bottom: 0;
   color: #f04438;
 }
-.info-license{
+
+.info-license {
   width: calc(50% - 12px);
-    display: flex;
-    flex-direction: column;
-    grid-gap: 16px;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 16px;
+  gap: 16px;
 }
+
 .content-account .driver-license .content .info-license {
   width: calc(50% - 12px);
   display: flex;
@@ -228,27 +249,31 @@ border-radius: 15px;
   grid-gap: 16px;
   gap: 16px;
 }
+
 .info-license__img {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 12px;
 }
+
 .driver-license .content .info-license__img .fix-img {
   padding-bottom: 65%;
   border-radius: 16px;
 }
+
 .info-license__img .fix-img-content {
   border-radius: 16px;
 }
-.fix-img-content{
+
+.fix-img-content {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 12px;
 }
 
-.fix-img-content img{
+.fix-img-content img {
   top: 0;
   left: 0;
   width: 100%;
@@ -260,6 +285,7 @@ border-radius: 15px;
 .info-license__title p {
   font-weight: 600;
 }
+
 .custom-input {
   width: 100%;
   display: flex;
@@ -267,9 +293,11 @@ border-radius: 15px;
   grid-gap: 6px;
   gap: 6px;
 }
+
 .info-license .custom-input .wrap-info {
   align-items: center;
 }
+
 .title-status p {
   font-size: .875rem;
   font-weight: 700;
@@ -277,7 +305,7 @@ border-radius: 15px;
   margin: 0;
 }
 
-.css-1umw9bq-MuiSvgIcon-root{
+.css-1umw9bq-MuiSvgIcon-root {
   position: relative;
   left: 150px;
 }
@@ -287,6 +315,7 @@ border-radius: 15px;
   border-color: #f6f6f6;
   background: #f6f6f6;
 }
+
 .custom-input .wrap-input {
   display: flex;
   align-items: center;
@@ -295,10 +324,14 @@ border-radius: 15px;
   padding: 12px;
   border: 1px solid #d8dae5;
   background: #fff;
-}.borderRadius-main, .custom-input .wrap-input {
+}
+
+.borderRadius-main,
+.custom-input .wrap-input {
   border-radius: 8px;
 }
-.wrap-text input{
+
+.wrap-text input {
   border: none !important;
   background: none;
   width: 100%;
@@ -319,15 +352,28 @@ border-radius: 15px;
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Định dạng khi hover */
+.nav-pills .nav-link {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+}
 
+.nav-link.logout {
+  color: #f04438 !important;
+}
+
+.nav-link.logout:hover {
+  color: #f04438 !important;
+}
 
 /* Định dạng cho menu hoạt động */
 .active1 {
-  background-color: #5FCF86 !important; /* Màu nền xanh Bootstrap */
+  background-color: #5FCF86 !important;
+  /* Màu nền xanh Bootstrap */
   color: #ffffff !important;
 }
-.nav-item{
+
+.nav-item {
   margin-top: 5px;
 }
 
@@ -339,6 +385,7 @@ border-radius: 15px;
   background-color: #fff;
   border: 1px solid #e0e0e0;
 }
+
 .item-box {
   grid-gap: 16px;
   gap: 16px;
@@ -352,19 +399,23 @@ border-radius: 15px;
   gap: 32px;
   border-radius: 12px;
 }
+
 .item-box .img-car .car-img {
   width: 250px;
 }
+
 .img-car .car-img {
   padding-bottom: 75%;
   border-radius: 10px;
 }
+
 .car-img {
   position: relative;
   max-width: 100%;
   padding-bottom: 100%;
   overflow: hidden;
 }
+
 .car-img img {
   position: absolute;
   top: 0;
@@ -373,18 +424,22 @@ border-radius: 15px;
   height: 100%;
   object-fit: cover;
 }
+
 .item-box .desc-car {
   width: calc(100% - 455px);
 }
+
 .item-box .desc-car {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
+
 .item-box .desc-car .desc-tag {
   display: flex;
   flex-wrap: wrap;
 }
+
 .item-box .desc-car .desc-name {
   display: flex;
   align-items: center;
@@ -392,6 +447,7 @@ border-radius: 15px;
   gap: 4px;
   margin-bottom: 4px;
 }
+
 .item-box .desc-car .desc-name p {
   color: #000;
   font-size: 1rem;
@@ -400,6 +456,7 @@ border-radius: 15px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .item-box .desc-car .desc-info {
   display: flex;
   align-items: center;
@@ -409,6 +466,7 @@ border-radius: 15px;
   line-height: 16px;
   margin-bottom: 12px;
 }
+
 .item-box .desc-car .desc-address-price {
   display: flex;
   justify-content: space-between;
@@ -420,6 +478,7 @@ border-radius: 15px;
   font-weight: 500;
   line-height: 16px;
 }
+
 .item-box .desc-car .desc-address-price .address {
   display: flex;
   align-items: center;
@@ -429,12 +488,14 @@ border-radius: 15px;
   grid-gap: 4px;
   gap: 4px;
 }
+
 .item-box .desc-car .desc-address-price .address p {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0;
 }
+
 .card-car .profile {
   justify-content: center;
   align-items: center;
@@ -454,50 +515,58 @@ border-radius: 15px;
 .item-box .profile .avatar {
   margin: 0 auto 12px;
 }
- .item-box .profile .price {
+
+.item-box .profile .price {
   display: flex;
   align-items: baseline;
   grid-gap: 4px;
   gap: 4px;
 }
+
 .item-box .profile .price span.price-origin {
   font-size: 1.25rem;
   font-weight: 600;
   color: #aaa;
   text-decoration: line-through;
 }
- .item-box .profile .price span.price-special {
+
+.item-box .profile .price span.price-special {
   font-size: 1.25rem;
   font-weight: 600;
   color: #000;
 }
+
 .item-box .profile .price span {
   font-size: .875rem;
   font-weight: 500;
   color: #767676;
 }
+
 /* Change_password */
- .content-account {
+.content-account {
   display: flex;
   flex-direction: column;
   grid-gap: 24px;
   gap: 24px;
   width: calc(70% - 20px);
 }
-.content-account .title{
+
+.content-account .title {
   display: flex;
   flex-direction: column;
   grid-gap: 24px;
   gap: 24px;
   width: calc(70% - 20px);
 }
+
 .content-account .title .title-edit {
   display: flex;
   flex-direction: column;
   grid-gap: 4px;
   gap: 4px;
 }
-.content-account .title .title-edit p{
+
+.content-account .title .title-edit p {
   font-size: 15px;
 }
 
@@ -507,6 +576,7 @@ border-radius: 15px;
   grid-gap: 12px;
   gap: 12px;
 }
+
 .custom-input {
   width: 100%;
   display: flex;
@@ -514,6 +584,7 @@ border-radius: 15px;
   grid-gap: 6px;
   gap: 6px;
 }
+
 .custom-input .wrap-info {
   display: flex;
   justify-content: space-between;
@@ -528,11 +599,13 @@ border-radius: 15px;
   border: 1px solid #d8dae5;
   background: #fff;
 }
+
 .custom-input .wrap-input .wrap-text {
   width: 100%;
   display: flex;
   flex-direction: column;
 }
+
 .custom-input .wrap-input .wrap-text input {
   display: inline-block;
   background-color: initial;
@@ -544,6 +617,7 @@ border-radius: 15px;
   border: none;
   box-shadow: none;
 }
+
 .content-account .change-pw .content .apply-button {
   display: flex;
   justify-content: flex-end;
@@ -552,13 +626,15 @@ border-radius: 15px;
   gap: 8px;
   margin-top: 12px;
 }
+
 /* note: user_GPLX */
-.img-license-edit{
+.img-license-edit {
   height: 100%;
   object-fit: cover;
   border-radius: 16px;
-    width: 100%;
+  width: 100%;
 }
-.has-edit{
+
+.has-edit {
   cursor: pointer;
 }

@@ -12,8 +12,17 @@ const LocationDropdown = () => {
       value: "TP.HCM",
       districts: [
         { label: "Quận Bình Thạnh", value: "BinhThanh" },
+        { label: "Quận Gò Vấp", value: "BinhThanh" },
+
         { label: "Quận 1", value: "Quan1" },
-        { label: "Quận 2", value: "Quan2" },
+        { label: "Quận 4", value: "Quan4" },
+
+        { label: "Quận 7", value: "Quan7" },
+
+        { label: "Quận 9", value: "Quan9" },
+        { label: "Quận 10", value: "Quan10" },
+        { label: "Quận 11", value: "Quan11" },
+        { label: "Quận 12", value: "Quan12" },
       ],
     },
     {

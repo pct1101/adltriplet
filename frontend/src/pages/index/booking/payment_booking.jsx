@@ -3,11 +3,36 @@ import "../../../css/index/payment.css";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import Next_step from "../event/next_step";
+import { useBooking } from "../../Private/bookingContext";
+import dayjs from "dayjs";
 
-function Payment_booking() {
+const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
+
+export default function Payment_booking() {
+  const { bookings, startDate, endDate, selectedTimes } = useBooking();
+  console.log(bookings);
+
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
+  };
+
+  useEffect(() => {
+    console.log("Booking details in Payment_booking:", bookings);
+  }, [bookings]);
+
+  const calculateTotalDays = (start, end) => {
+    const startDate = dayjs(start);
+    const endDate = dayjs(end);
+    return endDate.diff(startDate, "day");
+  };
+  const totalDays = calculateTotalDays(startDate, endDate);
+  const totalCost = bookings?.rental_price * totalDays;
+  const formatPrice2 = (price) => {
+    if (typeof price === "number") {
+      return `${price.toLocaleString("vi-VN")}đ`;
+    }
+    return "0 VND"; // Hoặc trả về một giá trị khác nếu price không hợp lệ
   };
   return (
     <div>
@@ -22,27 +47,24 @@ function Payment_booking() {
                 <h3 class="title">Thanh toán và hoàn tất</h3>
                 <Next_step></Next_step>
                 <div class="inputBox">
-                  <span>name on card :</span>
-                  <input type="text" placeholder="mr. john deo" />
+                  <span>Họ và tên :</span>
+                  <input type="text" />
                 </div>
                 <div class="inputBox">
-                  <span>credit card number :</span>
-                  <input type="number" placeholder="1111-2222-3333-4444" />
+                  <span>Di động :</span>
+                  <input type="number" />
                 </div>
                 <div class="inputBox">
-                  <span>exp month :</span>
-                  <input type="text" placeholder="january" />
+                  <span>Email :</span>
+                  <input type="email" />
                 </div>
-
-                <div class="flex">
-                  <div class="inputBox">
-                    <span>exp year :</span>
-                    <input type="number" placeholder="2022" />
-                  </div>
-                  <div class="inputBox">
-                    <span>CVV :</span>
-                    <input type="text" placeholder="1234" />
-                  </div>
+                <div class="inputBox">
+                  <span>Thành phố :</span>
+                  <input type="text" />
+                </div>
+                <div class="inputBox">
+                  <span>Địa chỉ :</span>
+                  <input type="text" />
                 </div>
               </div>
             </div>
@@ -63,7 +85,7 @@ function Payment_booking() {
                       <div className="car-img">
                         <img
                           className="scale-img"
-                          src={"/img/hyundai-1-anhchinh.jpg"}
+                          src={`/img/${bookings.car_image}`}
                           alt="Car"
                         />
                       </div>
@@ -71,23 +93,54 @@ function Payment_booking() {
                   </a>
                   <div className="desc-car">
                     <div className="desc-name">
-                      <p>Tên xe 1</p>
+                      <p>{bookings?.car_name}</p>
                     </div>
                     <div className="days">
                       <div className="desc-days">
-                        {" "}
-                        <label> Nhận xe :</label>
-                        <span>19/1/2000</span>
+                        <div className="form-item">
+                          <label>nhận xe </label>
+                          <div className="wrap-date-time">
+                            <div className="wrap-date">
+                              <span className="value">
+                                {formatDate(startDate)}
+                              </span>{" "}
+                            </div>
+                            <div className="wrap-time">
+                              <span className="value">
+                                {selectedTimes.nhanXe}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <div className="desc-days">
                         {" "}
-                        <label> Trả xe :</label>
-                        <span>19/1/2004</span>
+                        <div className="form-item">
+                          <label>trả xe </label>
+                          <div className="wrap-date-time">
+                            <div className="wrap-date">
+                              <span className="value">
+                                {" "}
+                                {formatDate(endDate)}
+                              </span>{" "}
+                            </div>
+                            <div className="wrap-time">
+                              <span className="value">
+                                {" "}
+                                {selectedTimes.traXe}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div className="total-price-car">
+                      <h6> Tổng ngày :</h6>
+                      <span>{totalDays} ngày</span>
+                    </div>
+                    <div className="total-price-car">
                       <h6> Tổng tiền :</h6>
-                      <span>6.000.000</span>
+                      <span> {formatPrice2(totalCost)} </span>
                     </div>
                   </div>
                 </div>
@@ -123,5 +176,3 @@ function Payment_booking() {
     </div>
   );
 }
-
-export default Payment_booking;

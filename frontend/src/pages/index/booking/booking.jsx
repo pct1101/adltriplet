@@ -15,8 +15,18 @@ import { addBookingUser } from "../../../lib/Axiosintance";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../event/loading";
-
+import { useBooking } from "../../Private/bookingContext";
 function Booking() {
+  const {
+    bookings,
+    setBookings,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    selectedTimes,
+    setSelectedTimes,
+  } = useBooking();
   // note: loadding
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
@@ -26,21 +36,12 @@ function Booking() {
     setOpenModal(false);
     setShowDatePicker(false);
   };
-  //note:    set time for days and time
-  const formattedToday = dayjs();
+
   //note:    set value for booking
-  const [bookings, setBookings] = useState(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  //note:    set state for startday and enday
-  const [startDate, setStartDate] = useState(formattedToday);
-  const [endDate, setEndDate] = useState(formattedToday.add(1, "day"));
+
   // note:  set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
-  //note:   set realtime
-  const [selectedTimes, setSelectedTimes] = useState({
-    traXe: dayjs().add(4, "hour").format("HH:mm"), //note: Thời gian trả xe mặc định là sau 4 giờ
-    nhanXe: dayjs().add(1, "hour").format("HH:mm"), //note: Thời gian nhận xe mặc định là sau 1 giờ
-  });
 
   const { id: carId } = useParams();
   const { user } = useAuth();
@@ -60,6 +61,7 @@ function Booking() {
       //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
       return;
     }
+
     const bookingData = {
       car_id: carId,
       start_date: formattedStartDate,
@@ -111,7 +113,6 @@ function Booking() {
     }
     return times;
   };
-
   // note:  xử lý realtime nhanXe
   const nhanXeOptions = generateTimeOptions(9, 0);
   //   xử lý realtime traXe
@@ -121,7 +122,6 @@ function Booking() {
       dayjs(time, "HH:mm").isBefore(dayjs("09:00", "HH:mm")) ||
       dayjs(time, "HH:mm").isAfter(dayjs("21:00", "HH:mm")),
   }));
-
   // note:  xử lý khi nhấn vào time
   const handleTimeSelect = (dropdown, time) => {
     const selectedTime = dayjs(time, "HH:mm");
@@ -143,8 +143,9 @@ function Booking() {
     }
     setOpenDropdown(null);
   };
-  //   set id
+
   const { id } = useParams();
+  console.log(id);
   // note:  Gọi API để lấy thông tin chi tiết xe
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -161,7 +162,7 @@ function Booking() {
 
   // note:   format days
   const formatDate = (date) => {
-    const validDate = dayjs(date); //note: chuyển date thành đối tượng dayjs
+    const validDate = dayjs(date);
 
     //note: Kiểm tra xem đối tượng dayjs có hợp lệ không
     if (validDate.isValid()) {

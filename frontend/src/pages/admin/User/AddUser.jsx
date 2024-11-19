@@ -73,7 +73,6 @@ function AdminAddUser() {
     formData.append("address", address);
     formData.append("gender", gender);
     // formData.append("birth_date", birthDate);
-    formData.append("role", role);
     formData.append("status", status);
     formData.append("password", password);
     formData.append("password_confirmation", passwordConfirmation); // Thêm trường xác nhận mật khẩu
@@ -82,7 +81,7 @@ function AdminAddUser() {
     try {
       await addUser(formData); // Gọi API để thêm người dùng
       alert("Đã thêm người dùng mới thành công!"); // Thông báo thành công
-      navigate("/admin/Userlist"); // Điều hướng đến trang danh sách người dùng sau khi thêm thành công
+      navigate("/admin/useer"); // Điều hướng đến trang danh sách người dùng sau khi thêm thành công
     } catch (error) {
       console.error("Error while adding user:", error.message);
     }
@@ -203,17 +202,6 @@ function AdminAddUser() {
                   onChange={(e) => setPasswordConfirmation(e.target.value)}
                   required
                 />
-              </div>
-              <div className="mb-3">
-                <label className="form-label">Vai Trò:</label>
-                <select
-                  className="form-select"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                >
-                  <option value="user">Người dùng</option>
-                  <option value="admin">Quản trị viên</option>
-                </select>
               </div>
               <div className="mb-3">
                 <label className="form-label">Trạng Thái:</label>

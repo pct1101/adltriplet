@@ -78,8 +78,8 @@ function AdminFavorite() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>ID Yêu thích</th>
-                  <th>ID người dùng</th>
+                  <th>ID</th>
+                  <th>Ngày yêu thích</th>
                   <th>Tên xe</th>
                   <th>Ngày yêu thích</th>
                   <th>Hành động</th>
@@ -90,8 +90,12 @@ function AdminFavorite() {
                   favorites.map((favorite) => (
                     <tr key={favorite.favorite_id}>
                       <td>{favorite.favorite_id}</td>
-                      <td>{favorite.user_id}</td>
-                      <td>{favorite.car_id}</td>
+                      <td>{favorite.date_favorite}</td>
+                      <td>
+                        {favorite && favorite.car && favorite.car.car_name
+                          ? favorite.car.car_name
+                          : "Không có tên xe"}
+                      </td>
                       <td>
                         {new Date(favorite.date_favorite).toLocaleDateString()}
                       </td>

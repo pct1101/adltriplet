@@ -5,9 +5,9 @@ import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 
 function AdminBooking() {
-  const [bookings, setBookings] = useState([]); // Khởi tạo bookings là một mảng rỗng
+  const [bookings, setBookings] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBookings();
@@ -16,21 +16,18 @@ function AdminBooking() {
 
   const fetchBookings = async () => {
     try {
-      const response = await getAllBookings(); // Lấy toàn bộ danh sách booking
-      console.log("Toàn bộ response: ", response); // Log toàn bộ response để kiểm tra
-
-      // Kiểm tra dữ liệu trả về, nếu dữ liệu trả về là mảng thì cập nhật state bookings
-      if (Array.isArray(response) && response.length > 0) {
-        setBookings(response); // Cập nhật danh sách bookings
+      const response = await getAllBookings();
+      if (Array.isArray(response)) {
+        setBookings(response);
       } else if (response && response.data && Array.isArray(response.data)) {
-        setBookings(response.data); // Nếu dữ liệu nằm trong response.data và là mảng
+        setBookings(response.data);
       } else {
         console.error("Dữ liệu trả về không đúng định dạng:", response);
-        setBookings([]); // Nếu không phải mảng, đặt state là mảng rỗng
+        setBookings([]);
       }
     } catch (error) {
       console.error("Không thể lấy danh sách booking:", error);
-      setBookings([]); // Đảm bảo state bookings luôn là mảng rỗng nếu có lỗi
+      setBookings([]);
     }
   };
 
@@ -44,13 +41,13 @@ function AdminBooking() {
   };
 
   const deleteBooking = async (bookingId) => {
-    const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+    const apiToken = localStorage.getItem("authToken");
     if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
       try {
         await deleteBookingById(bookingId, apiToken);
         setBookings(
           bookings.filter((booking) => booking.booking_id !== bookingId)
-        ); // Cập nhật lại danh sách
+        );
         alert("Booking đã được xóa thành công!");
       } catch (error) {
         console.error("Lỗi khi xóa booking:", error);
@@ -60,7 +57,20 @@ function AdminBooking() {
   };
 
   const editBooking = (BookingId) => {
-    navigate(`/admin/EditBooking/${BookingId}`); // Điều hướng đến trang sửa và truyền bookingId
+    navigate(`/admin/EditBooking/${BookingId}`);
+  };
+
+  // CSS cho các badge
+  const badgeStyle = {
+    display: "inline-flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "200px",
+    height: "30px",
+    fontSize: "14px",
+    borderRadius: "15px",
+    textAlign: "center",
+    whiteSpace: "nowrap",
   };
 
   return (
@@ -92,7 +102,6 @@ function AdminBooking() {
                 </tr>
               </thead>
               <tbody>
-                {/* Kiểm tra nếu bookings là một mảng và không rỗng */}
                 {Array.isArray(bookings) && bookings.length > 0 ? (
                   bookings.map((booking) => (
                     <tr key={booking.booking_id}>
@@ -110,15 +119,25 @@ function AdminBooking() {
                       <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <span
-                          className={`badge ${
-                            booking.booking_status === 1
-                              ? "bg-success" // Đã thanh toán -> màu xanh lá
-                              : "bg-danger" // Chưa thanh toán -> màu đỏ
-                          }`}
+                          style={{
+                            ...badgeStyle,
+                            backgroundColor:
+                              booking.booking_status === 1
+                                ? "yellow" // Chưa thanh toán
+                                : booking.booking_status === 2
+                                  ? "green" // Đã thanh toán
+                                  : "red", // Đã hủy
+                            color:
+                              booking.booking_status === 1
+                                ? "black" // Chữ màu đen cho nền vàng
+                                : "white", // Chữ màu trắng cho nền xanh và đỏ
+                          }}
                         >
                           {booking.booking_status === 1
-                            ? "Đã thanh toán"
-                            : "Chưa thanh toán"}
+                            ? "Chưa thanh toán"
+                            : booking.booking_status === 2
+                              ? "Đã thanh toán"
+                              : "Đã hủy"}
                         </span>
                       </td>
                       <td>

@@ -110,19 +110,60 @@ const AdminProducts = () => {
   const getBrandName = (brandid) => {
     switch (brandid) {
       case 1:
-        return "HUYNDAI";
+        return "Baic";
       case 2:
-        return "TOYOTA";
+        return "Chevrolet";
       case 3:
-        return "KIA";
+        return "Ford";
       case 4:
-        return "MITSUBISHI";
+        return "Hyundai";
       case 5:
-        return "MERCEDES";
+        return "Kia";
+      case 6:
+        return "Lexus";
+      case 7:
+        return "Mercedes";
+      case 8:
+        return "Morris Garages";
+      case 9:
+        return "Peugeot";
+      case 10:
+        return "Subaru";
+      case 11:
+        return "Toyota";
+      case 12:
+        return "Volkswagen";
+      case 13:
+        return "Audi";
+      case 14:
+        return "BMW";
+      case 15:
+        return "Daewoo";
+      case 16:
+        return "Honda";
+      case 17:
+        return "Isuzu";
+      case 18:
+        return "Land Rover";
+      case 19:
+        return "Mazda";
+      case 20:
+        return "Mitsubishi";
+      case 21:
+        return "Nissan";
+      case 22:
+        return "Renault";
+      case 23:
+        return "Suzuki";
+      case 24:
+        return "Vinfast";
+      case 25:
+        return "Zotye";
       default:
         return `Danh mục ID: ${brandid}`;
     }
   };
+  
 
   return (
     <div>

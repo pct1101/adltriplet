@@ -42,7 +42,7 @@ function UserList() {
 
   // Điều hướng đến trang chỉnh sửa người dùng
   const editUser = (userId) => {
-    navigate(`/admin/EditUser/${userId}`); // Điều hướng đến trang sửa user
+    navigate(`/admin/edit_user/${userId}`); // Điều hướng đến trang sửa user
   };
 
   // Xóa người dùng

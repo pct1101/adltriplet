@@ -43,19 +43,23 @@ const EditCar = () => {
   const fetchCarData = async (carId) => {
     try {
       const car = await getCarById(carId); // Gọi API lấy thông tin xe
-      setCarName(car.car_name);
-      setSeats(car.seats);
-      setModel(car.model);
-      setLicensePlate(car.license_plate);
-      setRentalPrice(car.rental_price);
-      setCarStatus(car.car_status);
-      setMileage(car.mileage);
-      setCarImage(car.car_image);
-      setCarDescription(car.car_description);
-      setBrandId(car.brandid); // Giả sử API trả về brandid
+      console.log("Dữ liệu xe từ API:", car);
+      setCarName(car.data.car_name);
+      // console.log(car.data.car_name);
+      setSeats(car.data.seats);
+      setModel(car.data.model);
+      setLicensePlate(car.data.license_plate);
+      setRentalPrice(car.data.rental_price);
+      setCarStatus(car.data.car_status);
+      setMileage(car.data.mileage);
+      setCarImage(car.data.car_image);
+      setCarDescription(car.data.car_description);
+      setBrandId(car.data.brandid); // Giả sử API trả về brandid
     } catch (error) {
+      
       console.error("Error fetching car data:", error.message);
     }
+    
   };
 
   // Cập nhật xe sau khi chỉnh sửa

@@ -144,8 +144,6 @@ export const getAllFeedbacks = async () => {
     throw error;
   }
 };
-;
-
 // API tạo mới một feedback
 export const addFeedback = async (feedbackData) => {
   const apiToken = localStorage.getItem("authToken");
@@ -943,5 +941,68 @@ export const getFeedbackByCarId = async (carId) => {
     throw new Error("Không thể lấy feedback từ API.");
   }
 };
-
+//  NOTE: getbooking
+export const getBooking = async (bookingData) => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+  try {
+    // Gửi yêu cầu POST đến API để thêm booking
+    const response = await axios.get(`${API_URL}/booking/`, bookingData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    // Kiểm tra lỗi từ API response
+    if (error.response) {
+      // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+      // Nếu là lỗi 401, có thể là do token không hợp lệ
+      if (error.response.status === 401) {
+        console.error(
+          "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
+        );
+      }
+      // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
+    } else if (error.request) {
+      // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      // Lỗi khác (ví dụ: cấu hình request sai)
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+    // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+    throw error;
+  }
+};
 // NOTE: HOÀN THÀNH THANH TOÁN
+export const payment = async (booking_id) => {
+  const apiToken = localStorage.getItem("authToken");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.post(
+      `${API_URL}/vnpay/createpayment/${booking_id}`,
+      {},
+      { headers: { Authorization: `Bearer ${apiToken}` } }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error creating payment:", error);
+    throw error;
+  }
+};

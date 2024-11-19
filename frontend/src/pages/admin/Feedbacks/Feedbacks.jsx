@@ -61,15 +61,25 @@ function AdminFeedbacks() {
     navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
   };
 
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);  // Lấy phần nguyên của rating
+    const emptyStars = 5 - fullStars;      // Tính số sao còn lại (max là 5 sao)
+  
+    // Tạo chuỗi sao đầy đủ và chuỗi sao trống
+    const fullStarStr = '★'.repeat(fullStars);
+    const emptyStarStr = '☆'.repeat(emptyStars);
+  
+    // Kết hợp chúng lại để hiển thị
+    return fullStarStr + emptyStarStr;
+  };
+
   return (
     <div>
       <Side_bar></Side_bar>
       <div className="main-wrapper section p-2">
         <Header></Header>
         <div className="">
-          {" "}
           <div className="d-flex">
-            {" "}
             <h1 className="title">Phản hồi khách hàng</h1>
             <button className="btn ms-auto">
               <Link className="btn btn-primary" to="/admin/add_feedback">
@@ -80,15 +90,13 @@ function AdminFeedbacks() {
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-            {" "}
             <table className="table">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Id xe</th>
-                  <th>Id người dùng</th>
                   <th>Nội dung phản hồi</th>
-                  <th>Đánh giá</th>
+                  <th className="text-start">Đánh giá</th>
                   <th>Ngày phản hồi</th>
                   <th>Hành động</th>
                 </tr>
@@ -105,9 +113,8 @@ function AdminFeedbacks() {
                     <tr key={feedback.id}>
                       <td>{feedback.id}</td>
                       <td>{feedback.car_id}</td>
-                      <td>{feedback.user_id}</td>
                       <td>{feedback.content}</td>
-                      <td>{feedback.rating}</td>
+                      <td className="text-start">{renderStars(feedback.rating)}</td>
                       <td>{feedback.feedback_date}</td>
                       <td>
                         <button

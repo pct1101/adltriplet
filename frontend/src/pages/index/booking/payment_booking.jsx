@@ -6,13 +6,63 @@ import Next_step from "../event/next_step";
 import { useBooking } from "../../Private/bookingContext";
 import dayjs from "dayjs";
 import { useAuth } from "../../Private/Auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUserProfile } from "../../../lib/Axiosintance.js";
+import { payment } from "../../../lib/Axiosintance.js";
 
 const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
 
 export default function Payment_booking() {
   const [userData, setUserData] = useState(null);
+  const { booking_id } = useParams();
+  console.log(booking_id);
+
+  const [bookingData, setBookingData] = useState(null);
+
+  // NOTE: get Booking_id
+  useEffect(() => {
+    const storedBookingId = localStorage.getItem("booking_id");
+    setBookingData(storedBookingId);
+
+    console.log("Booking ID from URL:", booking_id);
+  }, [booking_id]);
+
+  // NOTE: handle post
+  const handlePayment = async (event) => {
+    event.preventDefault();
+    const paymentData = {
+      order_desc: "Thanh toan don hang " + booking_id,
+      order_type: "billpayment",
+      language: "vn",
+      bank_code: "NCB",
+      txtexpire: dayjs().add(1, "day").format("YYYYMMDDHHmmss"),
+      txt_billing_mobile: userData?.phone,
+      txt_billing_email: userData?.email,
+      txt_billing_fullname: userData?.name,
+      txt_inv_addr1: selectedDistrict ? selectedDistrict.label : "",
+      txt_bill_city: selectedProvince ? selectedProvince.label : "",
+      txt_bill_country: "VN",
+      txt_inv_mobile: userData?.phone,
+      txt_inv_email: userData?.email,
+      txt_inv_customer: userData?.name,
+      txt_inv_company: "ABC Co., Ltd",
+      txt_inv_taxcode: "123456789",
+    };
+    console.log("Payment data:", paymentData);
+    try {
+      const response = await payment(booking_id, paymentData);
+      console.log("Payment response:", response);
+      if (response?.data?.message) {
+        alert("Thanh toán thành công!");
+      } else {
+        alert("Thanh toán thất bại. Vui lòng thử lại!");
+      }
+    } catch (error) {
+      console.error("Payment failed:", error);
+      console.log("Error response:", error.response?.data);
+      alert("Có lỗi xảy ra khi thực hiện thanh toán. Vui lòng thử lại sau.");
+    }
+  };
 
   // NOTE: get user
   useEffect(() => {
@@ -36,7 +86,6 @@ export default function Payment_booking() {
     selectedProvince,
     selectedDistrict,
   } = useBooking();
-  console.log(bookings);
 
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelectChange = (event) => {
@@ -115,7 +164,12 @@ export default function Payment_booking() {
               </div>
             </div>
 
-            <input type="submit" value="Xác nhận" className="submit-btn" />
+            <input
+              type="submit"
+              value="Xác nhận"
+              className="submit-btn"
+              onClick={handlePayment}
+            />
           </form>
           <div className="left-user">
             <div className="content-item">

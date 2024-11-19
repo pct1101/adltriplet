@@ -48,17 +48,17 @@ const AddCar = () => {
     try {
       const response = await getCarById(carId);
       const car = response.data;
-      setCarId(car.car_id);
-      setCarName(car.car_name);
-      setSeats(car.seats);
-      setModel(car.model);
-      setLicensePlate(car.license_plate);
-      setRentalPrice(car.rental_price);
-      setCarStatus(car.car_status);
-      setMileage(car.mileage);
-      setCarImage(car.car_image);
-      setCarDescription(car.car_description);
-      setBrandId(car.brandid);
+      setCarId(car.data.car_id);
+      setCarName(car.data.car_name);
+      setSeats(car.data.seats);
+      setModel(car.data.model);
+      setLicensePlate(car.data.license_plate);
+      setRentalPrice(car.data.rental_price);
+      setCarStatus(car.data.car_status);
+      setMileage(car.data.mileage);
+      setCarImage(car.data.car_image);
+      setCarDescription(car.data.car_description);
+      setBrandId(car.data.brandid);
     } catch (error) {
       console.error("Error fetching car data:", error.message);
     }
@@ -157,7 +157,31 @@ const AddCar = () => {
                   onChange={(e) => setBrandId(e.target.value)}
                   required
                 >
-                  <option value={1}>Hãng Xe 1</option>
+                  <option value={1}>Baic</option>
+                  <option value={2}>Chevrolet</option>
+                  <option value={3}>Ford</option>
+                  <option value={4}>Hyundai</option>
+                  <option value={5}>Kia</option>
+                  <option value={6}>Lexus</option>
+                  <option value={7}>Mercedes</option>
+                  <option value={8}>Morris Garages</option>
+                  <option value={9}>Peugeot</option>
+                  <option value={10}>Subaru</option>
+                  <option value={11}>Toyota</option>
+                  <option value={12}>Volkswagen</option>
+                  <option value={13}>Audi</option>
+                  <option value={14}>BMW</option>
+                  <option value={15}>Daewoo</option>
+                  <option value={16}>Honda</option>
+                  <option value={17}>Isuzu</option>
+                  <option value={18}>Land Rover</option>
+                  <option value={19}>Mazda</option>
+                  <option value={20}>Mitsubishi</option>
+                  <option value={21}>Nissan</option>
+                  <option value={22}>Renault</option>
+                  <option value={23}>Suzuki</option>
+                  <option value={24}>Vinfast</option>
+                  <option value={25}>Zotye</option>
                 </select>
               </div>
               <div className="mb-3">
@@ -188,7 +212,7 @@ const AddCar = () => {
                   onChange={(e) => setCarStatus(e.target.value)}
                 >
                   <option value={1}>Còn Hàng</option>
-                  <option value={0}>Hết Hàng</option>
+                  {/* <option value={0}>Hết Hàng</option> */}
                 </select>
               </div>
               <div className="mb-3">

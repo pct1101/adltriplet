@@ -95,7 +95,7 @@ export const getCarById = async (id) => {
     });
     return response.data; // Trả về dữ liệu từ phản hồi
   } catch (error) {
-    console.error("Error deleting car:", error);
+    console.error("Lỗi lấy xe theo xe:", error);
     throw error; // Ném lỗi để xử lý ở nơi gọi hàm
   }
 };
@@ -119,7 +119,7 @@ export const updateCar = async (id, carData) => {
   }
 };
 
-// API lấy tất cả feedbacks
+//Lấy toàn bộ feddbackadmin
 export const getAllFeedbacks = async () => {
   const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
   if (!apiToken) {
@@ -133,8 +133,8 @@ export const getAllFeedbacks = async () => {
     });
 
     // Kiểm tra dữ liệu trả về từ API
-    if (response.data && Array.isArray(response.data)) {
-      return response.data; // Trả về dữ liệu dạng mảng
+    if (response.data && Array.isArray(response.data.data)) {
+      return response.data.data; // Trả về mảng dữ liệu từ data
     } else {
       console.error("Dữ liệu phản hồi không phải mảng:", response.data);
       return []; // Trả về mảng rỗng nếu không phải mảng hợp lệ
@@ -144,6 +144,7 @@ export const getAllFeedbacks = async () => {
     throw error;
   }
 };
+;
 
 // API tạo mới một feedback
 export const addFeedback = async (feedbackData) => {
@@ -785,7 +786,7 @@ export const updateFavorite = async (userId, carId, favoriteData) => {
         },
       }
     );
-    return response.data;
+    return response.data.data.favorite;
   } catch (error) {
     console.error(
       `Lỗi khi cập nhật yêu thích cho userId ${userId} và carId ${carId}:`,
@@ -807,7 +808,7 @@ export const getFavoriteDetails = async (userId, carId) => {
         },
       }
     );
-    return response.data.favorite; // Trả về dữ liệu favorite
+    return response.data.data.favorite; // Trả về dữ liệu favorite
   } catch (error) {
     console.error("Lỗi khi lấy chi tiết favorite:", error);
     throw error;

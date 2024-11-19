@@ -21,7 +21,7 @@ function AddFavorite() {
 
     try {
       const response = await addFavorite(userId, carId); // Gửi yêu cầu thêm yêu thích
-      alert(response.message); // Thông báo thành công
+      alert(response.message,"Thêm thành công"); // Thông báo thành công
       navigate("/admin/favorite"); // Quay lại danh sách yêu thích
     } catch (error) {
       alert("Thêm yêu thích thất bại!");

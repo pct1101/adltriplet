@@ -49,7 +49,9 @@ function UserDetail() {
               <div className="row">
                 <div className="col-md-4 text-center">
                   <img
-                    src="../img/anh1-x1.jpg" // Thay đổi bằng ảnh của user nếu API có trường ảnh
+                    src={`/img/${
+                      user ? user.image : "đang load"
+                    }`} // Thay đổi bằng ảnh của user nếu API có trường ảnh
                     alt={user.name}
                     className="img-fluid rounded-circle"
                     style={{ maxWidth: "150px" }}

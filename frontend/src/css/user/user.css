@@ -119,12 +119,26 @@
   color: #6f6f6f;
 }
 
-.title-item .note.success {
+.note.success {
   background: #cff1db;
 }
 
 .info-desc__item .title-item .note {
   display: flex;
+  align-items: center;
+  grid-gap: 4px;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 100px;
+  font-size: .625rem;
+  font-weight: 500;
+  color: #262626;
+}
+
+.desc-car .note {
+  display: flex;
+  width: 100%;
+  max-width: 110px;
   align-items: center;
   grid-gap: 4px;
   gap: 4px;
@@ -429,6 +443,16 @@
   width: calc(100% - 455px);
 }
 
+.item-box .desc-car .days .desc-days .form-item {
+  padding: 0px;
+  gap: 6px;
+}
+
+.item-box .desc-car .days .desc-days .form-item span {
+  margin: 0px;
+
+}
+
 .item-box .desc-car {
   display: flex;
   flex-direction: column;
@@ -567,7 +591,7 @@
 }
 
 .content-account .title .title-edit p {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .content-account .change-pw .content {
@@ -637,4 +661,49 @@
 
 .has-edit {
   cursor: pointer;
+}
+
+
+/* note: user_car  */
+
+.title-edit {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-status {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-status p {
+  margin: 0px;
+  padding: 0;
+  width: 150px;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.custom-select:before {
+  content: url(../../assets/arrow-down.d8b3609e.svg);
+  position: absolute;
+  right: 12px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.custom-select select {
+  cursor: pointer;
+  padding: 12px 36px 12px 12px;
+  width: 100%;
+  font-size: 1rem;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-weight: 600;
 }

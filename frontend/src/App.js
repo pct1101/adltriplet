@@ -28,6 +28,8 @@ import AddFavorite from "./pages/admin/Favorite/AddFavorite.jsx";
 import Payment_booking from "./pages/index/booking/payment_booking.jsx";
 import { BookingProvider } from "./pages/Private/bookingContext.jsx";
 import UserDetail from "./pages/admin/User/DetailUserAdmin.jsx";
+import My_car from "./pages/index/user/my_car.jsx";
+
 
 function App() {
   return (
@@ -226,6 +228,8 @@ function App() {
                 path="/user_repassword"
                 element={<User_change_password />}
               />
+              <Route path="/user_car" element={<My_car />} />
+
               {/* Payment */}
               <Route path="/payment_car" element={<Payment_booking />} />
             </Routes>

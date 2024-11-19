@@ -18,6 +18,8 @@ import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
 function Booking() {
   const {
+    location,
+    setLocation,
     bookings,
     setBookings,
     startDate,

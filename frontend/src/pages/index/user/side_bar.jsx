@@ -181,7 +181,7 @@ function Side_bar() {
         </li>
         <li>
           <NavLink
-            to="/customers"
+            to="/user_car"
             className={({ isActive }) =>
               `nav-link ${isActive ? "active1" : "link-dark"}`
             }

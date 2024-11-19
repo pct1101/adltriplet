@@ -6,10 +6,14 @@ const BookingContext = createContext();
 export const useBooking = () => useContext(BookingContext);
 
 export const BookingProvider = ({ children }) => {
+  // note: set address
+  const [location, setLocation] = useState({ province: null, district: null });
+  // note: set booking
   const [bookings, setBookings] = useState(() => {
     const saved = localStorage.getItem("bookings");
     return saved ? JSON.parse(saved) : null;
   });
+  // note: set days
   const [startDate, setStartDate] = useState(() => {
     const saved = localStorage.getItem("startDate");
     return saved ? dayjs(saved) : dayjs();
@@ -18,6 +22,7 @@ export const BookingProvider = ({ children }) => {
     const saved = localStorage.getItem("endDate");
     return saved ? dayjs(saved) : dayjs().add(1, "day");
   });
+  // note: set time
   const [selectedTimes, setSelectedTimes] = useState(() => {
     const saved = localStorage.getItem("selectedTimes");
     return saved
@@ -34,6 +39,8 @@ export const BookingProvider = ({ children }) => {
   return (
     <BookingContext.Provider
       value={{
+        location,
+        setLocation,
         bookings,
         setBookings,
         startDate,

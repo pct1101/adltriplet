@@ -90,16 +90,14 @@ function User() {
               <div className="content">
                 <div className="avatar-box">
                   <div className="avatar avatar--xl has-edit">
-                    <img
-                      className="scale-img"
-                      src={`/img/${userData.image}`}
-                    />
+                    <img className="scale-img" src={`/img/${userData.image}`} />
                   </div>
                 </div>
                 <div className="info-user">
                   <h6> {userData?.name}</h6>
                   <p className="note">
-                    Tham gia: {new Date(userData?.created_at).toLocaleDateString('en-GB')}
+                    Tham gia:{" "}
+                    {new Date(userData?.created_at).toLocaleDateString("en-GB")}
                   </p>
                   <div className="info-desc">
                     <div className="info-desc__item">

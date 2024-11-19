@@ -94,7 +94,9 @@ function Header() {
                       <div className="info">
                         <div className="image">
                           <img
-                            src={`/img/${userData.image}`}
+                            src={`/img/${
+                              userData ? userData.image : "đang load"
+                            }`}
                             alt=""
                           />
                         </div>

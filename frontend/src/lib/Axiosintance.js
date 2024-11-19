@@ -853,7 +853,10 @@ export const deleteFavorite = async (id) => {
     console.log("Xóa yêu thích thành công:", response);
     return response.data;
   } catch (error) {
-    console.error("Lỗi khi xóa yêu thích:", error.response ? error.response.data : error.message);
+    console.error(
+      "Lỗi khi xóa yêu thích:",
+      error.response ? error.response.data : error.message
+    );
     throw error;
   }
 };
@@ -861,18 +864,18 @@ export const deleteFavorite = async (id) => {
 // Hàm tạo 1 feedback người dùng
 export const addFeedbackCarUser = async (carId, feedbackData) => {
   const apiToken = localStorage.getItem("remember_token");
-  
+
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
 
   try {
     const response = await axios.post(
-      `${API_URL}/feedback/${carId}`,  // Giả sử API này là cho feedback
-      { ...feedbackData },  // Dữ liệu feedback bao gồm content và rating
+      `${API_URL}/feedback/${carId}`, // Giả sử API này là cho feedback
+      { ...feedbackData }, // Dữ liệu feedback bao gồm content và rating
       {
         headers: {
-          Authorization: `Bearer ${apiToken}`,  // Thêm token vào header
+          Authorization: `Bearer ${apiToken}`, // Thêm token vào header
         },
       }
     );
@@ -882,7 +885,6 @@ export const addFeedbackCarUser = async (carId, feedbackData) => {
     throw error;
   }
 };
-
 
 export const addToFavorites = async (carId) => {
   const apiToken = localStorage.getItem("remember_token");
@@ -911,7 +913,7 @@ export const addToFavorites = async (carId) => {
 
 export const getFeedbackByCarId = async (carId) => {
   const apiToken = localStorage.getItem("remember_token");
-  
+
   if (!apiToken) {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");

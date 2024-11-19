@@ -38,7 +38,7 @@ const Dangky = () => {
       }
 
       setTimeout(() => {
-        navigate("/"); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
+        navigate("/Login"); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
       }, 2000);
     } catch (error) {
       setError(

@@ -107,63 +107,39 @@ const AdminProducts = () => {
     }
   };
 
-  const getBrandName = (brandid) => {
-    switch (brandid) {
-      case 1:
-        return "Baic";
-      case 2:
-        return "Chevrolet";
-      case 3:
-        return "Ford";
-      case 4:
-        return "Hyundai";
-      case 5:
-        return "Kia";
-      case 6:
-        return "Lexus";
-      case 7:
-        return "Mercedes";
-      case 8:
-        return "Morris Garages";
-      case 9:
-        return "Peugeot";
-      case 10:
-        return "Subaru";
-      case 11:
-        return "Toyota";
-      case 12:
-        return "Volkswagen";
-      case 13:
-        return "Audi";
-      case 14:
-        return "BMW";
-      case 15:
-        return "Daewoo";
-      case 16:
-        return "Honda";
-      case 17:
-        return "Isuzu";
-      case 18:
-        return "Land Rover";
-      case 19:
-        return "Mazda";
-      case 20:
-        return "Mitsubishi";
-      case 21:
-        return "Nissan";
-      case 22:
-        return "Renault";
-      case 23:
-        return "Suzuki";
-      case 24:
-        return "Vinfast";
-      case 25:
-        return "Zotye";
-      default:
-        return `Danh mục ID: ${brandid}`;
-    }
-  };
-  
+const brands = [
+  { id: 1, name: "Baic" },
+  { id: 2, name: "Chevrolet" },
+  { id: 3, name: "Ford" },
+  { id: 4, name: "Hyundai" },
+  { id: 5, name: "Kia" },
+  { id: 6, name: "Lexus" },
+  { id: 7, name: "Mercedes" },
+  { id: 8, name: "Morris Garages" },
+  { id: 9, name: "Peugeot" },
+  { id: 10, name: "Subaru" },
+  { id: 11, name: "Toyota" },
+  { id: 12, name: "Volkswagen" },
+  { id: 13, name: "Audi" },
+  { id: 14, name: "BMW" },
+  { id: 15, name: "Daewoo" },
+  { id: 16, name: "Honda" },
+  { id: 17, name: "Isuzu" },
+  { id: 18, name: "Land Rover" },
+  { id: 19, name: "Mazda" },
+  { id: 20, name: "Mitsubishi" },
+  { id: 21, name: "Nissan" },
+  { id: 22, name: "Renault" },
+  { id: 23, name: "Suzuki" },
+  { id: 24, name: "Vinfast" },
+  { id: 25, name: "Zotye" },
+];
+// Hàm lấy tên thương hiệu dựa trên brandid
+const getBrandName = (brandid) => {
+  const brand = brands.find((b) => b.id === brandid); // Tìm kiếm thương hiệu theo ID
+  return brand ? brand.name : "Không xác định"; // Nếu không tìm thấy, trả về "Không xác định"
+};
+
 
   return (
     <div>
@@ -191,11 +167,11 @@ const AdminProducts = () => {
             onChange={handleBrandChange}
           >
             <option value="All">Tất cả</option>
-            <option value="HUYNDAI">HUYNDAI</option>
-            <option value="TOYOTA">TOYOTA</option>
-            <option value="KIA">KIA</option>
-            <option value="MITSUBISHI">MITSUBISHI</option>
-            <option value="MERCEDES">MERCEDES</option>
+            {brands.map((brand) => (
+              <option key={brand.id} value={brand.name}>
+                {brand.name}
+              </option>
+            ))}
           </select>
         </div>
 

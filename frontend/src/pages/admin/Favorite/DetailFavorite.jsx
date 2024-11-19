@@ -8,7 +8,6 @@ function AdminFavoriteDetails() {
   const { userId, carId } = useParams(); // Lấy userId và carId từ URL
   const [favorite, setFavorite] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false); // Quản lý trạng thái chỉnh sửa
   const [editedFavorite, setEditedFavorite] = useState(null); // Dữ liệu chỉnh sửa
   const navigate = useNavigate();
 
@@ -28,31 +27,6 @@ function AdminFavoriteDetails() {
     } catch (error) {
       console.error("Không thể lấy chi tiết favorite:", error);
       setLoading(false);
-    }
-  };
-
-  // Hàm xử lý thay đổi dữ liệu chỉnh sửa
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedFavorite((prevState) => ({
-      ...prevState,
-      car: {
-        ...prevState.car,
-        [name]: value,
-      },
-    }));
-  };
-
-  // Hàm xử lý lưu lại thay đổi
-  const handleSave = async () => {
-    try {
-      await updateFavorite(userId, carId, editedFavorite); // Gửi yêu cầu cập nhật lên server
-      setFavorite(editedFavorite); // Cập nhật lại dữ liệu yêu thích
-      setIsEditing(false); // Kết thúc chế độ chỉnh sửa
-      alert("Cập nhật yêu thích thành công!");
-    } catch (error) {
-      console.error("Không thể cập nhật yêu thích:", error);
-      alert("Cập nhật thất bại!");
     }
   };
 

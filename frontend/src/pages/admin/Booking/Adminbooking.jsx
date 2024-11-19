@@ -40,26 +40,29 @@ function AdminBooking() {
     }
   };
 
-  const deleteBooking = async (bookingId) => {
-    const apiToken = localStorage.getItem("authToken");
-    if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
-      try {
-        await deleteBookingById(bookingId, apiToken);
-        setBookings(
-          bookings.filter((booking) => booking.booking_id !== bookingId)
-        );
-        alert("Booking đã được xóa thành công!");
-      } catch (error) {
-        console.error("Lỗi khi xóa booking:", error);
-        alert("Thất bại trong việc xóa booking: " + error.message);
-      }
-    }
-  };
+  // const deleteBooking = async (bookingId) => {
+  //   const apiToken = localStorage.getItem("authToken");
+  //   if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
+  //     try {
+  //       await deleteBookingById(bookingId, apiToken);
+  //       setBookings(
+  //         bookings.filter((booking) => booking.booking_id !== bookingId)
+  //       );
+  //       alert("Booking đã được xóa thành công!");
+  //     } catch (error) {
+  //       console.error("Lỗi khi xóa booking:", error);
+  //       alert("Thất bại trong việc xóa booking: " + error.message);
+  //     }
+  //   }
+  // };
 
   const editBooking = (BookingId) => {
     navigate(`/admin/EditBooking/${BookingId}`);
   };
 
+  const handleViewDetail = (BookingId) => {
+    navigate(`/admin/DetailBooking/${BookingId}`);
+  };
   // CSS cho các badge
   const badgeStyle = {
     display: "inline-flex",
@@ -73,6 +76,7 @@ function AdminBooking() {
     whiteSpace: "nowrap",
   };
 
+  
   return (
     <div>
       <Side_bar></Side_bar>
@@ -148,11 +152,11 @@ function AdminBooking() {
                           Sửa
                         </button>
                         <button
-                          className="btn btn-danger"
-                          onClick={() => deleteBooking(booking.booking_id)}
+                          className="btn btn-info me-2"
+                          onClick={() => handleViewDetail(booking.booking_id)}
                           disabled={!isAdmin}
                         >
-                          Xóa
+                          Chi tiết
                         </button>
                       </td>
                     </tr>

@@ -29,6 +29,7 @@ import Payment_booking from "./pages/index/booking/payment_booking.jsx";
 import { BookingProvider } from "./pages/Private/bookingContext.jsx";
 import UserDetail from "./pages/admin/User/DetailUserAdmin.jsx";
 import My_car from "./pages/index/user/my_car.jsx";
+import AdminBookingDetails from "./pages/admin/Booking/DetailBooking.jsx";
 
 function App() {
   return (
@@ -130,6 +131,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <EditBooking />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/detailbooking/:bookingId"
+                element={
+                  <PrivateRoute>
+                    <AdminBookingDetails />
                   </PrivateRoute>
                 }
               />

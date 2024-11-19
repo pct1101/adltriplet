@@ -94,7 +94,7 @@ function Header() {
                       <div className="info">
                         <div className="image">
                           <img
-                            src="https://n1-astg.mioto.vn/g/2024/10/04/17/aA9ESIVq66pc84S2PGAPgA.jpg"
+                            src={`/img/${userData.image}`}
                             alt=""
                           />
                         </div>

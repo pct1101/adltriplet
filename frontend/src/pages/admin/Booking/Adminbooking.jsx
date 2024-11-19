@@ -60,7 +60,7 @@ function AdminBooking() {
   };
 
   const editBooking = (BookingId) => {
-    navigate(`/admin/EditBooking/${BookingId}`); // Điều hướng đến trang sửa và truyền carId
+    navigate(`/admin/EditBooking/${BookingId}`); // Điều hướng đến trang sửa và truyền bookingId
   };
 
   return (
@@ -69,7 +69,6 @@ function AdminBooking() {
       <div className="main-wrapper section">
         <Header></Header>
         <div className="d-flex">
-          {" "}
           <h1 className="title">Quản lý Booking</h1>
           <button className="btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddBooking">
@@ -79,7 +78,6 @@ function AdminBooking() {
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-            {" "}
             <table className="table">
               <thead>
                 <tr>
@@ -89,7 +87,7 @@ function AdminBooking() {
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
                   <th>Ngày kết thúc</th>
-                  <th>Trạng thái</th>
+                  <th>Trạng thái thanh toán</th>
                   <th>Hành động</th>
                 </tr>
               </thead>
@@ -111,9 +109,17 @@ function AdminBooking() {
                       </td>
                       <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
-                        {booking.booking_status === 1
-                          ? "Đang chờ"
-                          : "Đã hoàn thành"}
+                        <span
+                          className={`badge ${
+                            booking.booking_status === 1
+                              ? "bg-success" // Đã thanh toán -> màu xanh lá
+                              : "bg-danger" // Chưa thanh toán -> màu đỏ
+                          }`}
+                        >
+                          {booking.booking_status === 1
+                            ? "Đã thanh toán"
+                            : "Chưa thanh toán"}
+                        </span>
                       </td>
                       <td>
                         <button
@@ -134,7 +140,7 @@ function AdminBooking() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="8" className="text-center">
+                    <td colSpan="9" className="text-center">
                       Không có booking nào
                     </td>
                   </tr>

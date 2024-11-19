@@ -27,6 +27,7 @@ import AdminFavoriteDetails from "./pages/admin/Favorite/DetailFavorite.jsx";
 import AddFavorite from "./pages/admin/Favorite/AddFavorite.jsx";
 import Payment_booking from "./pages/index/booking/payment_booking.jsx";
 import { BookingProvider } from "./pages/Private/bookingContext.jsx";
+import UserDetail from "./pages/admin/User/DetailUserAdmin.jsx";
 
 function App() {
   return (
@@ -178,6 +179,15 @@ function App() {
                 element={
                   <PrivateRoute>
                     <EditUser />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/admin/user/:id"
+                element={
+                  <PrivateRoute>
+                    <UserDetail />
                   </PrivateRoute>
                 }
               />

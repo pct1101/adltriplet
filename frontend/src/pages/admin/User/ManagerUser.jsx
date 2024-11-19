@@ -129,11 +129,10 @@ function UserList() {
                       <div className="col-md-9">
                         {user.name} |{" "}
                         <span
-                          className={`badge ${
-                            user.role === "user"
+                          className={`badge ${user.role === "user"
                               ? "text-bg-warning"
                               : "text-bg-danger"
-                          }`}
+                            }`}
                         >
                           {user.role}
                         </span>
@@ -172,11 +171,10 @@ function UserList() {
                       Sửa
                     </button>
                     <button
-                      className="btn btn-danger"
-                      onClick={() => deleteUser(user.id)}
-                      disabled={!isAdmin} // Vô hiệu hóa nút xóa nếu không phải admin
+                      className="btn btn-info me-2"
+                      onClick={() => navigate(`/admin/user/${user.id}`)}
                     >
-                      Xóa
+                      Chi tiết
                     </button>
                   </td>
                 </tr>

@@ -135,14 +135,14 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src={`/img/${car.car_image}`}
+                src={`/img/${car.car_image}`} // Hiển thị ảnh chính
               />
             </div>
             <div className="right">
-              {carImages.map((image, index) => (
-                <div className="right-item-car" key={index}>
+              {car.images.map((image) => (
+                <div className="right-item-car" key={image.carImage_id}>
                   <img
-                    src={`../img/${car.images[0].carImage_url}`} // Hiển thị ảnh con đầu tiên
+                    src={`/img/${image.carImage_url}`} // Hiển thị từng ảnh con
                     alt={car.car_name}
                   />
                 </div>
@@ -203,9 +203,8 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className={`fav-item wrap-ic wrap-svg ${
-                      isFavorite ? "favorite-active" : ""
-                    }`} // Thêm class để đổi màu trái tim
+                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""
+                      }`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg

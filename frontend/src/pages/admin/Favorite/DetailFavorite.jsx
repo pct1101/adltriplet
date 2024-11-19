@@ -19,8 +19,8 @@ function AdminFavoriteDetails() {
   const fetchFavoriteDetails = async () => {
     try {
       const response = await getFavoriteDetails(userId, carId); // Gửi request lấy chi tiết favorite từ API
-      setFavorite(response); // Lưu thông tin favorite vào state
       console.log(response);
+      setFavorite(response); // Lưu thông tin favorite vào state
 
       setEditedFavorite({ ...response }); // Khởi tạo giá trị chỉnh sửa
       setLoading(false); // Đánh dấu kết thúc loading
@@ -90,7 +90,9 @@ function AdminFavoriteDetails() {
                 </p>
                 <p>
                   <strong>Trạng thái xe:</strong>{" "}
-                  {favorite.car.car_status === 1 ? "Hoạt động" : "Không hoạt động"}
+                  {favorite.car.car_status === 1
+                    ? "Hoạt động"
+                    : "Không hoạt động"}
                 </p>
               </div>
             </div>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Autocomplete, TextField } from "@mui/material";
 import "../../../css/index/autocomplete.css";
 
-const LocationDropdown = () => {
+const LocationDropdown = ({ onLocationChange }) => {
   const [province, setProvince] = useState(null);
   const [district, setDistrict] = useState(null);
 
@@ -13,12 +13,9 @@ const LocationDropdown = () => {
       districts: [
         { label: "Quận Bình Thạnh", value: "BinhThanh" },
         { label: "Quận Gò Vấp", value: "BinhThanh" },
-
         { label: "Quận 1", value: "Quan1" },
         { label: "Quận 4", value: "Quan4" },
-
         { label: "Quận 7", value: "Quan7" },
-
         { label: "Quận 9", value: "Quan9" },
         { label: "Quận 10", value: "Quan10" },
         { label: "Quận 11", value: "Quan11" },
@@ -50,14 +47,15 @@ const LocationDropdown = () => {
       ],
     },
   ];
-
+  useEffect(() => {
+    onLocationChange(province, district);
+  }, [province, district, onLocationChange]);
   // Default selected province (e.g., Hồ Chí Minh)
   const defaultProvince = locations[0];
-
   // Handle province change
   const handleProvinceChange = (event, newValue) => {
     setProvince(newValue); // Set selected province
-    setDistrict(null); // Reset district when province changes
+    setDistrict(null); // Reset district when province change s
   };
 
   return (

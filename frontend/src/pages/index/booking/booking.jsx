@@ -18,8 +18,10 @@ import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
 function Booking() {
   const {
-    location,
-    setLocation,
+    selectedProvince,
+    setSelectedProvince,
+    selectedDistrict,
+    setSelectedDistrict,
     bookings,
     setBookings,
     startDate,
@@ -29,6 +31,12 @@ function Booking() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
+
+  // note: handle dữ liệu địa điểm
+  const handleLocationChange = (province, district) => {
+    setSelectedProvince(province);
+    setSelectedDistrict(district);
+  };
   // note: loadding
   const [isLoading, setIsLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
@@ -69,6 +77,8 @@ function Booking() {
       end_date: formattedEndDate,
       rental_price: total_cost,
       booking_date: new Date().toISOString(),
+      city: selectedProvince ? selectedProvince.label : null,
+      address: selectedDistrict ? selectedDistrict.label : null,
     };
 
     try {
@@ -264,7 +274,7 @@ function Booking() {
         <div className="wrap-form">
           <span className="value">
             {" "}
-            <LocationDropdown />
+            <LocationDropdown onLocationChange={handleLocationChange} />
           </span>
         </div>
       </div>

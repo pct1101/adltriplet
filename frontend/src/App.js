@@ -30,7 +30,6 @@ import { BookingProvider } from "./pages/Private/bookingContext.jsx";
 import UserDetail from "./pages/admin/User/DetailUserAdmin.jsx";
 import My_car from "./pages/index/user/my_car.jsx";
 
-
 function App() {
   return (
     <AuthProvider>
@@ -231,7 +230,10 @@ function App() {
               <Route path="/user_car" element={<My_car />} />
 
               {/* Payment */}
-              <Route path="/payment_car" element={<Payment_booking />} />
+              <Route
+                path="/payment_car/:booking_id"
+                element={<Payment_booking />}
+              />
             </Routes>
           </Router>
         </div>

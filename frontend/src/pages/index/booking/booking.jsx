@@ -60,6 +60,7 @@ function Booking() {
   const formattedEndDate = endDate.toISOString().split("T")[0]; //note: YYYY-MM-DD
   const handleBookingSubmit = async () => {
     setIsLoading(true);
+
     const apiToken = localStorage.getItem("remember_token");
     if (!user) {
       navigate("/login");
@@ -84,11 +85,12 @@ function Booking() {
     try {
       //note: Gọi hàm addBooking để thực hiện API call
       const response = await addBookingUser(bookingData, apiToken);
-      console.log("Booking thành công:", response);
+      const { booking } = response;
+      localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
         setTimeout(() => {
           setIsLoading(false);
-          navigate("/payment_car");
+          navigate(`/payment_car/${booking.booking_id}`);
         }, 3000);
       }
     } catch (error) {

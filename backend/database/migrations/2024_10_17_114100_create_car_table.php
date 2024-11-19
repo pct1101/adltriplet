@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('car_status')->default(1); // Trạng thái
             $table->double('mileage')->nullable(); // số km đã đi
             $table->string('car_image')->nullable(); // hình
-            $table->string('car_description')->nullable(); // mô tả
+            $table->text('car_description')->nullable(); // mô tả
             $table->unsignedBigInteger('brandid');
             $table->foreign('brandid')->references('brand_id')->on('carbrand');
             $table->timestamps();

@@ -12,6 +12,7 @@ require __DIR__ . '/api/car.php';
 require __DIR__ . '/api/carimage.php';
 require __DIR__ . '/api/feedback.php';
 require __DIR__ . '/api/favorite.php';
+require __DIR__ . '/api/vnpay.php';
 
 
 require __DIR__ . '/api_admin/user.php';

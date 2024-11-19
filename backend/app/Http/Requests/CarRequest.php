@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class CarRequest
 {
@@ -19,9 +21,32 @@ class CarRequest
 
     public function validate()
     {
+        // Kiểm tra và xử lý ảnh
+        if (isset($this->data['car_image'])) {
+            $image = $this->data['car_image'];
+
+            if ($image instanceof \Illuminate\Http\UploadedFile && $image->isValid()) {
+
+                if (isset($this->data['old_car_image']) && $this->data['old_car_image']) {
+                    $oldImagePath = public_path('cars/image/' . $this->data['old_car_image']);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);  // Xóa ảnh cũ
+                    }
+                }
+                $destinationPath = public_path('cars/image');
+                $image->move($destinationPath, $image->getClientOriginalName());
+                $this->data['car_image'] = $image->getClientOriginalName();
+            } else {
+                // Thay đổi ngoại lệ `ValidationException` để truyền đối tượng `Validator`
+                throw ValidationException::withMessages(['car_image' => ['Tệp tải lên không hợp lệ.']]);
+            }
+        }
+
+
+        // Thiết lập ID xe để bỏ qua khi xác thực duy nhất
         $carId = $this->carId;
 
-        // Kiểm tra yêu cầu update hay không, nếu có thì bỏ qua kiểm tra unique biển số xe
+        // Xác thực dữ liệu
         $validator = Validator::make($this->data, [
             'car_name'        => 'required|string|max:255',
             'seats'           => 'nullable|integer|min:2',
@@ -55,18 +80,18 @@ class CarRequest
             'car_status.boolean'       => 'Trạng thái xe phải là một giá trị boolean.',
             'mileage.numeric'          => 'Số km đã đi phải là một số.',
             'mileage.min'              => 'Số km đã đi không được nhỏ hơn 0.',
-            'car_image.string'         => 'Hình ảnh xe phải là chuỗi.',
-            'car_image.max'            => 'Hình ảnh xe không được vượt quá 255 ký tự.',
             'car_description.string'   => 'Mô tả xe phải là chuỗi.',
             'car_description.max'      => 'Mô tả xe không được vượt quá 1000 ký tự.',
             'brandid.required'         => 'Vui lòng cung cấp ID thương hiệu.',
             'brandid.exists'           => 'Thương hiệu không tồn tại.',
         ]);
 
+        // Kiểm tra nếu xác thực thất bại
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
 
+        // Trả về dữ liệu đã xác thực
         return $validator->validated();
     }
 }

@@ -52,6 +52,7 @@ class CarController extends Controller
             $carRequest = new CarRequest($request->all());
             $validatedData = $carRequest->validate();
             $car = Car::create($validatedData);
+            // dd($car->car_image);
             return $this->successResponse("Thêm xe mới thành công", $car, 201);
         } catch (ValidationException $e) {
             return $this->errorResponse($e->validator->errors()->all(), 400);
@@ -68,8 +69,12 @@ class CarController extends Controller
     {
         try {
             $car = Car::findOrFail($id);
+            $request->merge(['old_car_image' => $car->car_image]);
             $carRequest = new CarRequest($request->all(), $id);
             $validatedData = $carRequest->validate();
+            if (isset($validatedData['car_image']) && $validatedData['car_image']) {
+                $car->car_image = $validatedData['car_image'];
+            }
             $car->update($validatedData);
             return $this->successResponse("Cập nhập thông tin xe với ID: $id thành công", $car, 200);
         } catch (ModelNotFoundException $e) {

@@ -53,7 +53,7 @@ function EditUser() {
     try {
       await updateUser(id, userData); // Gọi API để cập nhật thông tin người dùng
       alert("Thông tin người dùng đã được cập nhật thành công!");
-      navigate("/admin/UserList"); // Điều hướng trở về danh sách người dùng sau khi thành công
+      navigate("/admin/user"); // Điều hướng trở về danh sách người dùng sau khi thành công
     } catch (error) {
       alert("Có lỗi khi cập nhật thông tin người dùng!");
     }

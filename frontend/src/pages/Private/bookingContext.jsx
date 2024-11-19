@@ -6,8 +6,6 @@ const BookingContext = createContext();
 export const useBooking = () => useContext(BookingContext);
 
 export const BookingProvider = ({ children }) => {
-  // note: set address
-  const [location, setLocation] = useState({ province: null, district: null });
   // note: set booking
   const [bookings, setBookings] = useState(() => {
     const saved = localStorage.getItem("bookings");
@@ -36,11 +34,28 @@ export const BookingProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("bookings", JSON.stringify(bookings));
   }, [bookings]);
+  // note: set địa điểm
+  const [selectedProvince, setSelectedProvince] = useState(() => {
+    const saved = localStorage.getItem("selectedProvince");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [selectedDistrict, setSelectedDistrict] = useState(() => {
+    const saved = localStorage.getItem("selectedDistrict");
+    return saved ? JSON.parse(saved) : null;
+  });
+  useEffect(() => {
+    localStorage.setItem("selectedProvince", JSON.stringify(selectedProvince));
+  }, [selectedProvince]);
+  useEffect(() => {
+    localStorage.setItem("selectedDistrict", JSON.stringify(selectedDistrict));
+  }, [selectedDistrict]);
   return (
     <BookingContext.Provider
       value={{
-        location,
-        setLocation,
+        selectedProvince,
+        setSelectedProvince,
+        selectedDistrict,
+        setSelectedDistrict,
         bookings,
         setBookings,
         startDate,

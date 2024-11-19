@@ -20,7 +20,9 @@ function AdminFavoriteDetails() {
   const fetchFavoriteDetails = async () => {
     try {
       const response = await getFavoriteDetails(userId, carId); // Gửi request lấy chi tiết favorite từ API
+      console.log(response);
       setFavorite(response); // Lưu thông tin favorite vào state
+
       setEditedFavorite({ ...response }); // Khởi tạo giá trị chỉnh sửa
       setLoading(false); // Đánh dấu kết thúc loading
     } catch (error) {

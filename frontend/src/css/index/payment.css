@@ -215,9 +215,12 @@ form.payment-form .submit-btn:hover {
 }
 
 .select-icons img {
-  width: 44px;
+  width: 100%;  
+  max-width: 40px;
   position: relative;
   top: 5px;
-  left: 19rem;
-  /* Kích thước hình ảnh */
+
+  /* Đẩy hình ảnh vào giữa theo trục ngang */
+  transform: translateX(-50%);
+  /* Dịch hình ảnh về giữa */
 }

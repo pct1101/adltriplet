@@ -66,11 +66,11 @@ export default function Payment_booking() {
                 <Next_step></Next_step>
                 <div className="inputBox">
                   <span>Họ và tên :</span>
-                  <input type="text" />
+                  <input type="text" name="fullName" />
                 </div>
                 <div className="inputBox">
                   <span>Di động :</span>
-                  <input type="number" />
+                  <input type="number" name="phone" />
                 </div>
                 <div className="inputBox">
                   <span>Email :</span>
@@ -78,11 +78,11 @@ export default function Payment_booking() {
                 </div>
                 <div className="inputBox">
                   <span>Thành phố :</span>
-                  <input type="text" />
+                  <input type="text" name="city" />
                 </div>
                 <div className="inputBox">
                   <span>Địa chỉ :</span>
-                  <input type="text" />
+                  <input type="text" name="address" />
                 </div>
               </div>
             </div>

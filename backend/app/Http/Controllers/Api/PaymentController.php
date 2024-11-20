@@ -24,11 +24,11 @@ class PaymentController extends Controller
         // Lấy dữ liệu từ request
 
         $vnp_TxnRef = $booking->booking_id; // Mã đơn hàng
-        $vnp_OrderInfo = $request->input('order_desc','thanh toan don hang + $booking_id');
-        $vnp_OrderType = $request->input('order_type','billpayment');
+        $vnp_OrderInfo = $request->input('order_desc');
+        $vnp_OrderType = $request->input('order_type');
         $vnp_Amount = $booking->total_cost * 100;
         $vnp_Locale = $request->input('language', 'vn');
-        $vnp_BankCode = $request->input('bank_code', 'NCB');
+        $vnp_BankCode = $request->input('bank_code', '');
         $vnp_IpAddr = $request->ip();
         $vnp_ExpireDate = $request->input('txtexpire');
 

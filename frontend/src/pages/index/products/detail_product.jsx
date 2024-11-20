@@ -135,14 +135,14 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src={`/img/${car.car_image}`} // Hiển thị ảnh chính
+                src={`http://localhost:8000/imgs/${car.car_image}`} // Hiển thị ảnh chính
               />
             </div>
             <div className="right">
               {car.images.map((image) => (
                 <div className="right-item-car" key={image.carImage_id}>
                   <img
-                    src={`/img/${image.carImage_url}`} // Hiển thị từng ảnh con
+                    src={`http://localhost:8000/Thumbs/${image.carImage_url}`} // Hiển thị từng ảnh con
                     alt={car.car_name}
                   />
                 </div>

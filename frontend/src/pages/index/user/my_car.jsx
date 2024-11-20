@@ -8,7 +8,6 @@ function My_car() {
   const [bookingData, setbookingData] = useState(null);
   console.log(bookingData);
 
-  
   useEffect(() => {
     const fecthBookingData = async () => {
       try {
@@ -22,7 +21,14 @@ function My_car() {
     fecthBookingData();
   }, []);
 
-  const formatDate = (dateString) => { const date = new Date(dateString); const year = date.getFullYear(); const month = String(date.getMonth() + 1).padStart(2, '0');  const day = String(date.getDate()).padStart(2, '0'); return `${year}-${month}-${day}`
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${day}-${month}-${year}`;
+  };
 
   return (
     <div>
@@ -149,9 +155,7 @@ function My_car() {
                               </defs>
                             </svg>
                           </div>
-                          <span className="info">
-                            {booking.city}, {booking.address}{" "}
-                          </span>
+                          <span className="info">{booking.city} </span>
                         </div>
                         <div className="days">
                           <div className="desc-days">
@@ -160,7 +164,7 @@ function My_car() {
                               <div className="wrap-date-time">
                                 <div className="wrap-date">
                                   <span className="value">
-                                    {booking.start_date}{" "}
+                                    {formatDate(booking.start_date)}{" "}
                                   </span>{" "}
                                 </div>
                                 <div className="wrap-time">
@@ -178,7 +182,7 @@ function My_car() {
                                   <span className="value">
                                     {" "}
                                     <span className="value">
-                                      {booking.end_date}{" "}
+                                      {formatDate(booking.end_date)}{" "}
                                     </span>{" "}
                                   </span>{" "}
                                 </div>

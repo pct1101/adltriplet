@@ -16,7 +16,6 @@ import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
-
 function Booking() {
   const {
     selectedProvince,
@@ -72,11 +71,10 @@ function Booking() {
       //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
       return;
     }
-    const carDetails = await getCarDetails(carId);
 
     const bookingData = {
       car_id: carId,
-      car_name: carDetails.name,
+
       start_date: formattedStartDate,
       end_date: formattedEndDate,
       rental_price: total_cost,

@@ -19,6 +19,7 @@ function AdminBooking() {
       const response = await getAllBookings();
       if (Array.isArray(response)) {
         setBookings(response);
+        console.log(response);
       } else if (response && response.data && Array.isArray(response.data)) {
         setBookings(response.data);
       } else {
@@ -76,7 +77,6 @@ function AdminBooking() {
     whiteSpace: "nowrap",
   };
 
-  
   return (
     <div>
       <Side_bar></Side_bar>
@@ -129,8 +129,8 @@ function AdminBooking() {
                               booking.booking_status === 1
                                 ? "yellow" // Chưa thanh toán
                                 : booking.booking_status === 2
-                                  ? "green" // Đã thanh toán
-                                  : "red", // Đã hủy
+                                ? "green" // Đã thanh toán
+                                : "red", // Đã hủy
                             color:
                               booking.booking_status === 1
                                 ? "black" // Chữ màu đen cho nền vàng
@@ -140,8 +140,8 @@ function AdminBooking() {
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                              ? "Đã thanh toán"
-                              : "Đã hủy"}
+                            ? "Đã thanh toán"
+                            : "Đã hủy"}
                         </span>
                       </td>
                       <td>

@@ -139,7 +139,7 @@ const Detail_product = () => {
               />
             </div>
             <div className="right">
-              {car.images.map((image) => (
+              {car.images.slice(0, 3).map((image) => (
                 <div className="right-item-car" key={image.carImage_id}>
                   <img
                     src={`http://localhost:8000/Thumbs/${image.carImage_url}`} // Hiển thị từng ảnh con
@@ -203,8 +203,9 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""
-                      }`} // Thêm class để đổi màu trái tim
+                    className={`fav-item wrap-ic wrap-svg ${
+                      isFavorite ? "favorite-active" : ""
+                    }`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg

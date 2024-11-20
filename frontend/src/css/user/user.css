@@ -138,6 +138,7 @@
 .desc-car .note {
   display: flex;
   width: 100%;
+  justify-content: center;
   max-width: 110px;
   align-items: center;
   grid-gap: 4px;

@@ -63,6 +63,11 @@ function AdminBookingDetails() {
               {/* Cột bên phải: Thông tin xe */}
               <div className="col-md-6">
                 <h3>Thông tin Xe</h3>
+                <img
+                            src={`/img/${booking.car.car_image}`}
+                            className="scale-img"
+                            alt={booking.car_name}
+                          />
                 <p>
                   <strong>Tên xe:</strong> {booking.car.car_name}
                 </p>

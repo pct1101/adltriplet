@@ -976,4 +976,118 @@ export const payment = async (booking_id) => {
     console.error("Error creating payment:", error);
     throw error;
   }
+  
+};
+
+  // --------------------------------------- GIẤY PHÉP LÁI XE -----------------------------------------
+// Lấy danh sách giấy phép lái xe
+export const getAllDriverLicenses = async () => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/driverlicense`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách giấy phép lái xe:", error);
+    throw error;
+  }
+};
+
+// Tạo mới giấy phép lái xe
+export const createDriverLicense = async (data) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.post(`${API_URL}/admin/driverlicense`, data, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi tạo giấy phép lái xe:", error);
+    throw error;
+  }
+};
+
+// Lấy thông tin giấy phép lái xe theo ID
+export const getDriverLicenseById = async (id) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/driverlicense/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log(response.data); // Kiểm tra dữ liệu trả về từ API
+    return response.data; // Đảm bảo rằng bạn trả về dữ liệu chính xác
+  } catch (error) {
+    console.error("Lỗi khi lấy giấy phép lái xe:", error);
+    throw error;
+  }
+};
+
+// Cập nhật giấy phép lái xe theo ID
+export const updateDriverLicense = async (id, data) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.put(`${API_URL}/admin/driverlicense/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log("Phản hồi API:", response.data)
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật giấy phép lái xe:", error);
+    throw error;
+  }
+};
+
+// Xóa giấy phép lái xe theo ID
+export const deleteDriverLicenseById = async (id) => {
+  const apiToken = localStorage.getItem("authToken");
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.delete(`${API_URL}/driverlicense/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi xóa giấy phép lái xe:", error);
+    throw error;
+  }
 };

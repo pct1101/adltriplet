@@ -135,7 +135,7 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src={`http://localhost:8000/img/${car.car_image}`} // Hiển thị ảnh chính
+                src={`http://localhost:8000/imgs/${car.car_image}`} // Hiển thị ảnh chính
               />
             </div>
             <div className="right">

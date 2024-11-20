@@ -30,6 +30,10 @@ import { BookingProvider } from "./pages/Private/bookingContext.jsx";
 import UserDetail from "./pages/admin/User/DetailUserAdmin.jsx";
 import My_car from "./pages/index/user/my_car.jsx";
 import AdminBookingDetails from "./pages/admin/Booking/DetailBooking.jsx";
+import AdminDriverLicense from "./pages/admin/LicenseController/AdminLicense.jsx";
+import EditDriverLicense from "./pages/admin/LicenseController/EditDriverLicense.jsx";
+import AdminDriverLicenseDetails from "./pages/admin/LicenseController/DetailDriverLicense.jsx";
+import AddDriverLicense from "./pages/admin/LicenseController/AddDriverLicense.jsx";
 
 function App() {
   return (
@@ -225,6 +229,42 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AddFavorite />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/admin/license"
+                element={
+                  <PrivateRoute>
+                    <AdminDriverLicense />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/admin/EditDriverLicense/:id"
+                element={
+                  <PrivateRoute>
+                    <EditDriverLicense />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/admin/DetailDriverLicense/:licenseId"
+                element={
+                  <PrivateRoute>
+                    <AdminDriverLicenseDetails />
+                  </PrivateRoute>
+                }
+              />
+
+              <Route
+                path="/admin/AddDriverLicense"
+                element={
+                  <PrivateRoute>
+                    < AddDriverLicense/>
                   </PrivateRoute>
                 }
               />

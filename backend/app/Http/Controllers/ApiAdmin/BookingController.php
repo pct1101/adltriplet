@@ -126,103 +126,124 @@ class BookingController extends Controller
         return response()->json(['booking' => $booking], 200);
     }
 
+    // public function update(Request $request, $id)
+    // {
+    //     // Xác thực đầu vào
+    //     $request->validate([
+    //         'user_id' => 'required|exists:users,id', // Kiểm tra user_id
+    //         'car_id' => 'sometimes|exists:car,car_id', // Kiểm tra car_id nếu có thay đổi
+    //         'start_date' => 'sometimes|date',
+    //         'end_date' => 'sometimes|date|after:start_date', // Đảm bảo end_date phải sau start_date
+    //         'address' => 'nullable|string',  // Địa chỉ có thể để trống
+    //         'city' => 'nullable|string',     // Thành phố có thể để trống
+    //         'state' => 'nullable|string',    // Tình trạng có thể để trống
+    //         'voucher_id' => 'nullable|exists:voucher,voucher_id', // Kiểm tra voucher nếu có
+    //     ]);
+
+    //     // Tìm booking theo booking_id
+    //     $booking = Booking::find($id);
+
+    //     // Kiểm tra xem booking có tồn tại không
+    //     if (!$booking) {
+    //         return response()->json(['message' => 'Booking not found.'], 404);
+    //     }
+
+    //     // Kiểm tra xung đột thời gian booking cho người dùng
+    //     $conflictUserBooking = Booking::where('user_id', $request->user_id)
+    //         ->where('booking_status', 1) // Chỉ kiểm tra các đơn hàng đang hoạt động
+    //         ->where('booking_id', '!=', $booking->booking_id)
+    //         ->where(function ($query) use ($request, $booking) {
+    //             // Kiểm tra trùng lịch trong khoảng thời gian
+    //             $query->whereBetween('start_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
+    //                 ->orWhereBetween('end_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
+    //                 ->orWhere(function ($q) use ($request, $booking) {
+    //                     $q->where('start_date', '<=', $request->start_date ?? $booking->start_date)
+    //                         ->where('end_date', '>=', $request->end_date ?? $booking->end_date);
+    //                 });
+    //         })
+    //         ->exists();
+
+    //     // Kiểm tra xem xe đã được đặt trong khoảng thời gian này chưa
+    //     $conflictCarBooking = Booking::where('car_id', $request->car_id ?? $booking->car_id)
+    //         ->where('booking_status', 1) // Chỉ kiểm tra các đơn hàng đang hoạt động
+    //         ->where('booking_id', '!=', $booking->booking_id) // Loại trừ booking hiện tại
+    //         ->where(function ($query) use ($request, $booking) {
+    //             // Kiểm tra trùng lịch trong khoảng thời gian
+    //             $query->whereBetween('start_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
+    //                 ->orWhereBetween('end_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
+    //                 ->orWhere(function ($q) use ($request, $booking) {
+    //                     $q->where('start_date', '<=', $request->start_date ?? $booking->start_date)
+    //                         ->where('end_date', '>=', $request->end_date ?? $booking->end_date);
+    //                 });
+    //         })
+    //         ->exists();
+
+    //     // Kiểm tra xung đột
+    //     if ($conflictUserBooking) {
+    //         return response()->json(['message' => 'Bạn không thể đặt xe vì bạn đang có đơn'], 400);
+    //     }
+
+    //     if ($conflictCarBooking) {
+    //         return response()->json(['message' => 'Chiếc xe này đã được đặt trong khoảng thời gian bạn chọn'], 400);
+    //     }
+
+    //     // Cập nhật thông tin booking, giữ nguyên thông tin cũ nếu không có thay đổi
+    //     $booking->car_id = $request->car_id ?? $booking->car_id;
+    //     $booking->user_id = $request->user_id ?? $booking->user_id;
+    //     $booking->start_date = $request->start_date ?? $booking->start_date;
+    //     $booking->end_date = $request->end_date ?? $booking->end_date;
+    //     $booking->address = $request->address ?? $booking->address;
+    //     $booking->city = $request->city ?? $booking->city;
+    //     $booking->state = $request->state ?? $booking->state;
+    //     $booking->voucher_id = $request->voucher_id ?? $booking->voucher_id;
+
+    //     // Nếu có thay đổi về ngày, tính lại tổng chi phí
+    //     if ($request->has('start_date') || $request->has('end_date')) {
+    //         // Tính toán tổng chi phí dựa trên số ngày thuê
+    //         $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $booking->start_date);
+    //         $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $booking->end_date);
+    //         $numberOfDays = ($endDate->timestamp - $startDate->timestamp) / (60 * 60 * 24);
+    //         $totalCost = $numberOfDays * $booking->car->rental_price;  // Tính tổng chi phí
+
+    //         // Nếu có voucher, áp dụng chiết khấu
+    //         if ($request->has('voucher_id')) {
+    //             $voucher = Voucher::find($request->voucher_id);
+    //             if ($voucher && $voucher->expiration_date > now()) {
+    //                 $discount = $totalCost * ($voucher->discount_percentage / 100);
+    //                 $totalCost -= $discount; // Trừ phần chiết khấu vào tổng chi phí
+    //             } else {
+    //                 return response()->json(['message' => 'Voucher không hợp lệ hoặc đã hết hạn'], 400);
+    //             }
+    //         }
+
+    //         $booking->total_cost = $totalCost; // Cập nhật tổng chi phí
+    //     }
+
+    //     // Lưu thông tin booking
+    //     $booking->save();
+
+    //     return response()->json(['message' => 'Booking updated successfully!', 'booking' => $booking], 200);
+    // }
     public function update(Request $request, $id)
     {
-        // Xác thực đầu vào
-        $request->validate([
-            'user_id' => 'required|exists:users,id', // Kiểm tra user_id
-            'car_id' => 'sometimes|exists:car,car_id', // Kiểm tra car_id nếu có thay đổi
-            'start_date' => 'sometimes|date',
-            'end_date' => 'sometimes|date|after:start_date', // Đảm bảo end_date phải sau start_date
-            'address' => 'nullable|string',  // Địa chỉ có thể để trống
-            'city' => 'nullable|string',     // Thành phố có thể để trống
-            'state' => 'nullable|string',    // Tình trạng có thể để trống
-            'voucher_id' => 'nullable|exists:voucher,voucher_id', // Kiểm tra voucher nếu có
+        $validatedData = $request->validate([
+            'booking_status' => 'required|integer',
         ]);
+        $booking = Booking::findOrFail($id);
 
-        // Tìm booking theo booking_id
-        $booking = Booking::find($id);
-
-        // Kiểm tra xem booking có tồn tại không
         if (!$booking) {
-            return response()->json(['message' => 'Booking not found.'], 404);
+            return response()->json([
+                'message' => 'không tìm thấy booking',
+            ], 404);
         }
 
-        // Kiểm tra xung đột thời gian booking cho người dùng
-        $conflictUserBooking = Booking::where('user_id', $request->user_id)
-            ->where('booking_status', 1) // Chỉ kiểm tra các đơn hàng đang hoạt động
-            ->where('booking_id', '!=', $booking->booking_id)
-            ->where(function ($query) use ($request, $booking) {
-                // Kiểm tra trùng lịch trong khoảng thời gian
-                $query->whereBetween('start_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
-                    ->orWhereBetween('end_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
-                    ->orWhere(function ($q) use ($request, $booking) {
-                        $q->where('start_date', '<=', $request->start_date ?? $booking->start_date)
-                            ->where('end_date', '>=', $request->end_date ?? $booking->end_date);
-                    });
-            })
-            ->exists();
+        $booking->booking_status = $validatedData['booking_status'];
 
-        // Kiểm tra xem xe đã được đặt trong khoảng thời gian này chưa
-        $conflictCarBooking = Booking::where('car_id', $request->car_id ?? $booking->car_id)
-            ->where('booking_status', 1) // Chỉ kiểm tra các đơn hàng đang hoạt động
-            ->where('booking_id', '!=', $booking->booking_id) // Loại trừ booking hiện tại
-            ->where(function ($query) use ($request, $booking) {
-                // Kiểm tra trùng lịch trong khoảng thời gian
-                $query->whereBetween('start_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
-                    ->orWhereBetween('end_date', [$request->start_date ?? $booking->start_date, $request->end_date ?? $booking->end_date])
-                    ->orWhere(function ($q) use ($request, $booking) {
-                        $q->where('start_date', '<=', $request->start_date ?? $booking->start_date)
-                            ->where('end_date', '>=', $request->end_date ?? $booking->end_date);
-                    });
-            })
-            ->exists();
-
-        // Kiểm tra xung đột
-        if ($conflictUserBooking) {
-            return response()->json(['message' => 'Bạn không thể đặt xe vì bạn đang có đơn'], 400);
-        }
-
-        if ($conflictCarBooking) {
-            return response()->json(['message' => 'Chiếc xe này đã được đặt trong khoảng thời gian bạn chọn'], 400);
-        }
-
-        // Cập nhật thông tin booking, giữ nguyên thông tin cũ nếu không có thay đổi
-        $booking->car_id = $request->car_id ?? $booking->car_id;
-        $booking->user_id = $request->user_id ?? $booking->user_id;
-        $booking->start_date = $request->start_date ?? $booking->start_date;
-        $booking->end_date = $request->end_date ?? $booking->end_date;
-        $booking->address = $request->address ?? $booking->address;
-        $booking->city = $request->city ?? $booking->city;
-        $booking->state = $request->state ?? $booking->state;
-        $booking->voucher_id = $request->voucher_id ?? $booking->voucher_id;
-
-        // Nếu có thay đổi về ngày, tính lại tổng chi phí
-        if ($request->has('start_date') || $request->has('end_date')) {
-            // Tính toán tổng chi phí dựa trên số ngày thuê
-            $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $booking->start_date);
-            $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $booking->end_date);
-            $numberOfDays = ($endDate->timestamp - $startDate->timestamp) / (60 * 60 * 24);
-            $totalCost = $numberOfDays * $booking->car->rental_price;  // Tính tổng chi phí
-
-            // Nếu có voucher, áp dụng chiết khấu
-            if ($request->has('voucher_id')) {
-                $voucher = Voucher::find($request->voucher_id);
-                if ($voucher && $voucher->expiration_date > now()) {
-                    $discount = $totalCost * ($voucher->discount_percentage / 100);
-                    $totalCost -= $discount; // Trừ phần chiết khấu vào tổng chi phí
-                } else {
-                    return response()->json(['message' => 'Voucher không hợp lệ hoặc đã hết hạn'], 400);
-                }
-            }
-
-            $booking->total_cost = $totalCost; // Cập nhật tổng chi phí
-        }
-
-        // Lưu thông tin booking
         $booking->save();
 
-        return response()->json(['message' => 'Booking updated successfully!', 'booking' => $booking], 200);
+        return response()->json([
+            'message' => 'Cập nhật thành công'
+        ], 200);
     }
 
     public function destroy($id)

@@ -193,7 +193,8 @@ const getBrandName = (brandid) => {
                       <div className="row">
                         <div className="col-md-3">
                           <img
-                            src={`../img/${car.car_image}`}
+                            // src={`../img/${car.car_image}`}
+                            src={`http://localhost:8000/imgs/${car.car_image}`}
                             className="w-100 img-thumbnail"
                             alt={car.car_name}
                           />

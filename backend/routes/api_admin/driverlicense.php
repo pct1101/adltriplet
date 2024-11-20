@@ -10,17 +10,13 @@ use Illuminate\Support\Facades\Route;
  *  **URL**                                        |**Phương thức**| **Mô tả**
  * ------------------------------------------------|---------------|-----------------------------------
  *  http://localhost:8000/api/admin/driverlicense            | GET           | Lây danh sách giấy phép lái xe
- *  http://localhost:8000/api/admin/driverlicense            | POST          | Tạo một giấy phép lái xe
  *  http://localhost:8000/api/admin/driverlicense/{id}       | GET           | Lấy giấy lái phép lái xe theo ID
  *  http://localhost:8000/api/admin/driverlicense/{id}       | PUT           | Sửa giấy phép lái xe
- *  http://localhost:8000/api/admin/driverlicense/{id}       | DELETE        | Xóa giấy phép lái xe
  *
  */
 
 Route::prefix('admin')->middleware(['auth:api', \App\Http\Middleware\CheckRole::class])->group(function () {
     Route::get('/driverlicense', [DriverLicenseController::class, 'index']);
     Route::get('/driverlicense/{id}', [DriverLicenseController::class, 'show']);
-    Route::post('/driverlicense', [DriverLicenseController::class, 'store']);
     Route::put('/driverlicense/{id}', [DriverLicenseController::class, 'update']);
-    Route::delete('/driverlicense/{id}', [DriverLicenseController::class, 'destroy']);
 });

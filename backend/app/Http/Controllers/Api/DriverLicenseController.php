@@ -65,22 +65,13 @@ class DriverLicenseController extends Controller
             ]);
 
             // Phản hồi thành công
-            return response()->json([
-                'message' => 'Tạo giấy phép lái xe thành công',
-                'data' => $driver_license
-            ], 201);
+            return response()->json(['message' => 'Tạo giấy phép lái xe thành công', 'data' => $driver_license], 201);
         } catch (ValidationException $e) {
             // Xử lý lỗi khi xác thực
-            return response()->json([
-                'error' => 'Lỗi xác thực dữ liệu',
-                'messages' => $e->validator->errors()->all()
-            ], 400);
+            return response()->json(['error' => 'Lỗi xác thực dữ liệu', 'messages' => $e->validator->errors()->all()], 400);
         } catch (\Exception $e) {
             // Xử lý lỗi khác
-            return response()->json([
-                'error' => 'Đã xảy ra lỗi trong quá trình xử lý',
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json(['error' => 'Đã xảy ra lỗi trong quá trình xử lý','message' => $e->getMessage()], 500);
         }
     }
 

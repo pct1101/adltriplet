@@ -33,7 +33,8 @@ class CarRequest
                         unlink($oldImagePath);  // Xóa ảnh cũ
                     }
                 }
-                $destinationPath = public_path('cars/image');
+                // $destinationPath = public_path('cars/image');
+                $destinationPath = public_path('frontend/public/car');
                 $image->move($destinationPath, $image->getClientOriginalName());
                 $this->data['car_image'] = $image->getClientOriginalName();
             } else {

@@ -24,7 +24,7 @@ function Home() {
       <Placecar />
       <Banner_top></Banner_top>
       <Endow></Endow>
-      <Services />
+
       <Register />
       <News />
       <Footer />

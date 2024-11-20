@@ -38,9 +38,9 @@ function CarDelivery() {
     <div>
       <div className="container airport d-flex mt-4">
         <h1 className="airport-head">
-          Giao xe tại
+          Dòng xe tại
           <br />
-          sân bay
+          ADL TRIPLE T
         </h1>
         <>
           <Swiper
@@ -67,7 +67,7 @@ function CarDelivery() {
                   <div className="fix-img2">
                     <img variant="" src={slideBanner} />
                   </div>
-                  <p>Vịnh Hạ Long</p>
+                  <p>Youden Four</p>
                   <span>1000+ xe chờ</span>
                 </div>
               </SwiperSlide>

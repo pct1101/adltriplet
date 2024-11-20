@@ -35,7 +35,7 @@ function Placecar() {
   return (
     <div style={{ position: "relative" }} className="container">
       <div className="title mb-4">
-        <h1 className="text-center">TOP ĐỊA ĐIỂM NỔI BẬT</h1>
+        <h1 className="text-center">TOP XE NỔI BẬT</h1>
       </div>
       <>
         <Swiper

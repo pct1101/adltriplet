@@ -100,6 +100,7 @@ function AdminBooking() {
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
                   <th>Ngày kết thúc</th>
+                  <th>Địa chỉ nhận </th>
                   <th>Trạng thái thanh toán</th>
                   <th>Hành động</th>
                 </tr>
@@ -120,6 +121,9 @@ function AdminBooking() {
                         {new Date(booking.start_date).toLocaleDateString()}
                       </td>
                       <td>{new Date(booking.end_date).toLocaleDateString()}</td>
+                      <td>
+                        {booking.address} <b>{booking.city}</b>
+                      </td>
                       <td>
                         <span
                           style={{

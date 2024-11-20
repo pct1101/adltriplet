@@ -79,7 +79,7 @@ class BookingController
             $voucher = Voucher::find($request->voucher_id);
             if ($voucher && $voucher->expiration_date > now()) {
                 $discount = $totalCost * ($voucher->discount_percentage / 100);
-                $CAD = $totalCost - $discount; // Trừ phần chiết khấu vào tổng chi phí
+                $totalCost -= $discount; // Trừ phần chiết khấu vào tổng chi phí
             } else {
                 return response()->json(['message' => 'Voucher không hợp lệ hoặc đã hết hạn'], 400);
             }
@@ -93,7 +93,7 @@ class BookingController
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'total_cost' => $totalCost,
-            'total_cost_after_discount' => $CAD, // Lưu tổng chi phí sau khi trừ chiết khấu (nếu có)
+            // 'total_cost_after_discount' => $CAD, // Lưu tổng chi phí sau khi trừ chiết khấu (nếu có)
             'booking_status' => 1, // Đặt trạng thái mặc định là pending
             'address' => $request->address, // Lưu địa chỉ
             'city' => $request->city, // Lưu city

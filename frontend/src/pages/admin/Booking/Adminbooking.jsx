@@ -40,21 +40,21 @@ function AdminBooking() {
     }
   };
 
-  // const deleteBooking = async (bookingId) => {
-  //   const apiToken = localStorage.getItem("authToken");
-  //   if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
-  //     try {
-  //       await deleteBookingById(bookingId, apiToken);
-  //       setBookings(
-  //         bookings.filter((booking) => booking.booking_id !== bookingId)
-  //       );
-  //       alert("Booking đã được xóa thành công!");
-  //     } catch (error) {
-  //       console.error("Lỗi khi xóa booking:", error);
-  //       alert("Thất bại trong việc xóa booking: " + error.message);
-  //     }
-  //   }
-  // };
+  const deleteBooking = async (bookingId) => {
+    const apiToken = localStorage.getItem("authToken");
+    if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
+      try {
+        await deleteBookingById(bookingId, apiToken);
+        setBookings(
+          bookings.filter((booking) => booking.booking_id !== bookingId)
+        );
+        alert("Booking đã được xóa thành công!");
+      } catch (error) {
+        console.error("Lỗi khi xóa booking:", error);
+        alert("Thất bại trong việc xóa booking: " + error.message);
+      }
+    }
+  };
 
   const editBooking = (BookingId) => {
     navigate(`/admin/EditBooking/${BookingId}`);
@@ -76,7 +76,6 @@ function AdminBooking() {
     whiteSpace: "nowrap",
   };
 
-  
   return (
     <div>
       <Side_bar></Side_bar>
@@ -129,8 +128,8 @@ function AdminBooking() {
                               booking.booking_status === 1
                                 ? "yellow" // Chưa thanh toán
                                 : booking.booking_status === 2
-                                  ? "green" // Đã thanh toán
-                                  : "red", // Đã hủy
+                                ? "green" // Đã thanh toán
+                                : "red", // Đã hủy
                             color:
                               booking.booking_status === 1
                                 ? "black" // Chữ màu đen cho nền vàng
@@ -140,8 +139,8 @@ function AdminBooking() {
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                              ? "Đã thanh toán"
-                              : "Đã hủy"}
+                            ? "Đã thanh toán"
+                            : "Đã hủy"}
                         </span>
                       </td>
                       <td>
@@ -157,6 +156,13 @@ function AdminBooking() {
                           disabled={!isAdmin}
                         >
                           Chi tiết
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => deleteBooking(booking.booking_id)}
+                          disabled={!isAdmin}
+                        >
+                          Xóa
                         </button>
                       </td>
                     </tr>

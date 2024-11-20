@@ -13,6 +13,7 @@ require __DIR__ . '/api/carimage.php';
 require __DIR__ . '/api/feedback.php';
 require __DIR__ . '/api/favorite.php';
 require __DIR__ . '/api/vnpay.php';
+require __DIR__ . '/api/driverlicense.php';
 
 
 require __DIR__ . '/api_admin/user.php';
@@ -22,3 +23,4 @@ require __DIR__ . '/api_admin/banner.php';
 require __DIR__ . '/api_admin/booking.php';
 require __DIR__ . '/api_admin/feedback.php';
 require __DIR__ . '/api_admin/favorite.php';
+require __DIR__ . '/api_admin/driverlicense.php';

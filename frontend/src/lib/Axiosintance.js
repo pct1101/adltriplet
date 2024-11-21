@@ -24,17 +24,26 @@ export const login = (email, password) => {
     .post(`${API_URL}/auth/login`, { login: email, password })
     .then((response) => {
       console.log("Login response from API:", response);
-      // Lưu token vào localStorage
-      localStorage.setItem("authToken", response.data.token); // Đảm bảo tên key là 'authToken'
-      localStorage.setItem("userRole", response.data.user.role); // Lưu vai trò của người dùng
-      localStorage.setItem("remember_token", response.data.token);
-      return response;
+
+      // Kiểm tra sự tồn tại của token và thông tin người dùng trong response.data
+      if (response.data && response.data.token) {
+        // Lưu token vào localStorage
+        localStorage.setItem("authToken", response.data.token); // Token xác thực
+        localStorage.setItem("userRole", response.data.user.role); // Lưu vai trò của người dùng
+        localStorage.setItem("remember_token", response.data.token); // Token dùng cho các request sau
+        localStorage.setItem("user_id", response.data.user_id); // Lưu user_id (nếu có trong response)
+
+        return response;
+      } else {
+        throw new Error("Không có dữ liệu token hoặc user_id trong phản hồi.");
+      }
     })
     .catch((error) => {
       console.error("Login error: ", error);
-      throw error;
+      throw error; // Ném lỗi để xử lý ở nơi gọi API
     });
 };
+
 
 // Đăng ký
 export const register = (userData) => {
@@ -1099,5 +1108,36 @@ export const deleteDriverLicenseById = async (id) => {
   } catch (error) {
     console.error("Lỗi khi xóa giấy phép lái xe:", error);
     throw error;
+  }
+};
+
+// --------------------------- GIẤY PHÉP LÁI XE NGƯỜI DÙNG -----------------------
+export const getDriverLicenseByUserId = async (id) => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi request tới API với token trong headers
+    const response = await axios.get(`${API_URL}/driverlicense/${id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,  // Gửi token trong header
+      },
+    });
+
+    // Kiểm tra dữ liệu trả về
+    if (response.data && response.data.driver_licenses) {
+      console.log(response.data.driver_licenses);  // Log để kiểm tra dữ liệu
+      return response.data;  // Trả về dữ liệu giấy phép lái xe nếu có
+    } else {
+      throw new Error("Không tìm thấy giấy phép lái xe.");
+    }
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin giấy phép theo user_id:", error);
+    throw error;  // Ném lỗi để xử lý ở nơi gọi API
   }
 };

@@ -49,10 +49,11 @@ function My_car() {
                     <div className="custom-select">
                       <select>
                         <option value="0">Tất cả</option>
-                        <option value="2">Đang hoạt động</option>
-                        <option value="1">Đang chờ duyệt</option>
+                        <option value="2">Đã thanh toán</option>
+                        <option value="1">Chưa thanh toán</option>
                         <option value="3">Đã bị từ chối</option>
                         <option value="5">Đang tạm ngưng</option>
+                        <option value="6">Đang hoạt động</option>
                       </select>
                     </div>
                   </div>

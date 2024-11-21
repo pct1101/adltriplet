@@ -90,7 +90,7 @@ function User() {
               <div className="content">
                 <div className="avatar-box">
                   <div className="avatar avatar--xl has-edit">
-                    <img className="scale-img" src={`/img/${userData.image}`} />
+                    <img className="scale-img" src={`http://localhost:8000/imgs_user/${userData.image}`} />
                   </div>
                 </div>
                 <div className="info-user">

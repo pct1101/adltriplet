@@ -41,21 +41,21 @@ function AdminBooking() {
     }
   };
 
-  // const deleteBooking = async (bookingId) => {
-  //   const apiToken = localStorage.getItem("authToken");
-  //   if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
-  //     try {
-  //       await deleteBookingById(bookingId, apiToken);
-  //       setBookings(
-  //         bookings.filter((booking) => booking.booking_id !== bookingId)
-  //       );
-  //       alert("Booking đã được xóa thành công!");
-  //     } catch (error) {
-  //       console.error("Lỗi khi xóa booking:", error);
-  //       alert("Thất bại trong việc xóa booking: " + error.message);
-  //     }
-  //   }
-  // };
+  const deleteBooking = async (bookingId) => {
+    const apiToken = localStorage.getItem("authToken");
+    if (window.confirm("Bạn có chắc chắn muốn xóa booking này?")) {
+      try {
+        await deleteBookingById(bookingId, apiToken);
+        setBookings(
+          bookings.filter((booking) => booking.booking_id !== bookingId)
+        );
+        alert("Booking đã được xóa thành công!");
+      } catch (error) {
+        console.error("Lỗi khi xóa booking:", error);
+        alert("Thất bại trong việc xóa booking: " + error.message);
+      }
+    }
+  };
 
   const editBooking = (BookingId) => {
     navigate(`/admin/EditBooking/${BookingId}`);
@@ -157,6 +157,13 @@ function AdminBooking() {
                           disabled={!isAdmin}
                         >
                           Chi tiết
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => deleteBooking(booking.booking_id)}
+                          disabled={!isAdmin}
+                        >
+                          Xóa
                         </button>
                       </td>
                     </tr>

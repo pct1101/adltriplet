@@ -1112,6 +1112,7 @@ export const deleteDriverLicenseById = async (id) => {
 };
 
 // --------------------------- GIẤY PHÉP LÁI XE NGƯỜI DÙNG -----------------------
+// LẤY GIẤY PHÉP LÁI XE THEO ID NGƯỜI DÙNG
 export const getDriverLicenseByUserId = async (id) => {
   // Lấy remember_token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
@@ -1141,3 +1142,35 @@ export const getDriverLicenseByUserId = async (id) => {
     throw error;  // Ném lỗi để xử lý ở nơi gọi API
   }
 };
+
+// Hàm để thêm giấy phép lái xe
+export const addDriverLicense = async (licenseData) => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi request tới API với token trong headers
+    const response = await axios.post(`${API_URL}/driverlicense/`, licenseData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,  // Gửi token trong header
+      },
+    });
+
+    // Kiểm tra dữ liệu trả về
+    if (response.data && response.data.success) {
+      console.log("Thêm giấy phép lái xe thành công:", response.data);  // Log để kiểm tra dữ liệu
+      return response.data;  // Trả về dữ liệu nếu thêm thành công
+    } else {
+      throw new Error("Không thể thêm giấy phép lái xe.");
+    }
+  } catch (error) {
+    console.error("Lỗi khi thêm giấy phép lái xe:", error);
+    throw error;  // Ném lỗi để xử lý ở nơi gọi API
+  }
+};
+

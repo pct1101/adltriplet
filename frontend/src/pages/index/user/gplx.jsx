@@ -1,39 +1,79 @@
 import React, { useState } from "react";
-import dayjs from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers-pro";
-import { LocalizationProvider } from "@mui/x-date-pickers-pro";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { addDriverLicense } from "../../../lib/Axiosintance";
 import "../../../css/user/user.css";
-function Gplx() {
-  const [licenseNumber, setLicenseNumber] = useState("");
-  const [licenseName, setLicenseName] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [birthDate, setBirthDate] = useState(null);
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  // idea: tạo giá trị các hàm
+function Gplx() {
+  const [license_number, setLicenseNumber] = useState("");
+  const [license_holder, setLicenseName] = useState("");
+  // const [licenseType, setLicenseType] = useState(""); // Thay đổi từ birthDate thành licenseType
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState(""); // for error handling
+
+  // Handle changes for license number, name and license type
   const handleLicenseNumberChange = (e) => setLicenseNumber(e.target.value);
   const handleLicenseNameChange = (e) => setLicenseName(e.target.value);
+  // const handleLicenseTypeChange = (e) => setLicenseType(e.target.value); // Thêm hàm xử lý thay đổi licenseType
 
+  // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing(!isEditing);
   };
 
-  //  idea:Hàm xử lý khi người dùng chọn ảnh
+  // Handle image upload
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
+  
     if (file) {
+      // Kiểm tra loại file
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml']; 
+      if (!allowedTypes.includes(file.type)) {
+        setError("Ảnh giấy phép chỉ chấp nhận các định dạng: jpeg, png, jpg, gif, svg.");
+        return;
+      }
+  
+      // Kiểm tra dung lượng file (2MB)
+      const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+      if (file.size > maxSize) {
+        setError("Dung lượng ảnh giấy phép không được vượt quá 2MB.");
+        return;
+      }
+  
+      // Nếu tất cả điều kiện đều hợp lệ, tiếp tục xử lý file
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result); // Đặt base64 vào state
+        setSelectedImage(reader.result); // Lưu hình ảnh dưới dạng base64
+        setError(""); // Xóa thông báo lỗi nếu file hợp lệ
       };
-      reader.readAsDataURL(file); // Chuyển đổi file sang base64
+      reader.readAsDataURL(file); // Chuyển đổi file ảnh sang dạng base64
     }
   };
+
+  // Handle form submission to add GPLX
+  const handleSubmit = async () => {
+    if (!license_number || !license_holder || !selectedImage) {
+      setError("Vui lòng nhập đầy đủ thông tin.");
+      return; // prevent submission if any field is missing
+    }
+
+    try {
+      const formData = {
+        license_number,
+        license_holder,
+        license_image: selectedImage, // Base64 image
+      };
+
+      // Call API to add driver license
+      await addDriverLicense(formData);
+      setError(""); // Clear error message if successful
+      setIsEditing(false); // Switch to view mode
+    } catch (err) {
+      setError("Đã xảy ra lỗi, vui lòng thử lại.");
+    }
+  };
+
   return (
     <div>
-      {" "}
       <div className="content-item driver-license">
         <div className="title">
           <div className="title-item">
@@ -57,17 +97,13 @@ function Gplx() {
             </div>
           </div>
           <a className="btn btn--s" onClick={toggleEdit}>
-            {" "}
-            {isEditing ? "Cập nhật" : "Chỉnh sửa"}{" "}
+            {isEditing ? "Cập nhật" : "Chỉnh sửa"}
           </a>
         </div>
-        <div className="note-license">
-          <p>
-            <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
-            <u>người đặt xe</u> trên Mioto (đã xác thực GPLX) <b>ĐỒNG THỜI </b>
-            phải là <u>người nhận xe.</u>
-          </p>
-        </div>
+
+        {/* Error message */}
+        {error && <div className="error-message">{error}</div>}
+
         <div className="content">
           <div className="info-license position-relative">
             <div className="info-license__title">
@@ -102,6 +138,7 @@ function Gplx() {
               )}
             </label>
           </div>
+
           <div className="info-license">
             <div className="info-license__title">
               <p>Thông tin chung</p>
@@ -111,7 +148,6 @@ function Gplx() {
                 <div className="title-status">
                   <p>Số GPLX</p>
                 </div>
-                <div className="desc text-success"></div>
               </div>
               <div className="wrap-input disabled">
                 <div className="wrap-text">
@@ -119,7 +155,7 @@ function Gplx() {
                     type="text"
                     name="licenseNumber"
                     placeholder="Nhập số GPLX đã cấp"
-                    value={licenseNumber}
+                    value={license_number}
                     onChange={handleLicenseNumberChange}
                     disabled={!isEditing}
                   />
@@ -131,7 +167,6 @@ function Gplx() {
                 <div className="title-status">
                   <p>Họ và tên</p>
                 </div>
-                <div className="desc text-success"></div>
               </div>
               <div className="wrap-input disabled">
                 <div className="wrap-text">
@@ -139,51 +174,43 @@ function Gplx() {
                     type="text"
                     name="licenseName"
                     placeholder="Nhập đầy đủ họ tên"
-                    value={licenseName}
+                    value={license_holder}
                     onChange={handleLicenseNameChange}
                     disabled={!isEditing}
                   />
                 </div>
               </div>
             </div>
-            <div className="custom-input">
+            {/* <div className="custom-input">
               <div className="wrap-info">
                 <div className="title-status">
-                  <p>Ngày sinh</p>
+                  <p>Loại giấy phép</p>
                 </div>
-                <div className="desc text-success"></div>
               </div>
-              <div className="wrap-input disabled" style={{ padding: "0px" }}>
+              <div className="wrap-input disabled">
                 <div className="wrap-text">
-                  <span>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          value={birthDate}
-                          onChange={(newDate) => setBirthDate(newDate)}
-                          disabled={!isEditing}
-                          label="Nhập ngày sinh của bạn"
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              border: "none",
-                              "& fieldset": {
-                                border: "none",
-                              },
-                            },
-                            "& .MuiInputLabel-root": {
-                              color: "#242420", // Thay đổi màu sắc của label
-                              fontSize: "1rem",
-                              fontWeight: "500", // Đặt độ đậm cho label
-                            },
-                          }}
-                        />{" "}
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </span>
+                  <select
+                    value={licenseType}
+                    onChange={handleLicenseTypeChange}
+                    disabled={!isEditing}
+                  >
+                    <option value="">Chọn loại giấy phép</option>
+                    <option value="B2">B2</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                  </select>
                 </div>
               </div>
-            </div>
-          </div>{" "}
+            </div> */}
+          </div>
+
+          {/* Button to submit the form */}
+          {isEditing && (
+            <button className="btn btn-primary" onClick={handleSubmit}>
+              Thêm Giấy phép lái xe
+            </button>
+          )}
         </div>
       </div>
     </div>

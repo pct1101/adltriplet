@@ -105,5 +105,6 @@ class PaymentController extends Controller
             return redirect()->route('checkout.failed'); // Chuyển hướng đến trang lỗi nếu cần
         }
         return redirect('http://localhost:3000/successfull');
+
     }
 }

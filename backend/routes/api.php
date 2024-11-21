@@ -10,6 +10,7 @@ require __DIR__ . '/api/auth.php';
 require __DIR__ . '/api/booking.php';
 require __DIR__ . '/api/car.php';
 require __DIR__ . '/api/carimage.php';
+require __DIR__ . '/api/carbrand.php';
 require __DIR__ . '/api/feedback.php';
 require __DIR__ . '/api/favorite.php';
 require __DIR__ . '/api/vnpay.php';

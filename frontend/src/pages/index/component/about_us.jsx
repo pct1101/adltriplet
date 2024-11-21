@@ -60,7 +60,10 @@ function Blog() {
           className="content-margin"
           style={{ position: "relative", top: "105px" }}
         >
+          {" "}
+          <div className="section-intro"></div>
           <Endow></Endow>
+          <div className="section-intro"></div>
           <Banner_top></Banner_top>
           <Footer></Footer>
         </div>

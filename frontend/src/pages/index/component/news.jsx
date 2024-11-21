@@ -100,13 +100,19 @@ function News() {
                   <SwiperSlide>
                     <div className="item">
                       <div className="news-item">
-                        <a className="news-item-inner" href="#" title="">
+                        <a
+                          className="news-item-inner"
+                          href="#"
+                          title=""
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <div className="news-img">
                             <div className="news-img-inner scale-img">
                               <img
                                 className=" w-100"
                                 src="/upload/slide 1.webp"
                                 alt=""
+                                style={{ borderRadius: "15px" }}
                               />
                             </div>
                           </div>
@@ -127,17 +133,23 @@ function News() {
                         </a>
                       </div>{" "}
                     </div>
-                  </SwiperSlide>
+                  </SwiperSlide>{" "}
                   <SwiperSlide>
                     <div className="item">
                       <div className="news-item">
-                        <a className="news-item-inner" href="#" title="">
+                        <a
+                          className="news-item-inner"
+                          href="#"
+                          title=""
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <div className="news-img">
                             <div className="news-img-inner scale-img">
                               <img
                                 className=" w-100"
                                 src="/upload/slide 1.webp"
                                 alt=""
+                                style={{ borderRadius: "15px" }}
                               />
                             </div>
                           </div>
@@ -158,17 +170,23 @@ function News() {
                         </a>
                       </div>{" "}
                     </div>
-                  </SwiperSlide>
+                  </SwiperSlide>{" "}
                   <SwiperSlide>
                     <div className="item">
                       <div className="news-item">
-                        <a className="news-item-inner" href="#" title="">
+                        <a
+                          className="news-item-inner"
+                          href="#"
+                          title=""
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <div className="news-img">
                             <div className="news-img-inner scale-img">
                               <img
                                 className=" w-100"
                                 src="/upload/slide 1.webp"
                                 alt=""
+                                style={{ borderRadius: "15px" }}
                               />
                             </div>
                           </div>
@@ -189,17 +207,23 @@ function News() {
                         </a>
                       </div>{" "}
                     </div>
-                  </SwiperSlide>
+                  </SwiperSlide>{" "}
                   <SwiperSlide>
                     <div className="item">
                       <div className="news-item">
-                        <a className="news-item-inner" href="#" title="">
+                        <a
+                          className="news-item-inner"
+                          href="#"
+                          title=""
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <div className="news-img">
                             <div className="news-img-inner scale-img">
                               <img
                                 className=" w-100"
                                 src="/upload/slide 1.webp"
                                 alt=""
+                                style={{ borderRadius: "15px" }}
                               />
                             </div>
                           </div>
@@ -220,17 +244,23 @@ function News() {
                         </a>
                       </div>{" "}
                     </div>
-                  </SwiperSlide>
+                  </SwiperSlide>{" "}
                   <SwiperSlide>
                     <div className="item">
                       <div className="news-item">
-                        <a className="news-item-inner" href="#" title="">
+                        <a
+                          className="news-item-inner"
+                          href="#"
+                          title=""
+                          style={{ textDecoration: "none", color: "black" }}
+                        >
                           <div className="news-img">
                             <div className="news-img-inner scale-img">
                               <img
                                 className=" w-100"
                                 src="/upload/slide 1.webp"
                                 alt=""
+                                style={{ borderRadius: "15px" }}
                               />
                             </div>
                           </div>
@@ -252,8 +282,6 @@ function News() {
                       </div>{" "}
                     </div>
                   </SwiperSlide>
-                  <SwiperSlide>Slide 8</SwiperSlide>
-                  <SwiperSlide>Slide 9</SwiperSlide>
                 </Swiper>
               </div>
             </div>

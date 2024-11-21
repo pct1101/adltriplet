@@ -708,3 +708,51 @@
   border: 1px solid #e0e0e0;
   font-weight: 600;
 }
+
+
+
+.tb-success {
+  z-index: 1;
+
+  text-align: center;
+  padding: 20px;
+  margin: 20px auto;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tb-success h1 {
+  font-size: 24px;
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+.tb-success img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.tb-success p {
+  font-size: 16px;
+  color: #333;
+}
+
+.tb-success a {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #4caf50;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.tb-success a:hover {
+  background-color: #45a049;
+}

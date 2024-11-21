@@ -1101,3 +1101,5 @@ export const deleteDriverLicenseById = async (id) => {
     throw error;
   }
 };
+
+// POST GPLX CLIENT

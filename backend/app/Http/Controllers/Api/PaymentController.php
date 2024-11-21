@@ -24,7 +24,7 @@ class PaymentController extends Controller
         // Lấy dữ liệu từ request
 
         $vnp_TxnRef = $booking->booking_id; // Mã đơn hàng
-        $vnp_OrderInfo = $request->input('order_desc', 'thanh toan don hang');
+        $vnp_OrderInfo = $request->input('order_desc', 'thanh toan hoa don');
         $vnp_OrderType = $request->input('order_type', 'billpayment');
         $vnp_Amount = $booking->total_cost * 100;
         $vnp_Locale = $request->input('language', 'vn');
@@ -104,10 +104,6 @@ class PaymentController extends Controller
             // toastr()->error('Thanh toán thất bại');
             return redirect()->route('checkout.failed'); // Chuyển hướng đến trang lỗi nếu cần
         }
-        // return response()->json([
-        //     'Tên người thanh toán' => $fullname,
-        //     'Số tiền' => $vnp_amount,
-        //     'Mã đơn hàng' => $vnp_TxnRef
-        // ]);
+        return redirect('http://localhost:3000/successfull');
     }
 }

@@ -34,6 +34,7 @@ import AdminDriverLicense from "./pages/admin/LicenseController/AdminLicense.jsx
 import EditDriverLicense from "./pages/admin/LicenseController/EditDriverLicense.jsx";
 import AdminDriverLicenseDetails from "./pages/admin/LicenseController/DetailDriverLicense.jsx";
 import AddDriverLicense from "./pages/admin/LicenseController/AddDriverLicense.jsx";
+import PaymentReturn from "./pages/index/booking/payment_return.jsx";
 
 function App() {
   return (
@@ -264,7 +265,7 @@ function App() {
                 path="/admin/AddDriverLicense"
                 element={
                   <PrivateRoute>
-                    < AddDriverLicense/>
+                    <AddDriverLicense />
                   </PrivateRoute>
                 }
               />
@@ -283,6 +284,7 @@ function App() {
                 path="/payment_car/:booking_id"
                 element={<Payment_booking />}
               />
+              <Route path="/successfull" element={<PaymentReturn />} />
             </Routes>
           </Router>
         </div>

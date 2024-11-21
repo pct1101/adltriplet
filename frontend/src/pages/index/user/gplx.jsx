@@ -162,7 +162,6 @@ function Gplx() {
                           value={birthDate}
                           onChange={(newDate) => setBirthDate(newDate)}
                           disabled={!isEditing}
-                          label="Nhập ngày sinh của bạn"
                           sx={{
                             "& .MuiOutlinedInput-root": {
                               border: "none",

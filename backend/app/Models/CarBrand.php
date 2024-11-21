@@ -13,13 +13,14 @@ class CarBrand extends Model
     protected $primaryKey = 'brand_id';
 
     protected $fillable = [
-        'brand_name',        // Tên thương hiệu
-        'brand_description', // Mô tả thương hiệu
+        'brand_name', 
+        'brand_logo',       
+        'brand_description', 
     ];
 
     // Thiết lập mối quan hệ với bảng car
     public function cars()
     {
-        return $this->hasMany(Car::class, 'brandid'); // Mối quan hệ 1-n giữa thương hiệu và xe
+        return $this->hasMany(Car::class, 'brandid');
     }
 }

@@ -104,10 +104,10 @@ class PaymentController extends Controller
             // toastr()->error('Thanh toán thất bại');
             return redirect()->route('checkout.failed'); // Chuyển hướng đến trang lỗi nếu cần
         }
-        // return response()->json([
-        //     'Tên người thanh toán' => $fullname,
-        //     'Số tiền' => $vnp_amount,
-        //     'Mã đơn hàng' => $vnp_TxnRef
-        // ]);
+        return response()->json([
+            'Tên người thanh toán' => $fullname,
+            'Số tiền' => $vnp_amount,
+            'Mã đơn hàng' => $vnp_TxnRef
+        ]);
     }
 }

@@ -59,7 +59,7 @@ function My_car() {
                 </div>
               </div>
               {bookingData && bookingData.length > 0 ? (
-                bookingData.map((booking) => (
+                bookingData.slice(0, 3).map((booking) => (
                   <div className="card-car row" key={booking.id}>
                     <div className="item-box">
                       <a href="#">
@@ -67,7 +67,7 @@ function My_car() {
                           <div className="car-img">
                             <img
                               className="scale-img"
-                              src={"../img/mitsubishi-3-anhchinh.jpg"}
+                              src={`http://localhost:8000/imgs/${booking.car.car_image}`}
                               alt="Car"
                             />
                           </div>
@@ -96,7 +96,7 @@ function My_car() {
                             : "Đã hủy"}
                         </div>
                         <div className="desc-name">
-                          <p> {booking.booking_id} </p>
+                          <p> {booking.car.car_name} </p>
                         </div>
 
                         <div className="desc-info">
@@ -202,7 +202,6 @@ function My_car() {
                           />
                         </div>
                         <div className="price">
-                          <span className="price-origin">976K</span>
                           <span className="price-special">
                             {" "}
                             {booking.total_cost}{" "}

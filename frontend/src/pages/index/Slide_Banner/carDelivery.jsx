@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -6,9 +6,22 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../../../css/index/home.css";
+import { getAllCars } from "../../../lib/Axiosintance";
 
 function CarDelivery() {
   const [swiperRef, setSwiperRef] = useState(null);
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    // Gọi API để lấy danh sách xe
+    getAllCars()
+      .then((response) => {
+        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+      })
+      .catch((error) => {
+        console.error("Error fetching car list:", error);
+      });
+  }, []);
 
   // Create array with 500 slides
   const [slides, setSlides] = useState(

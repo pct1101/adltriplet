@@ -44,34 +44,34 @@ export default function Endow() {
           </div>
           <div className="col-md-4">
             <div className="advantage-box text-center p-4 mb-4">
-              <img src="/upload/uudiem 3.svg" />
+              <img src="/upload/uudiem 4.svg" />
 
-              <h5>An toàn lái xe</h5>
+              <h5>Thanh toán dễ dàng</h5>
               <p>
-                Các dòng xe được kiểm tra kỹ lưỡng để đảm bảo an toàn cho khách
-                hàng.
+                Đa dạng hình thức thanh toán: ATM, thẻ Visa & Ví điện tử (Momo,
+                VnPay, ZaloPay).
               </p>
             </div>
           </div>{" "}
           <div className="col-md-4">
             <div className="advantage-box text-center p-4 mb-4">
-              <img src="/upload/uudiem 3.svg" />
+              <img src="/upload/uudiem 5.svg" />
 
-              <h5>An toàn lái xe</h5>
+              <h5>Giao xe tận nơi</h5>
               <p>
-                Các dòng xe được kiểm tra kỹ lưỡng để đảm bảo an toàn cho khách
-                hàng.
+                Bạn có thể lựa chọn giao xe tận nhà/sân bay... Phí tiết kiệm chỉ
+                từ 15k/km.
               </p>
             </div>
           </div>{" "}
           <div className="col-md-4">
             <div className="advantage-box text-center p-4 mb-4">
-              <img src="/upload/uudiem 3.svg" />
+              <img src="/upload/uudiem 6.svg" />
 
-              <h5>An toàn lái xe</h5>
+              <h5>Dòng xe đa dạng</h5>
               <p>
-                Các dòng xe được kiểm tra kỹ lưỡng để đảm bảo an toàn cho khách
-                hàng.
+                Hơn 100 dòng xe cho bạn tuỳ ý lựa chọn: Mini, Sedan, CUV, SUV,
+                MPV, Bán tải.
               </p>
             </div>
           </div>

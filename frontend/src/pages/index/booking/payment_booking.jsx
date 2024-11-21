@@ -41,25 +41,28 @@ export default function Payment_booking() {
       txt_billing_fullname: userData?.name,
       txt_inv_addr1: selectedDistrict ? selectedDistrict.label : "",
       txt_bill_city: selectedProvince ? selectedProvince.label : "",
-      txt_bill_country: "VN",
       txt_inv_mobile: userData?.phone,
       txt_inv_email: userData?.email,
       txt_inv_customer: userData?.name,
       txt_inv_company: "ABC Co., Ltd",
       txt_inv_taxcode: "123456789",
+      total_cost: totalCost * 100,
     };
+
     console.log("Payment data:", paymentData);
     try {
       const response = await payment(booking_id, paymentData);
       console.log("Payment response:", response);
-      if (response?.data?.message) {
-        alert("Thanh toán thành công!");
-      } else {
-        alert("Thanh toán thất bại. Vui lòng thử lại!");
+
+      if (response?.data) {
+        const paymentUrl = response.data;
+        alert("Đang chuyển hướng tới cổng thanh toán...");
+        window.location.href = paymentUrl;
       }
     } catch (error) {
       console.error("Payment failed:", error);
       console.log("Error response:", error.response?.data);
+      console.log("Error details:", error.response?.data || error.message);
       alert("Có lỗi xảy ra khi thực hiện thanh toán. Vui lòng thử lại sau.");
     }
   };
@@ -135,21 +138,33 @@ export default function Payment_booking() {
                 <Next_step></Next_step>
                 <div className="inputBox">
                   <span>Họ và tên :</span>
-                  <input type="text" value={userData?.name} name="fullName" />
+                  <input
+                    type="text"
+                    value={userData?.name}
+                    name="txt_inv_fullname"
+                  />
                 </div>
                 <div className="inputBox">
                   <span>Di động :</span>
-                  <input type="number" value={userData?.phone} name="phone" />
+                  <input
+                    type="number"
+                    value={userData?.phone}
+                    name="txt_inv_mobile"
+                  />
                 </div>
                 <div className="inputBox">
                   <span>Email :</span>
-                  <input type="email" value={userData?.email} />
+                  <input
+                    type="email"
+                    name="txt_inv_email"
+                    value={userData?.email}
+                  />
                 </div>
                 <div className="inputBox">
                   <span>Thành phố :</span>
                   <input
                     type="text"
-                    name="city"
+                    name="txt_inv_city"
                     value={selectedProvince ? selectedProvince.label : ""}
                   />{" "}
                 </div>
@@ -157,7 +172,7 @@ export default function Payment_booking() {
                   <span>Địa chỉ nhận xe :</span>
                   <input
                     type="text"
-                    name="address"
+                    name="txt_inv_addr1"
                     value={selectedDistrict ? selectedDistrict.label : ""}
                   />
                 </div>
@@ -185,7 +200,7 @@ export default function Payment_booking() {
                       <div className="car-img">
                         <img
                           className="scale-img"
-                          src={`/img/${bookings.car_image}`}
+                          src={`http://localhost:8000/imgs/${bookings.car_image}`}
                           alt="Car"
                         />
                       </div>

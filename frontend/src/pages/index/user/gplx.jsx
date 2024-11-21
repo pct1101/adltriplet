@@ -181,28 +181,6 @@ function Gplx() {
                 </div>
               </div>
             </div>
-            {/* <div className="custom-input">
-              <div className="wrap-info">
-                <div className="title-status">
-                  <p>Loại giấy phép</p>
-                </div>
-              </div>
-              <div className="wrap-input disabled">
-                <div className="wrap-text">
-                  <select
-                    value={licenseType}
-                    onChange={handleLicenseTypeChange}
-                    disabled={!isEditing}
-                  >
-                    <option value="">Chọn loại giấy phép</option>
-                    <option value="B2">B2</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                    <option value="E">E</option>
-                  </select>
-                </div>
-              </div>
-            </div> */}
           </div>
 
           {/* Button to submit the form */}

@@ -44,7 +44,6 @@ export const login = (email, password) => {
     });
 };
 
-
 // Đăng ký
 export const register = (userData) => {
   return axios
@@ -1126,20 +1125,20 @@ export const getDriverLicenseByUserId = async (id) => {
     // Gửi request tới API với token trong headers
     const response = await axios.get(`${API_URL}/driverlicense/${id}`, {
       headers: {
-        Authorization: `Bearer ${apiToken}`,  // Gửi token trong header
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
       },
     });
 
     // Kiểm tra dữ liệu trả về
     if (response.data && response.data.driver_licenses) {
-      console.log(response.data.driver_licenses);  // Log để kiểm tra dữ liệu
-      return response.data;  // Trả về dữ liệu giấy phép lái xe nếu có
+      console.log(response.data.driver_licenses); // Log để kiểm tra dữ liệu
+      return response.data; // Trả về dữ liệu giấy phép lái xe nếu có
     } else {
       throw new Error("Không tìm thấy giấy phép lái xe.");
     }
   } catch (error) {
     console.error("Lỗi khi lấy thông tin giấy phép theo user_id:", error);
-    throw error;  // Ném lỗi để xử lý ở nơi gọi API
+    throw error; // Ném lỗi để xử lý ở nơi gọi API
   }
 };
 

@@ -32,6 +32,8 @@ function Booking() {
     setSelectedTimes,
   } = useBooking();
 
+  console.log(startDate);
+
   // note: handle dữ liệu địa điểm
   const handleLocationChange = (province, district) => {
     setSelectedProvince(province);
@@ -74,7 +76,6 @@ function Booking() {
 
     const bookingData = {
       car_id: carId,
-
       start_date: formattedStartDate,
       end_date: formattedEndDate,
       rental_price: total_cost,
@@ -291,20 +292,13 @@ function Booking() {
             <span>{formatPrice2(bookings?.rental_price)} / ngày</span>
           </p>
         </div>
-        <div className="price-item">
-          <p className="df-align-center">
-            {" "}
-            <span>Bảo hiểm thuê xe</span>{" "}
-          </p>
-          <p className="cost">
-            <span>86 520đ/ ngày</span>
-          </p>
-        </div>
+
         <div className="line-page"></div>
         <div className="price-item">
           <p>Tổng cộng</p>
           <p className="cost">
-            <span>1 050 840đ </span>x 1 ngày
+            <span>1 050 840đ </span> x {calculateTotalDays(startDate, endDate)}{" "}
+            ngày
           </p>
         </div>
         <div className="price-item">

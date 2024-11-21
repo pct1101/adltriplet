@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../css/index/home.css";
 import Card from "react-bootstrap/Card";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
@@ -7,31 +7,30 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { getAllCars } from "../../../lib/Axiosintance";
 
 function Placecar() {
   const [swiperRef, setSwiperRef] = useState(null);
+
+  const [cars, setCars] = useState([]);
+  console.log(cars);
+
+  useEffect(() => {
+    // Gọi API để lấy danh sách xe
+    getAllCars()
+      .then((response) => {
+        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+      })
+      .catch((error) => {
+        console.error("Error fetching car list:", error);
+      });
+  }, []);
 
   // Create array with 500 slides
   const [slides, setSlides] = useState(
     Array.from({ length: 10 }).map((_, index) => `Slide ${index + 1}`)
   );
-  const [slide, setSlide] = useState([
-    "/upload/hcm1.jpg",
-    "/upload/hn.jpg",
-    "/upload/dn.jpg",
-    "/upload/hue.jpg",
-    "/upload/pq.jpg",
-    "/upload/vt.jpg",
-    "/upload/hue.jpg",
-    "/upload/pq.jpg",
-    "/upload/vt.jpg",
-    "/upload/hue.jpg",
-    "/upload/pq.jpg",
-    "/upload/vt.jpg",
-    "/upload/hue.jpg",
-    "/upload/pq.jpg",
-    "/upload/vt.jpg",
-  ]);
+
   return (
     <div style={{ position: "relative" }} className="container">
       <div className="title mb-4">
@@ -56,12 +55,15 @@ function Placecar() {
           }}
           loop={true} // Để kích hoạt loop, slider sẽ quay lại slide đầu khi đến slide cuối
         >
-          {slide.map((slideBanner, index) => (
+          {cars.map((slideBanner, index) => (
             <SwiperSlide key={slideBanner} virtualIndex={index}>
               <div className="cartop-item">
-                <Card.Img variant="sales" src={slideBanner} />
+                <Card.Img
+                  variant="sales"
+                  src={`http://localhost:8000/imgs/${slideBanner.car_image}`}
+                />
                 <p>
-                  TP.Hồ Chí Minh <span>3200+ xe chờ</span>{" "}
+                  {slideBanner.car_name} <span> {slideBanner.seats} chỗ </span>{" "}
                 </p>
               </div>
             </SwiperSlide>

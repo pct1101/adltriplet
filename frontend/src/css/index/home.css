@@ -261,10 +261,12 @@
 
 /* Search Car */
 .search-option {
-  bottom: 150px;
+  bottom: 100px;
   z-index: 3;
   position: relative;
 }
+
+
 
 .option {
   display: flex;

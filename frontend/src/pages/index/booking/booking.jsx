@@ -32,8 +32,6 @@ function Booking() {
     setSelectedTimes,
   } = useBooking();
 
-  console.log(startDate);
-
   // note: handle dữ liệu địa điểm
   const handleLocationChange = (province, district) => {
     setSelectedProvince(province);
@@ -58,8 +56,7 @@ function Booking() {
   const { id: carId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const formattedStartDate = startDate.toISOString().split("T")[0]; // note:YYYY-MM-DD
-  const formattedEndDate = endDate.toISOString().split("T")[0]; //note: YYYY-MM-DD
+
   const handleBookingSubmit = async () => {
     setIsLoading(true);
 
@@ -73,6 +70,20 @@ function Booking() {
       //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
       return;
     }
+    // note: Giờ nhận và trả xe từ selectedTimes
+    const nhanXeTime = selectedTimes.nhanXe;
+    const traXeTime = selectedTimes.traXe;
+    // note: Kết hợp ngày và giờ thành datetime
+    // Tạo datetime
+    const formattedStartDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} ${nhanXeTime}`;
+    const formattedEndDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} ${traXeTime}`;
+
+    console.log("Start Date:", formattedStartDate);
+    console.log("End Date:", formattedEndDate);
 
     const bookingData = {
       car_id: carId,
@@ -83,6 +94,7 @@ function Booking() {
       city: selectedProvince ? selectedProvince.label : null,
       address: selectedDistrict ? selectedDistrict.label : null,
     };
+    console.log(bookingData);
 
     try {
       //note: Gọi hàm addBooking để thực hiện API call
@@ -90,10 +102,13 @@ function Booking() {
       const { booking } = response;
       localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
+        console.log(response);
         setTimeout(() => {
           setIsLoading(false);
           navigate(`/payment_car/${booking.booking_id}`);
         }, 3000);
+      } else {
+        console.log("lõi ne", Error);
       }
     } catch (error) {
       console.error("Có lỗi khi đặt xe:", error);
@@ -160,13 +175,11 @@ function Booking() {
   };
 
   const { id } = useParams();
-  console.log(id);
   // note:  Gọi API để lấy thông tin chi tiết xe
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
         const response = await getCarDetails(id);
-        console.log(response.data.car);
         setBookings(response.data.car); // note:Cập nhật để lấy dữ liệu của thuộc tính car
       } catch (error) {
         console.error("Error fetching car details", error);

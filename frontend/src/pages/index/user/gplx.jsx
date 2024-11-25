@@ -23,29 +23,30 @@ function Gplx() {
   // Handle image upload
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-  
     if (file) {
       // Kiểm tra loại file
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml']; 
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+        "image/svg+xml",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        setError("Ảnh giấy phép chỉ chấp nhận các định dạng: jpeg, png, jpg, gif, svg.");
+        setError(
+          "Ảnh giấy phép chỉ chấp nhận các định dạng: jpeg, png, jpg, gif, svg."
+        );
         return;
       }
-  
       // Kiểm tra dung lượng file (2MB)
       const maxSize = 2 * 1024 * 1024; // 2MB in bytes
       if (file.size > maxSize) {
         setError("Dung lượng ảnh giấy phép không được vượt quá 2MB.");
         return;
       }
-  
-      // Nếu tất cả điều kiện đều hợp lệ, tiếp tục xử lý file
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result); // Lưu hình ảnh dưới dạng base64
-        setError(""); // Xóa thông báo lỗi nếu file hợp lệ
-      };
-      reader.readAsDataURL(file); // Chuyển đổi file ảnh sang dạng base64
+      // Lưu hình ảnh vào state
+      setSelectedImage(file);
+      setError(""); // Xóa thông báo lỗi nếu file hợp lệ
     }
   };
 
@@ -57,21 +58,20 @@ function Gplx() {
     }
 
     try {
-      const formData = {
-        license_number,
-        license_holder,
-        license_image: selectedImage, // Base64 image
-      };
-
+      const formData = new FormData();
+      formData.append("license_number", license_number);
+      formData.append("license_holder", license_holder);
+      formData.append("license_image", selectedImage); // Chuyển ảnh tệp vào FormData
       // Call API to add driver license
       await addDriverLicense(formData);
-      setError(""); // Clear error message if successful
+      console.log(formData);
+
       setIsEditing(false); // Switch to view mode
     } catch (err) {
       setError("Đã xảy ra lỗi, vui lòng thử lại.");
+      console.log(err);
     }
   };
-
   return (
     <div>
       <div className="content-item driver-license">
@@ -115,7 +115,11 @@ function Gplx() {
                   <img
                     loading="lazy"
                     className="img-license-edit"
-                    src={selectedImage || "/upload/upload.png"}
+                    src={
+                      selectedImage
+                        ? URL.createObjectURL(selectedImage)
+                        : "/upload/upload.png"
+                    }
                     alt="Edited Upload"
                   />
                 ) : (
@@ -181,14 +185,10 @@ function Gplx() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Button to submit the form */}
-          {isEditing && (
             <button className="btn btn-primary" onClick={handleSubmit}>
               Thêm Giấy phép lái xe
             </button>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -3,17 +3,18 @@ import Footer from "../footer/footer";
 import Side_bar from "./side_bar";
 import Header from "../header/header";
 import { getBooking } from "../../../lib/Axiosintance";
+import dayjs from "dayjs";
 
 function My_car() {
   const [bookingData, setbookingData] = useState(null);
-  console.log(bookingData);
+  const [startDateFormatted, setStartDateFormatted] = useState(null);
+  const [endDateFormatted, setEndDateFormatted] = useState(null);
 
   useEffect(() => {
     const fecthBookingData = async () => {
       try {
         const data = await getBooking();
         setbookingData(data);
-        console.log(data);
       } catch (error) {
         console.log(error.data.message);
       }
@@ -21,14 +22,23 @@ function My_car() {
     fecthBookingData();
   }, []);
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
-    const day = String(date.getDate()).padStart(2, "0");
+  useEffect(() => {
+    if (bookingData && bookingData[0]?.start_date) {
+      const startDate = bookingData[0].start_date;
+      const endDate = bookingData[0].end_date;
+      const startDateFormatted = dayjs(startDate).format("DD-MM-YYYY HH:mm");
+      const endDateFormatted = dayjs(endDate).format("DD-MM-YYYY HH:mm");
+      // Lưu giá trị đã định dạng vào state
+      setStartDateFormatted(startDateFormatted);
+      setEndDateFormatted(endDateFormatted);
+      console.log("Formatted start date:", startDateFormatted);
+      console.log("Formatted end date:", endDateFormatted);
+    } else {
+      console.log("Start date not found or invalid");
+    }
+  }, [bookingData]);
 
-    return `${day}-${month}-${year}`;
-  };
+  console.log(bookingData);
 
   return (
     <div>
@@ -49,10 +59,11 @@ function My_car() {
                     <div className="custom-select">
                       <select>
                         <option value="0">Tất cả</option>
-                        <option value="2">Đang hoạt động</option>
-                        <option value="1">Đang chờ duyệt</option>
+                        <option value="2">Đã thanh toán</option>
+                        <option value="1">Chưa thanh toán</option>
                         <option value="3">Đã bị từ chối</option>
                         <option value="5">Đang tạm ngưng</option>
+                        <option value="6">Đang hoạt động</option>
                       </select>
                     </div>
                   </div>
@@ -164,11 +175,10 @@ function My_car() {
                               <div className="wrap-date-time">
                                 <div className="wrap-date">
                                   <span className="value">
-                                    {formatDate(booking.start_date)}{" "}
+                                    {startDateFormatted
+                                      ? startDateFormatted
+                                      : "Đang tải..."}{" "}
                                   </span>{" "}
-                                </div>
-                                <div className="wrap-time">
-                                  <span className="value">2:00 </span>
                                 </div>
                               </div>
                             </div>
@@ -182,12 +192,11 @@ function My_car() {
                                   <span className="value">
                                     {" "}
                                     <span className="value">
-                                      {formatDate(booking.end_date)}{" "}
+                                      {endDateFormatted
+                                        ? endDateFormatted
+                                        : "Đang tải..."}{" "}
                                     </span>{" "}
                                   </span>{" "}
-                                </div>
-                                <div className="wrap-time">
-                                  <span className="value"> 2:00 </span>
                                 </div>
                               </div>
                             </div>
@@ -207,9 +216,10 @@ function My_car() {
                             {booking.total_cost}{" "}
                           </span>
                         </div>
-                        <button className="btn btn--s btn-primary">
+                        <button className="btn btn-primary">
                           Xem chi tiết
                         </button>
+                        <button className="btn btn-danger">Hủy chuyến</button>
                       </div>
                     </div>
                   </div>

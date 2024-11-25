@@ -35,7 +35,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-store"></i>
                 </span>
-                <span className="text">Sản phẩm</span>
+                <span className="text">Car</span>
               </a>
             </li>
             <li className="nav-item">
@@ -69,6 +69,14 @@ function Side_bar() {
                 </span>
                 <span className="text">License Driver</span>
               </a>
+            </li>{" "}
+            <li className="nav-item">
+              <a href="/admin/license">
+                <span className="icon">
+                  <i className="fa-solid fa-box-open"></i>
+                </span>
+                <span className="text">License</span>
+              </a>
             </li>
             <li className="nav-item">
               <a href="/admin/order">
@@ -83,7 +91,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-users-gear"></i>
                 </span>
-                <span className="text">Tài khoản</span>
+                <span className="text">Users</span>
               </a>
             </li>
             <span className="divider">

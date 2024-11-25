@@ -70,18 +70,20 @@ function Booking() {
       //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
       return;
     }
-    // Khởi tạo datetime với dayjs và định dạng thành ISO 8601
-    const formattedStartDate =
-      dayjs(startDate).format("YYYY-MM-DD") +
-      " " +
-      dayjs(selectedTimes.nhanXe, "HH:mm").format("HH:mm:ss");
-    const formattedEndDate =
-      dayjs(endDate).format("YYYY-MM-DD") +
-      " " +
-      dayjs(selectedTimes.traXe, "HH:mm").format("HH:mm:ss");
+    // note: Giờ nhận và trả xe từ selectedTimes
+    const nhanXeTime = selectedTimes.nhanXe;
+    const traXeTime = selectedTimes.traXe;
+    // note: Kết hợp ngày và giờ thành datetime
+    // Tạo datetime
+    const formattedStartDate = `${dayjs(startDate).format(
+      "YYYY-MM-DD"
+    )} ${nhanXeTime}`;
+    const formattedEndDate = `${dayjs(endDate).format(
+      "YYYY-MM-DD"
+    )} ${traXeTime}`;
 
-    console.log(formattedStartDate);
-    console.log(formattedEndDate);
+    console.log("Start Date:", formattedStartDate);
+    console.log("End Date:", formattedEndDate);
 
     const bookingData = {
       car_id: carId,
@@ -101,11 +103,10 @@ function Booking() {
       localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
         console.log(response);
-
-        // setTimeout(() => {
-        //   setIsLoading(false);
-        //   navigate(`/payment_car/${booking.booking_id}`);
-        // }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate(`/payment_car/${booking.booking_id}`);
+        }, 3000);
       } else {
         console.log("lõi ne", Error);
       }

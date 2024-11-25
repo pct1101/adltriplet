@@ -1154,22 +1154,26 @@ export const addDriverLicense = async (licenseData) => {
 
   try {
     // Gửi request tới API với token trong headers
-    const response = await axios.post(`${API_URL}/driverlicense/`, licenseData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,  // Gửi token trong header
-      },
-    });
+    const response = await axios.post(
+      `${API_URL}/driverlicense/`,
+      licenseData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+          "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
+        },
+      }
+    );
 
     // Kiểm tra dữ liệu trả về
     if (response.data && response.data.success) {
-      console.log("Thêm giấy phép lái xe thành công:", response.data);  // Log để kiểm tra dữ liệu
-      return response.data;  // Trả về dữ liệu nếu thêm thành công
+      console.log("Thêm giấy phép lái xe thành công:", response.data); // Log để kiểm tra dữ liệu
+      return response.data; // Trả về dữ liệu nếu thêm thành công
     } else {
       throw new Error("Không thể thêm giấy phép lái xe.");
     }
   } catch (error) {
     console.error("Lỗi khi thêm giấy phép lái xe:", error);
-    throw error;  // Ném lỗi để xử lý ở nơi gọi API
+    throw error; // Ném lỗi để xử lý ở nơi gọi API
   }
 };
-

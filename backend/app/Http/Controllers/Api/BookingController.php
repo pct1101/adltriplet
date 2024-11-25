@@ -67,8 +67,8 @@ class BookingController
         $car = Car::findOrFail($request->car_id);
 
         // Tính toán tổng chi phí dựa trên số ngày thuê
-        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->start_date);
-        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d', $request->end_date);
+        $startDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $request->start_date);
+        $endDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $request->end_date);
         $numberOfDays = ($endDate->timestamp - $startDate->timestamp) / (60 * 60 * 24);
 
         $numberOfDays = (int)$numberOfDays;

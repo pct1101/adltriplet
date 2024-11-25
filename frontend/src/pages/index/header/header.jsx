@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 function Header() {
   const { user } = useAuth();
   const [userData, setUserData] = useState(null);
+
   const [error, setError] = useState(null);
   const { logout } = useAuth(); // Lấy hàm logout từ context
   const navigate = useNavigate();

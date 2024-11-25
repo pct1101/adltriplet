@@ -60,7 +60,7 @@ function Placecar() {
               <div className="cartop-item">
                 <Card.Img
                   variant="sales"
-                  src={`http://localhost:8000/imgs/${slideBanner.car_image}`}
+                  src={`http://localhost:8000/storage/imgs/${slideBanner.car_image}`}
                 />
                 <p>
                   {slideBanner.car_name} <span> {slideBanner.seats} chỗ </span>{" "}

@@ -11,6 +11,7 @@ import { getUserProfile } from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
 
 const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
+// const API_URL = "http://localhost:8000"  
 
 export default function Payment_booking() {
   const [userData, setUserData] = useState(null);
@@ -200,7 +201,7 @@ export default function Payment_booking() {
                       <div className="car-img">
                         <img
                           className="scale-img"
-                          src={`http://localhost:8000/imgs/${bookings.car_image}`}
+                          src={`http://localhost:8000/storage/imgs/${bookings.car_image}`}
                           alt="Car"
                         />
                       </div>

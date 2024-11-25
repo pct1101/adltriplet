@@ -17,7 +17,7 @@ return new class extends Migration
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->integer('total_cost');
-            $table->integer('total_cost_after_voucher');
+            $table->integer('total_cost_after_voucher')->nullable();
             $table->boolean('booking_status')->default(1);
             $table->string('booking_note')->nullable();
             $table->string('address')->nullable();

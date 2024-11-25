@@ -27,7 +27,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = $booking->booking_id; // Mã đơn hàng
         $vnp_OrderInfo = $request->input('order_desc', 'thanh toan hoa don');
         $vnp_OrderType = $request->input('order_type', 'billpayment');
-        $vnp_Amount = $booking->total_cost * 100;
+        $vnp_Amount = $booking->total_cost*100;
         $vnp_Locale = $request->input('language', 'vn');
         $vnp_BankCode = $request->input('bank_code', 'NCB');
         $vnp_IpAddr = $request->ip();
@@ -102,9 +102,10 @@ class PaymentController extends Controller
                 $booking->save();
 
                 $payment = PaymentModel::create([
-                    'payment_amount' => $vnp_amount,
+                    'payment_amount' => $vnp_amount/100,
                     'payment_date' => now(),
                     'payment_method' => 'VNPAY',
+                    'user_id' => $booking->user_id,
                     'booking_id' => $vnp_TxnRef,
                 ]);
             }

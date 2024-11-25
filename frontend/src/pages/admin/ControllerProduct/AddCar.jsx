@@ -64,27 +64,18 @@ const AddCar = () => {
     }
   };
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
   const handleFileChange = (e) => {
     setCarImage(e.target.files[0]); // Cập nhật carImage thành file ảnh
   };
 
   const handleAddCar = async (e) => {
     e.preventDefault();
-    const files = e.target.files;
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    if (files && files.length > 0) {
-      // Kiểm tra nếu có file nào được chọn
-      const file = files[0];
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        console.log(base64String); // Dùng base64 này để lưu hoặc gửi lên server
-      };
-      reader.readAsDataURL(file);
-    } else {
-      console.error("Không có file nào được chọn");
-    }
 
     const carData = new FormData(); // Sử dụng FormData để gửi file và dữ liệu khác
     carData.append("car_name", carName);

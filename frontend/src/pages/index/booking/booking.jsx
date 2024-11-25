@@ -316,6 +316,9 @@ function Booking() {
         </div>
         <div className="price-item">
           <p>Mã giảm giá</p>
+          <option>
+            
+          </option>
         </div>
         <div className="line-page"></div>
         <div className="price-item total">

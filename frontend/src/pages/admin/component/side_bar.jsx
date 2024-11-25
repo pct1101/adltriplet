@@ -51,7 +51,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-table-list"></i>
                 </span>
-                <span className="text">feedbacks</span>
+                <span className="text">Feedbacks</span>
               </a>
             </li>
             <li className="nav-item">
@@ -59,7 +59,15 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-table-list"></i>
                 </span>
-                <span className="text">favorite</span>
+                <span className="text">Favorites</span>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/admin/license">
+                <span className="icon">
+                  <i className="fa-solid fa-table-list"></i>
+                </span>
+                <span className="text">License Driver</span>
               </a>
             </li>
             <li className="nav-item">

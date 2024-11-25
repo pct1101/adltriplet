@@ -46,15 +46,15 @@ const EditCar = () => {
       console.log("Dữ liệu xe từ API:", car);
       setCarName(car.data.car_name);
       // console.log(car.data.car_name);
-      setSeats(car.data.seats);
-      setModel(car.data.model);
-      setLicensePlate(car.data.license_plate);
-      setRentalPrice(car.data.rental_price);
-      setCarStatus(car.data.car_status);
-      setMileage(car.data.mileage);
-      setCarImage(car.data.car_image);
-      setCarDescription(car.data.car_description);
-      setBrandId(car.data.brandid); // Giả sử API trả về brandid
+      setSeats(car.data.data.seats);
+      setModel(car.data.data.model);
+      setLicensePlate(car.data.data.license_plate);
+      setRentalPrice(car.data.data.rental_price);
+      setCarStatus(car.data.data.car_status);
+      setMileage(car.data.data.mileage);
+      setCarImage(car.data.data.car_image);
+      setCarDescription(car.data.data.car_description);
+      setBrandId(car.data.data.brandid); // Giả sử API trả về brandid
     } catch (error) {
       
       console.error("Error fetching car data:", error.message);

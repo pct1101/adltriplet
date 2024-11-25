@@ -67,10 +67,10 @@ function AdminDriverLicenseDetails() {
             });
         }
     };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const data = new FormData();
         data.append("license_number", formData.license_number);
         data.append("license_holder", formData.license_holder);
@@ -80,7 +80,7 @@ function AdminDriverLicenseDetails() {
         data.append("expiry_date", formData.expiry_date);
         data.append("issued_by", formData.issued_by);
         data.append("license_image", formData.license_image);  // Ảnh tải lên dưới dạng tệp
-    
+
         try {
             await updateDriverLicense(licenseId, data);  // Gửi dữ liệu FormData
             alert("Cập nhật thành công!");
@@ -174,13 +174,21 @@ function AdminDriverLicenseDetails() {
                                         style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}
                                     />
                                     <label>Hình ảnh giấy phép:</label>
-                                    <input
-                                        type="text"
-                                        name="license_image"
-                                        value={formData.license_image}
-                                        onChange={handleInputChange}
-                                        disabled={!isEditing}
-                                        style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '5px' }}
+                                    <img
+                                        src={`http://localhost:8000/${formData.license_image}`}
+                                        alt="License"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            marginBottom: '10px',
+                                            borderRadius: '5px',
+                                        }}
+                                        onClick={() => {
+                                            if (isEditing) {
+                                                // Logic để thay đổi hình ảnh nếu cần
+                                                alert('Edit mode: Bạn có thể thay đổi hình ảnh.');
+                                            }
+                                        }}
                                     />
                                 </div>
                             </div>

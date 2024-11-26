@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
@@ -13,53 +14,36 @@ class DriverLicenseRequest extends FormRequest
 
     public function rules(): array
     {
-        // Quy tắc chung
-        $rules = [
+        // Lấy ID của giấy phép hiện tại (nếu có) từ route
+        $driverLicenseId = $this->route('id');
+
+        return [
             'license_number' => [
                 'required',
                 'digits:12',
-                // Kiểm tra tính duy nhất
-                function ($attribute, $value, $fail) {
-                    // Kiểm tra khi sửa
-                    if ($this->isMethod('put')) {
-                        // Lấy bản ghi hiện tại khi đang sửa
-                        $currentLicense = \App\Models\DriverLicenses::find($this->route('driver_license'));
-
-                        // Nếu license_number thay đổi thì kiểm tra tính duy nhất
-                        if ($currentLicense && $currentLicense->license_number !== $value) {
-                            $existingLicense = \App\Models\DriverLicenses::where('license_number', $value)->first();
-                            if ($existingLicense) {
-                                // Trả về thông báo lỗi giống như khi thêm mới
-                                $fail('Số giấy phép đã tồn tại trong hệ thống.');
-                            }
-                        }
-                    } else {
-                        // Kiểm tra khi thêm mới
-                        $existingLicense = \App\Models\DriverLicenses::where('license_number', $value)->first();
-                        if ($existingLicense) {
-                            // Trả về thông báo lỗi
-                            $fail('Số giấy phép đã tồn tại trong hệ thống.');
-                        }
-                    }
-                }
+                Rule::unique('driver_licenses', 'license_number')->ignore($driverLicenseId, 'driver_license_id'),
             ],
             'license_holder' => 'required|string|max:255',
             'license_type' => 'nullable|in:B2,C,D,E',
-            'license_image' => 'required|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'license_image' => [
+                $this->isMethod('post') ? 'required' : 'nullable', // Chỉ bắt buộc khi tạo mới
+                'file',
+                'mimes:jpeg,png,jpg,gif,svg',
+                'max:2048',
+            ],
             'license_status' => 'nullable|in:active,inactive',
             'issue_date' => 'nullable|date',
             'expiry_date' => 'nullable|date|after:issue_date',
             'issued_by' => 'nullable|string|max:255',
         ];
-
-        return $rules;
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'license_number.required' => 'Số giấy phép là bắt buộc.',
             'license_number.digits' => 'Số giấy phép phải gồm đúng 12 chữ số.',
+            'license_number.unique' => 'Số giấy phép đã tồn tại trong hệ thống.',
             'license_holder.required' => 'Tên người sở hữu giấy phép là bắt buộc.',
             'license_holder.string' => 'Tên người sở hữu giấy phép phải là một chuỗi ký tự hợp lệ.',
             'license_holder.max' => 'Tên người sở hữu giấy phép không được vượt quá 255 ký tự.',

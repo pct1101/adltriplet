@@ -66,7 +66,7 @@ class DriverLicenseController extends Controller
                 $storage = Storage::disk('public');
 
                 // Lưu ảnh vào thư mục license_images trong storage/app/public
-                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . now('Asia/Ho_Chi_Minh')->format('Y-m-d_H-i-s') . '.' . $request->file('license_image')->getClientOriginalExtension();
                 $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
 
                 // Đường dẫn file nguồn (storage/app/public)
@@ -130,7 +130,7 @@ class DriverLicenseController extends Controller
                 $storage = Storage::disk('public');
 
                 // Tạo tên file mới
-                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . now('Asia/Ho_Chi_Minh')->format('Y-m-d_H-i-s') . '.' . $request->file('license_image')->getClientOriginalName();
 
                 // Lưu ảnh vào thư mục storage/app/public/license_images
                 $storage->put($licenseImageName, file_get_contents($request->file('license_image')));

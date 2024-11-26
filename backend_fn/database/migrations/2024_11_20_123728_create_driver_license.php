@@ -17,8 +17,7 @@ return new class extends Migration
             $table->string('license_number')->unique(); // Số giấy phép
             $table->string('license_holder'); // Tên người sở hữu giấy phép
             $table->enum('license_type', ['B2', 'C', 'D','E'])->nullable();; // Loại giấy phép
-            $table->string('license_image_front'); // Hình giấy phép mặt trước
-            // $table->string('license_image_back'); // Hình giấy phép mặt sau
+            $table->string('license_image'); // Hình giấy phép lái xe
             $table->enum('license_status', ['active', 'inactive'])->default('inactive')->nullable();;
             $table->date('issue_date')->nullable(); // Ngày cấp
             $table->date('expiry_date')->nullable(); // Ngày hết hạn

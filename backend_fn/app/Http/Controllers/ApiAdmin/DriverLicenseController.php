@@ -5,7 +5,9 @@ namespace App\Http\Controllers\ApiAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DriverLicenseRequest;
 use App\Models\DriverLicenses;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class DriverLicenseController extends Controller
 {
@@ -52,59 +54,70 @@ class DriverLicenseController extends Controller
     {
         try {
             // Tìm giấy phép lái xe
-            $driver_license = DriverLicenses::find($id);
-            if(!$driver_license){
+            $driverLicense = DriverLicenses::find($id);
+            if(!$driverLicense){
                 return response()->json(['message', 'không tìm thấy giấy phép lái xe với id:'. $id], 404);
             }
 
             // Cập nhật giấy phép lái xe
-            $driver_license->license_number = $request->license_number;
-            $driver_license->license_holder = $request->license_holder;
-            $driver_license->license_type = $request->license_type;
-            $driver_license->license_status = $request->license_status;
-            $driver_license->issue_date = $request->issue_date;
-            $driver_license->expiry_date = $request->expiry_date;
-            $driver_license->issued_by = $request->issued_by;
+            $driverLicense->license_number = $request->license_number;
+            $driverLicense->license_holder = $request->license_holder;
+            $driverLicense->license_type = $request->license_type;
+            $driverLicense->license_status = $request->license_status;
+            $driverLicense->issue_date = $request->issue_date;
+            $driverLicense->expiry_date = $request->expiry_date;
+            $driverLicense->issued_by = $request->issued_by;
 
-            // Sử dụng Storage với disk 'public' để lưu ảnh
-            $storage = Storage::disk('public');
+            // Xử lý ảnh nếu được tải lên
+            if ($request->hasFile('license_image')) {
+                $storage = Storage::disk('public');
 
-            // Kiểm tra và xử lý cập nhật hình ảnh (nếu có)
-            if ($request->hasFile('license_image_front') && $request->hasFile('license_image_back')) {
-                $frontImageContent = file_get_contents($request->file('license_image_front')->getRealPath());
-                $backImageContent = file_get_contents($request->file('license_image_back')->getRealPath());
+                // Tạo tên file mới
+                $licenseImageName = 'license_images/' . 'us_id_' . $driverLicense->user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
 
-                // Kiểm tra nội dung hai file ảnh
-                if(md5($frontImageContent) === md5($backImageContent)){
-                    return response()->json(['message' => 'Hai hình ảnh giấy phép lái xe không được trùng nhau'], 400);
+                // Lưu ảnh vào thư mục storage/app/public/license_images
+                $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
+
+                // Đường dẫn file nguồn (storage/app/public)
+                $sourcePath = storage_path('app/public/' . $licenseImageName);
+
+                // Đường dẫn file đích (public/license_images)
+                $destinationPath = public_path('license_images/' . basename($licenseImageName));
+
+                // Tạo thư mục public/license_images nếu chưa tồn tại
+                if (!File::exists(public_path('license_images'))) {
+                    File::makeDirectory(public_path('license_images'), 0755, true);
                 }
 
-                // Xử lý hình ảnh mặt trước
-                if($request->hasFile('license_image_front')){
-                    if($storage->exists($driver_license->license_image_front)){
-                        $storage->delete($driver_license->license_image_front);
+                // Di chuyển file từ storage sang public
+                if (File::exists($sourcePath)) {
+                    File::copy($sourcePath, $destinationPath);
+                }
+
+                // Xóa ảnh cũ nếu tồn tại
+                if (!empty($driverLicense->license_image)) {
+                    $oldStoragePath = storage_path('app/public/' . $driverLicense->license_image);
+                    $oldPublicPath = public_path('license_images/' . basename($driverLicense->license_image));
+
+                    if (File::exists($oldStoragePath)) {
+                        File::delete($oldStoragePath);
                     }
-                    $frontImageName = 'license_images/' . '_front_' . $request->file('license_image_front')->getClientOriginalName();
-                    $storage->put($frontImageName, $frontImageContent);
-                    $driver_license->license_image_front = $frontImageName;
+
+                    if (File::exists($oldPublicPath)) {
+                        File::delete($oldPublicPath);
+                    }
                 }
 
-                // Xử lý ảnh mặt sau
-                if ($request->hasFile('license_image_back')) {
-                    if ($storage->exists($driver_license->license_image_back)) {
-                        $storage->delete($driver_license->license_image_back);
-                    }
-                    $backImageName = 'license_images/' . '_back_' . $request->file('license_image_back')->getClientOriginalName();
-                    $storage->put($backImageName, $backImageContent);
-                    $driver_license->license_image_back = $backImageName;
-                }
+                // Cập nhật đường dẫn ảnh mới vào database
+                $driverLicense->license_image = $licenseImageName;
             }
 
+
             // Lưu các thay đổi vào database
-            $driver_license->save();
+            $driverLicense->save();
 
             // Trả về phản hồi thành công
-            return response()->json(['message' => 'Sửa giấy phép lái xe thành công', 'driver_licenses' => $driver_license], 200);
+            return response()->json(['message' => 'Sửa giấy phép lái xe thành công', 'driver_licenses' => $driverLicense], 200);
         } catch (\Exception $e) {
 
             // Trả về phản hồi lỗi nếu có lỗi xảy ra trong quá trình xử lý

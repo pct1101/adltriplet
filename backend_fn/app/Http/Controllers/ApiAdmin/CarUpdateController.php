@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\ApiAdmin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Car; // Import model Car
-use App\Http\Requests\CarUpdateRequest; // Import request validator
-use Illuminate\Support\Facades\Storage; // Để làm việc với lưu trữ file
-use Illuminate\Support\Str; // Để tạo tên ngẫu nhiên cho file
+use App\Models\Car;
+use App\Http\Requests\CarUpdateRequest;
+use Illuminate\Support\Facades\Storage;
 use Exception;
+use Illuminate\Support\Facades\File;
+
 
 class CarUpdateController extends Controller
 {
@@ -41,39 +42,58 @@ class CarUpdateController extends Controller
             $car->mileage = $request->mileage;
             $car->car_description = $request->car_description;
 
-            // Xử lý cập nhật hình ảnh
-            // if ($request->hasFile('car_image') && $request->file('car_image')->isValid()) {
-            if($request->car_image){
-                // Sử dụng public storage
+            // Xử lý ảnh nếu được tải lên
+            if ($request->hasFile('car_image')) {
                 $storage = Storage::disk('public');
 
-                // Xóa ảnh cũ nếu tồn tại
-                if ($storage->exists($car->car_image)) {
-                    $storage->delete($car->car_image);
+                // Tạo tên file mới
+                $carImageName = 'imgs/' . '_img_' . $request->file('car_image')->getClientOriginalName();
+
+                // Lưu ảnh vào thư mục storage/app/public/cimgs
+                $storage->put($carImageName, file_get_contents($request->file('car_image')));
+
+                // Đường dẫn file nguồn (storage/app/public)
+                $sourcePath = storage_path('app/public/' . $carImageName);
+
+                // Đường dẫn file đích (public/imgs)
+                $destinationPath = public_path('imgs/' . basename($carImageName));
+
+                // Tạo thư mục public/imgs nếu chưa tồn tại
+                if (!File::exists(public_path('imgs'))) {
+                    File::makeDirectory(public_path('imgs'), 0755, true);
                 }
 
-                // Lưu ảnh mới
-                $imageName = 'imgs/' . Str::random(32) . "." . $request->car_image->getClientOriginalExtension();
-                $storage->put($imageName, file_get_contents($request->car_image));
+                // Di chuyển file từ storage sang public
+                if (File::exists($sourcePath)) {
+                    File::copy($sourcePath, $destinationPath);
+                }
 
-                // Lưu tên file vào cơ sở dữ liệu
-                $car->car_image = $imageName;
+                // Xóa ảnh cũ nếu tồn tại
+                if (!empty($car->car_image)) {
+                    $oldStoragePath = storage_path('app/public/' . $car->car_image);
+                    $oldPublicPath = public_path('imgs/' . basename($car->car_image));
+
+                    if (File::exists($oldStoragePath)) {
+                        File::delete($oldStoragePath);
+                    }
+
+                    if (File::exists($oldPublicPath)) {
+                        File::delete($oldPublicPath);
+                    }
+                }
+
+                // Cập nhật đường dẫn ảnh mới vào database
+                $car->car_image = $carImageName;
             }
 
             // Lưu cập nhật vào cơ sở dữ liệu
             $car->save();
 
             // Trả về phản hồi JSON
-            return response()->json([
-                'message' => 'Car successfully updated.',
-                'data' => $car
-            ], 200);
+            return response()->json(['message' => 'Car successfully updated.', 'data' => $car], 200);
         } catch (Exception $e) {
             // Trả về phản hồi lỗi
-            return response()->json([
-                'message' => 'Something went really wrong!',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['message' => 'Something went really wrong!', 'error' => $e->getMessage()], 500);
         }
     }
 }

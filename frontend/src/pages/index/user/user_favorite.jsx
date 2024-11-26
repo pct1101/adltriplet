@@ -5,8 +5,10 @@ import Header from "../header/header";
 import Footer from "../footer/footer";
 import "../../../css/user/user.css";
 import { getFavoriteUser, deleteFavorite } from "../../../lib/Axiosintance";
+import Loading from "../event/loading";
 
 function User_favorite() {
+  const [isLoading, setIsLoading] = useState(false);
   const [favoriteCars, setFavoriteCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,6 +19,7 @@ function User_favorite() {
   useEffect(() => {
     const fetchFavoriteCars = async () => {
       try {
+        setIsLoading(true);
         const response = await getFavoriteUser(); // Gọi API lấy danh sách xe yêu thích
         console.log("Dữ liệu trả về từ API:", response);
         setFavoriteCars(response); // Lưu danh sách xe yêu thích vào state
@@ -34,18 +37,18 @@ function User_favorite() {
   const handleRemoveFavorite = async (id) => {
     try {
       // Gọi API xóa xe yêu thích, sử dụng favorite_id thay vì car_id
-      await deleteFavorite(id); 
-      
+      await deleteFavorite(id);
+
       // Sau khi xóa, cập nhật danh sách yêu thích
-      setFavoriteCars((prevCars) => 
-        prevCars.filter((car) => car.favorite_id !== id) // Dùng favorite_id để so sánh
+      setFavoriteCars(
+        (prevCars) => prevCars.filter((car) => car.favorite_id !== id) // Dùng favorite_id để so sánh
       );
-      
+
       // Thông báo người dùng
       alert("Xóa xe yêu thích thành công.");
     } catch (err) {
       console.error("Lỗi khi xóa xe yêu thích:", err);
-      
+
       // Xử lý lỗi hiển thị cho người dùng
       alert("Không thể xóa xe yêu thích. Vui lòng thử lại.");
     }
@@ -53,7 +56,7 @@ function User_favorite() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{isLoading && <Loading />} </div>;
   }
 
   if (error) {
@@ -85,7 +88,11 @@ function User_favorite() {
                           <div className="car-img">
                             <img
                               className="scale-img"
-                              src={car.car && car.car.car_image ? `/img/${car.car.car_image}` : '/img/default-image.jpg'}
+                              src={
+                                car.car && car.car.car_image
+                                  ? `/img/${car.car.car_image}`
+                                  : "/img/default-image.jpg"
+                              }
                               alt="Car"
                             />
                           </div>

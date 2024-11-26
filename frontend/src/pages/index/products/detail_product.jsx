@@ -13,8 +13,10 @@ import {
 import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
+import Loading from "../event/loading";
 
 const Detail_product = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const [car, setCar] = useState(null);
   const [carImages, setCarImages] = useState([]);
@@ -29,19 +31,17 @@ const Detail_product = () => {
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
+        setIsLoading(true);
         const response = await getCarDetails(id);
         setCar(response.data.car);
-
         const imageResponse = await getCarImagesByCarId(
           response.data.car.car_id
         );
         setCarImages(imageResponse.data);
-
         const feedbackData = response.data.car.feedback;
         setFeedbacks(
           feedbackData && feedbackData.length > 0 ? feedbackData : []
         );
-
         // Kiểm tra yêu thích
         const favoriteStatus =
           localStorage.getItem(`favorite_${id}`) === "true";
@@ -54,7 +54,7 @@ const Detail_product = () => {
   }, [id]);
 
   if (!car) {
-    return <div>Loading...</div>;
+    return <div>{isLoading && <Loading />} </div>;
   }
 
   const formatPrice = (price) => {

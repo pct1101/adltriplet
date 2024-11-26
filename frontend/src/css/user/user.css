@@ -709,15 +709,23 @@
   font-weight: 600;
 }
 
-
+/* note: css successfully */
+.main-content {
+  z-index: 1;
+  display: flex;
+  gap: 20px;
+  height: 100vh;
+  align-items: center;
+}
 
 .tb-success {
+  width: 70%;
+  height: 320px;
   z-index: 1;
-
   text-align: center;
   padding: 20px;
   margin: 20px auto;
-  border: 2px solid #4caf50;
+  border: 1px solid #4caf50;
   border-radius: 10px;
   background-color: #f9f9f9;
   max-width: 500px;
@@ -755,4 +763,31 @@
 
 .tb-success a:hover {
   background-color: #45a049;
+}
+
+/* left */
+.modal-body-text {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 16px;
+  gap: 16px;
+}
+
+.block-content {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 8px;
+  gap: 8px;
+  padding: 15px;
+}
+
+.block-content h5 {
+  color: #5FCF86;
+}
+
+.block-content .note {
+  color: white;
+  background-color: tomato;
+  padding: 2px 0px 2px 15px;
+  border-radius: 15px;
 }

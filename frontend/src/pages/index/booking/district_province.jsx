@@ -64,11 +64,12 @@ const LocationDropdown = ({ onLocationChange }) => {
       <Autocomplete
         className="district"
         options={locations}
-        value={province || defaultProvince} // Default to Hồ Chí Minh
+        value={province} // Default to Hồ Chí Minh
         onChange={handleProvinceChange}
         getOptionLabel={(option) => option.label}
         renderInput={(params) => (
           <TextField
+            label={!province ? "Chọn thành phố" : null}
             {...params}
             sx={{
               "& .MuiOutlinedInput-root": {

@@ -13,8 +13,8 @@ function Gplx() {
   // Handle changes for license number, name and license type
   const handleLicenseNumberChange = (e) => setLicenseNumber(e.target.value);
   const handleLicenseNameChange = (e) => setLicenseName(e.target.value);
-  // const handleLicenseTypeChange = (e) => setLicenseType(e.target.value); // Thêm hàm xử lý thay đổi licenseType
-
+  // note:
+  const [successMessage, setSuccessMessage] = useState("");
   // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -56,7 +56,6 @@ function Gplx() {
       setError("Vui lòng nhập đầy đủ thông tin.");
       return; // prevent submission if any field is missing
     }
-
     try {
       const formData = new FormData();
       formData.append("license_number", license_number);
@@ -64,9 +63,9 @@ function Gplx() {
       formData.append("license_image", selectedImage); // Chuyển ảnh tệp vào FormData
       // Call API to add driver license
       await addDriverLicense(formData);
-      console.log(formData);
-
       setIsEditing(false); // Switch to view mode
+
+      const response = await addDriverLicense(formData);
     } catch (err) {
       setError("Đã xảy ra lỗi, vui lòng thử lại.");
       console.log(err);
@@ -100,9 +99,18 @@ function Gplx() {
             {isEditing ? "Cập nhật" : "Chỉnh sửa"}
           </a>
         </div>
+        <div class="note-license">
+          <p>
+            <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
+            <u>người đặt xe</u> trên Mioto (đã xác thực GPLX) <b>ĐỒNG THỜI </b>
+            phải là <u>người nhận xe.</u>
+          </p>
+        </div>
 
-        {/* Error message */}
         {error && <div className="error-message">{error}</div>}
+        {successMessage && (
+          <div style={{ color: "green" }}>{successMessage}</div>
+        )}
 
         <div className="content">
           <div className="info-license position-relative">

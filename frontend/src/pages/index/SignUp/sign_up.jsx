@@ -22,7 +22,6 @@ const Dangky = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
 
   // Xử lý khi submit form đăng ký
   const handleRegister = async (e) => {
@@ -38,7 +37,7 @@ const Dangky = () => {
       }
 
       setTimeout(() => {
-        navigate("/Login"); // Điều hướng đến trang đăng nhập sau khi đăng ký thành công
+        navigate("/Login");
       }, 2000);
     } catch (error) {
       setError(
@@ -156,7 +155,7 @@ const Dangky = () => {
                     </div>
                     {error && <div className="alert alert-danger">{error}</div>}
                     {success && (
-                      <div className="alert alert-danger">{success}</div>
+                      <div className="alert alert-success">{success}</div>
                     )}
                     <div className="d-grid">
                       <button

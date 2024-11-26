@@ -6,8 +6,10 @@ import { format } from "date-fns";
 import { getUserProfile } from "../../../lib/Axiosintance";
 import Side_bar from "./side_bar";
 import Gplx from "./gplx";
+import Loading from "../event/loading";
 
 function User() {
+  const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +17,7 @@ function User() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const data = await getUserProfile();
         setUserData(data);
       } catch (err) {
@@ -29,7 +32,7 @@ function User() {
 
   // Nếu đang tải, hiển thị loading
   if (loading) {
-    return <div>Đang tải...</div>;
+    return <div>{isLoading && <Loading />} </div>;
   }
 
   // Nếu có lỗi, hiển thị lỗi
@@ -90,7 +93,10 @@ function User() {
               <div className="content">
                 <div className="avatar-box">
                   <div className="avatar avatar--xl has-edit">
-                    <img className="scale-img" src={`http://localhost:8000/imgs_user/${userData.image}`} />
+                    <img
+                      className="scale-img"
+                      src={`http://localhost:8000/imgs_user/${userData.image}`}
+                    />
                   </div>
                 </div>
                 <div className="info-user">

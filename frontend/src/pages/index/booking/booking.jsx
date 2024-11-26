@@ -16,6 +16,7 @@ import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
+import Voucher from "./voucher";
 function Booking() {
   const {
     selectedProvince,
@@ -310,15 +311,13 @@ function Booking() {
         <div className="price-item">
           <p>Tổng cộng</p>
           <p className="cost">
-            <span>1 050 840đ </span> x {calculateTotalDays(startDate, endDate)}{" "}
-            ngày
+            <span>{formatPrice2(bookings?.rental_price)} </span> x{" "}
+            {calculateTotalDays(startDate, endDate)} ngày
           </p>
         </div>
         <div className="price-item">
           <p>Mã giảm giá</p>
-          <option>
-            
-          </option>
+          <Voucher></Voucher>
         </div>
         <div className="line-page"></div>
         <div className="price-item total">

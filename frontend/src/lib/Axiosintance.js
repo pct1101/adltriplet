@@ -348,7 +348,6 @@ export const addBookingUser = async (bookingData) => {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
-
   // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
   if (!API_URL) {
     console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
@@ -1151,7 +1150,6 @@ export const addDriverLicense = async (licenseData) => {
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
-
   try {
     // Gửi request tới API với token trong headers
     const response = await axios.post(
@@ -1164,14 +1162,7 @@ export const addDriverLicense = async (licenseData) => {
         },
       }
     );
-
-    // Kiểm tra dữ liệu trả về
-    if (response.data && response.data.success) {
-      console.log("Thêm giấy phép lái xe thành công:", response.data); // Log để kiểm tra dữ liệu
-      return response.data; // Trả về dữ liệu nếu thêm thành công
-    } else {
-      throw new Error("Không thể thêm giấy phép lái xe.");
-    }
+    return response.data;
   } catch (error) {
     console.error("Lỗi khi thêm giấy phép lái xe:", error);
     throw error; // Ném lỗi để xử lý ở nơi gọi API

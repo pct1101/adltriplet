@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -9,11 +10,20 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 
 class AuthController
 {
+    /**
+     * Update an existing users.
+     *
+     * @param UserRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+
     public function register(Request $request)
     {
         // In ra dữ liệu nhận được
@@ -113,40 +123,75 @@ class AuthController
     }
 
     // Cập nhập thông tin người dùng
-    public function updateProfile(Request $request)
+    // public function updateProfile(Request $request)
+    // {
+    //     // Xác thực dữ liệu đầu vào
+    //     $validator = Validator::make($request->all(), [
+    //         'name' => 'sometimes|string|max:255',
+    //         'email' => 'sometimes|string|email|max:255|unique:users,email,' . $request->user()->id,
+    //         'phone' => 'sometimes|string|max:15|unique:users,phone,' . $request->user()->id,
+    //         'image' => 'nullable|string',
+    //         'gender' => 'nullable|in:male,female,other',
+    //         'birth_date' => 'nullable|date',
+    //         'address' => 'nullable|string',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator->errors(), 422);
+    //     }
+
+    //     // Cập nhật thông tin người dùng
+    //     $user = $request->user();
+
+    //     // Cập nhật từng trường chỉ nếu nó có trong yêu cầu
+    //     $user->name = $request->input('name', $user->name); // Giữ nguyên nếu không có thay đổi
+    //     $user->email = $request->input('email', $user->email); // Giữ nguyên nếu không có thay đổi
+    //     $user->phone = $request->input('phone', $user->phone); // Giữ nguyên nếu không có thay đổi
+    //     $user->image = $request->input('image', $user->image); // Giữ nguyên nếu không có thay đổi
+    //     $user->gender = $request->input('gender', $user->gender); // Giữ nguyên nếu không có thay đổi
+    //     $user->birth_date = $request->input('birth_date', $user->birth_date); // Giữ nguyên nếu không có thay đổi
+    //     $user->address = $request->input('address', $user->address); // Giữ nguyên nếu không có thay đổi
+
+    //     // Lưu các thay đổi
+    //     $user->save();
+
+    //     return response()->json(['message' => 'Profile updated successfully!', 'user' => $user], 200);
+    // }
+
+    public function update(UserRequest $request)
     {
-        // Xác thực dữ liệu đầu vào
-        $validator = Validator::make($request->all(), [
-            'name' => 'sometimes|string|max:255',
-            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $request->user()->id,
-            'phone' => 'sometimes|string|max:15|unique:users,phone,' . $request->user()->id,
-            'image' => 'nullable|string',
-            'gender' => 'nullable|in:male,female,other',
-            'birth_date' => 'nullable|date',
-            'address' => 'nullable|string',
-        ]);
+        try {
+            $user_id = Auth::id();
+            $user = $request->user(); // Lấy người dùng hiện tại
+            $storage = Storage::disk('public');
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            // Xử lý ảnh (nếu có)
+            if ($request->hasFile('image')) {
+                $authImageName = 'auth_images/' . '_auth_' .$user_id . '_img_
+
+                ' . $request->file('image')->getClientOriginalName();
+                $storage->put($authImageName, file_get_contents($request->file('image')));
+                $user->image = $authImageName; // Cập nhật đường dẫn ảnh
+            }
+
+            // Cập nhật các thông tin khác
+            $user->name = $request->input('name', $user->name);
+            $user->email = $request->input('email', $user->email);
+            $user->phone = $request->input('phone', $user->phone);
+            $user->gender = $request->input('gender', $user->gender);
+            $user->birth_date = $request->input('birth_date', $user->birth_date);
+            $user->address = $request->input('address', $user->address);
+            $user->role = $request->input('role', $user->role);
+
+            // Lưu các thay đổi
+            $user->save();
+
+            return response()->json(['message' => 'Cập nhật hồ sơ thành công!', 'user' => $user], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Cập nhật thất bại', 'message' => $e->getMessage()], 500);
         }
-
-        // Cập nhật thông tin người dùng
-        $user = $request->user();
-
-        // Cập nhật từng trường chỉ nếu nó có trong yêu cầu
-        $user->name = $request->input('name', $user->name); // Giữ nguyên nếu không có thay đổi
-        $user->email = $request->input('email', $user->email); // Giữ nguyên nếu không có thay đổi
-        $user->phone = $request->input('phone', $user->phone); // Giữ nguyên nếu không có thay đổi
-        $user->image = $request->input('image', $user->image); // Giữ nguyên nếu không có thay đổi
-        $user->gender = $request->input('gender', $user->gender); // Giữ nguyên nếu không có thay đổi
-        $user->birth_date = $request->input('birth_date', $user->birth_date); // Giữ nguyên nếu không có thay đổi
-        $user->address = $request->input('address', $user->address); // Giữ nguyên nếu không có thay đổi
-
-        // Lưu các thay đổi
-        $user->save();
-
-        return response()->json(['message' => 'Profile updated successfully!', 'user' => $user], 200);
     }
+
     // Thay đổi mật khẩu
     public function changePassword(Request $request)
     {

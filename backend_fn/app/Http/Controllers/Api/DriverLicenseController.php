@@ -65,19 +65,8 @@ class DriverLicenseController extends Controller
                 $storage = Storage::disk('public');
 
                 // Lưu ảnh mặt trước
-                $frontImageName = 'license_images/' . '_front_' . $request->file('license_image_front')->getClientOriginalName();
-                $storage->put($frontImageName, file_get_contents($request->file('license_image_front')));
-
-                // Lưu ảnh mặt sau
-                // $backImageName = 'license_images/' . '_back_' . $request->file('license_image_back')->getClientOriginalName();
-                // $storage->put($backImageName, file_get_contents($request->file('license_image_back')));
-
-                // Kiểm tra nếu hai ảnh trùng nhau
-                // $frontImageContent = file_get_contents($request->file('license_image_front')->getRealPath());
-                // $backImageContent = file_get_contents($request->file('license_image_back')->getRealPath());
-                // if (md5($frontImageContent) === md5($backImageContent)) {
-                //     return response()->json(['error' => 'Hai ảnh mặt trước và mặt sau không được trùng nhau'], 400);
-                // }
+                $licenseImageName ='license_images/'.'us_id_' .$user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+                $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
 
             } catch (Exception $e) {
                 return response()->json(['error' => 'Lỗi khi xử lý file ảnh', 'details' => $e->getMessage()], 500);
@@ -89,8 +78,7 @@ class DriverLicenseController extends Controller
                     'user_id' => $user_id,
                     'license_number' => $license_number,
                     'license_holder' => $license_holder,
-                    'license_image_front' => $frontImageName,
-                    // 'license_image_back' => $backImageName,
+                    'license_image' => $licenseImageName,
                 ]);
             } catch (Exception $e) {
                 return response()->json(['error' => 'Lỗi không xác định xảy ra khi lưu giấy phép', 'details' => $e->getMessage(),], 500);
@@ -124,35 +112,19 @@ class DriverLicenseController extends Controller
             // Sử dụng Storage với disk 'public' để lưu ảnh
             $storage = Storage::disk('public');
 
-            // Kiểm tra nếu cả hai ảnh được upload
-            if ($request->hasFile('license_image_front') && $request->hasFile('license_image_back')) {
-                $frontImageContent = file_get_contents($request->file('license_image_front')->getRealPath());
-                // $backImageContent = file_get_contents($request->file('license_image_back')->getRealPath());
-
-                // Kiểm tra nội dung hai file ảnh
-                // if (md5($frontImageContent) === md5($backImageContent)) {
-                //     return response()->json(['message' => 'Hai hình ảnh giấy phép lái xe không được trùng nhau'], 400);
-                // }
+            // Kiểm tra ảnh có được up
+            if ($request->hasFile('license_image')) {
+                $licenseImageContent = file_get_contents($request->file('license_image')->getRealPath());
 
                 // Xử lý ảnh mặt trước
-                if ($request->hasFile('license_image_front')) {
-                    if ($storage->exists($driver_license->license_image_front)) {
-                        $storage->delete($driver_license->license_image_front);
+                if ($request->hasFile('license_image')) {
+                    if ($storage->exists($driver_license->license_image)) {
+                        $storage->delete($driver_license->license_image);
                     }
-                    $frontImageName = 'license_images/' . '_front_' . $request->file('license_image_front')->getClientOriginalName();
-                    $storage->put($frontImageName, $frontImageContent);
-                    $driver_license->license_image_front = $frontImageName;
+                    $licenseImageName = 'license_images/' .'us_id_' .$user_id  . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+                    $storage->put($licenseImageName, $licenseImageContent);
+                    $driver_license->license_image = $licenseImageName;
                 }
-
-                // Xử lý ảnh mặt sau
-                // if ($request->hasFile('license_image_back')) {
-                //     if ($storage->exists($driver_license->license_image_back)) {
-                //         $storage->delete($driver_license->license_image_back);
-                //     }
-                //     $backImageName = 'license_images/' . '_back_' . $request->file('license_image_back')->getClientOriginalName();
-                //     $storage->put($backImageName, $backImageContent);
-                //     $driver_license->license_image_back = $backImageName;
-                // }
             }
 
             // Lưu các thay đổi vào database

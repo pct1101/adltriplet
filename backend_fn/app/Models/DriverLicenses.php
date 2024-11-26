@@ -21,8 +21,7 @@ class DriverLicenses extends Model
         'license_number', // Số giấy phép lái xe
         'license_holder', // Tên người sở hữu giấy phép lái xe
         'license_type', // Loại giấy phép lái xe
-        'license_image_front', // Hình giấy phép lái xe mặt trước
-        'license_image_back', // Hình giấy phép lái xe mặt sau
+        'license_image', // Hình giấy phép lái xe 
         'license_status', // Trạng thái giấy phép lái xe
         'issue_date', // Ngày cấp giấy phép lái xe
         'expiry_date', // Ngày hết hạn giấy phép lái xe

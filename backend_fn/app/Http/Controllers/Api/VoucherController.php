@@ -9,6 +9,14 @@ use App\Http\Controllers\Controller;
 
 class VoucherController extends Controller
 {
+    // note: lấy all voucher
+    public function applyVoucher()
+    {
+        // Lấy tất cả các voucher từ cơ sở dữ liệu
+        $voucher = Voucher::all();
+        // Trả về danh sách voucher dưới dạng JSON
+        return response()->json($voucher);
+    }
     // Tạo voucher mới
     public function store(Request $request)
     {

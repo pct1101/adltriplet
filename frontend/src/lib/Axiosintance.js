@@ -1141,11 +1141,10 @@ export const getDriverLicenseByUserId = async (id) => {
   }
 };
 
-// Hàm để thêm giấy phép lái xe
+// add giấy phép lái xe
 export const addDriverLicense = async (licenseData) => {
   // Lấy remember_token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
-
   // Kiểm tra xem token có tồn tại trong localStorage không
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
@@ -1162,9 +1161,33 @@ export const addDriverLicense = async (licenseData) => {
         },
       }
     );
+    if (response.data) {
+      console.log("xuc1h xihc1 thành công");
+    }
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
+
+// note: voucher
+export const getvoucher = async () => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    // Gửi request tới API với token trong headers
+    const response = await axios.get(`${API_URL}/voucher/apply-voucher`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error("Lỗi khi thêm giấy phép lái xe:", error);
+    console.error("Lỗi khi lấ voucher:", error);
     throw error; // Ném lỗi để xử lý ở nơi gọi API
   }
 };

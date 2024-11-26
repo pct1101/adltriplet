@@ -16,7 +16,8 @@ import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
 import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
-import Voucher from "./voucher";
+import { getvoucher } from "../../../lib/Axiosintance";
+
 function Booking() {
   const {
     selectedProvince,
@@ -32,8 +33,12 @@ function Booking() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
+  // note: set value voucher
+  const [voucher, setVoucher] = useState([]);
+  // note:allow state user voucher
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
 
-  // note: handle dữ liệu địa điểm
+  // note: handle data place
   const handleLocationChange = (province, district) => {
     setSelectedProvince(province);
     setSelectedDistrict(district);
@@ -48,8 +53,10 @@ function Booking() {
     setShowDatePicker(false);
   };
 
-  //note:    set value for booking
+  //note: show date/time
   const [showDatePicker, setShowDatePicker] = useState(false);
+  //note: show voucher
+  const [showVoucher, setshowVoucher] = useState(false);
 
   // note:  set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -75,7 +82,6 @@ function Booking() {
     const nhanXeTime = selectedTimes.nhanXe;
     const traXeTime = selectedTimes.traXe;
     // note: Kết hợp ngày và giờ thành datetime
-    // Tạo datetime
     const formattedStartDate = `${dayjs(startDate).format(
       "YYYY-MM-DD"
     )} ${nhanXeTime}`;
@@ -249,6 +255,42 @@ function Booking() {
     return "0 VND"; // Hoặc trả về một giá trị khác nếu price không hợp lệ
   };
 
+  // Idea: voucher
+
+  const handleToggleVoucher = (event) => {
+    setshowVoucher(!showVoucher);
+  };
+
+  const handleRemoveVoucher = () => {
+    setSelectedVoucher(null); // note: Hủy chọn voucher
+  };
+  //note: get data voucher
+
+  useEffect(() => {
+    const fetchVoucher = async () => {
+      try {
+        const response = await getvoucher();
+        console.log(response);
+        setVoucher(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchVoucher();
+  }, []);
+
+  const handldetoggleTotalVoucher = (voucher) => {
+    setSelectedVoucher(voucher);
+  };
+  // note:
+  const total_voucher = selectedVoucher
+    ? total_cost - total_cost * ((voucher[0]?.discount_percentage || 0) / 100)
+    : total_cost;
+
+  // note: price after amount
+  const discountAmount =
+    (total_cost * (voucher[0]?.discount_percentage || 0)) / 100;
+
   return (
     <div>
       <div className="price-booking">
@@ -311,19 +353,93 @@ function Booking() {
         <div className="price-item">
           <p>Tổng cộng</p>
           <p className="cost">
-            <span>{formatPrice2(bookings?.rental_price)} </span> x{" "}
+            <span>{formatPrice2(total_cost)} </span> x{" "}
             {calculateTotalDays(startDate, endDate)} ngày
           </p>
         </div>
-        <div className="price-item">
-          <p>Mã giảm giá</p>
-          <Voucher></Voucher>
+        <div className="line-page"></div>
+        <div className="promotion-radio__item" onClick={handleToggleVoucher}>
+          <div className="custom-radio-voucher">
+            <label for="code">
+              <div className="promo-text">
+                <div className="promo-text-main">
+                  {/* Hiển thị mã giảm giá nếu có, ngược lại hiển thị SVG */}
+                  {selectedVoucher ? (
+                    <div className="d-flex gap-2">
+                      <div className="wrap-svg">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M21.3 10.8394C21.69 10.8394 22 10.5294 22 10.1394V9.20938C22 5.10938 20.75 3.85938 16.65 3.85938H7.35C3.25 3.85937 2 5.10938 2 9.20938V9.67938C2 10.0694 2.31 10.3794 2.7 10.3794C3.6 10.3794 4.33 11.1094 4.33 12.0094C4.33 12.9094 3.6 13.6294 2.7 13.6294C2.31 13.6294 2 13.9394 2 14.3294V14.7994C2 18.8994 3.25 20.1494 7.35 20.1494H16.65C20.75 20.1494 22 18.8994 22 14.7994C22 14.4094 21.69 14.0994 21.3 14.0994C20.4 14.0994 19.67 13.3694 19.67 12.4694C19.67 11.5694 20.4 10.8394 21.3 10.8394ZM9 8.87938C9.55 8.87938 10 9.32938 10 9.87938C10 10.4294 9.56 10.8794 9 10.8794C8.45 10.8794 8 10.4294 8 9.87938C8 9.32938 8.44 8.87938 9 8.87938ZM15 15.8794C14.44 15.8794 13.99 15.4294 13.99 14.8794C13.99 14.3294 14.44 13.8794 14.99 13.8794C15.54 13.8794 15.99 14.3294 15.99 14.8794C15.99 15.4294 15.56 15.8794 15 15.8794ZM15.9 9.47937L9.17 16.2094C9.02 16.3594 8.83 16.4294 8.64 16.4294C8.45 16.4294 8.26 16.3594 8.11 16.2094C7.82 15.9194 7.82 15.4394 8.11 15.1494L14.84 8.41938C15.13 8.12938 15.61 8.12938 15.9 8.41938C16.19 8.70938 16.19 9.18937 15.9 9.47937Z"
+                            fill="#5FCF86"
+                          ></path>
+                        </svg>
+                      </div>
+                      <p>{voucher[0]?.voucher_code}</p>
+                      <div className="close" onClick={handleRemoveVoucher}>
+                        x
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="d-flex gap-2">
+                      <div className="wrap-svg">
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M21.3 10.8394C21.69 10.8394 22 10.5294 22 10.1394V9.20938C22 5.10938 20.75 3.85938 16.65 3.85938H7.35C3.25 3.85937 2 5.10938 2 9.20938V9.67938C2 10.0694 2.31 10.3794 2.7 10.3794C3.6 10.3794 4.33 11.1094 4.33 12.0094C4.33 12.9094 3.6 13.6294 2.7 13.6294C2.31 13.6294 2 13.9394 2 14.3294V14.7994C2 18.8994 3.25 20.1494 7.35 20.1494H16.65C20.75 20.1494 22 18.8994 22 14.7994C22 14.4094 21.69 14.0994 21.3 14.0994C20.4 14.0994 19.67 13.3694 19.67 12.4694C19.67 11.5694 20.4 10.8394 21.3 10.8394ZM9 8.87938C9.55 8.87938 10 9.32938 10 9.87938C10 10.4294 9.56 10.8794 9 10.8794C8.45 10.8794 8 10.4294 8 9.87938C8 9.32938 8.44 8.87938 9 8.87938ZM15 15.8794C14.44 15.8794 13.99 15.4294 13.99 14.8794C13.99 14.3294 14.44 13.8794 14.99 13.8794C15.54 13.8794 15.99 14.3294 15.99 14.8794C15.99 15.4294 15.56 15.8794 15 15.8794ZM15.9 9.47937L9.17 16.2094C9.02 16.3594 8.83 16.4294 8.64 16.4294C8.45 16.4294 8.26 16.3594 8.11 16.2094C7.82 15.9194 7.82 15.4394 8.11 15.1494L14.84 8.41938C15.13 8.12938 15.61 8.12938 15.9 8.41938C16.19 8.70938 16.19 9.18937 15.9 9.47937Z"
+                            fill="#5FCF86"
+                          ></path>
+                        </svg>
+                      </div>
+                      <p>Mã khuyến mãi</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="promo-price">
+                {/* Kiểm tra trạng thái */}
+                {selectedVoucher ? (
+                  <div>
+                    <p>
+                      <strong>- {discountAmount?.toLocaleString()} VND</strong>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="wrap-svg">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M14.8299 11.2897L10.5899 7.0497C10.497 6.95598 10.3864 6.88158 10.2645 6.83081C10.1427 6.78004 10.012 6.75391 9.87994 6.75391C9.74793 6.75391 9.61723 6.78004 9.49537 6.83081C9.37351 6.88158 9.26291 6.95598 9.16994 7.0497C8.98369 7.23707 8.87915 7.49052 8.87915 7.7547C8.87915 8.01889 8.98369 8.27234 9.16994 8.4597L12.7099 11.9997L9.16994 15.5397C8.98369 15.7271 8.87915 15.9805 8.87915 16.2447C8.87915 16.5089 8.98369 16.7623 9.16994 16.9497C9.26338 17.0424 9.3742 17.1157 9.49604 17.1655C9.61787 17.2152 9.74834 17.2405 9.87994 17.2397C10.0115 17.2405 10.142 17.2152 10.2638 17.1655C10.3857 17.1157 10.4965 17.0424 10.5899 16.9497L14.8299 12.7097C14.9237 12.6167 14.9981 12.5061 15.0488 12.3843C15.0996 12.2624 15.1257 12.1317 15.1257 11.9997C15.1257 11.8677 15.0996 11.737 15.0488 11.6151C14.9981 11.4933 14.9237 11.3827 14.8299 11.2897Z"
+                        fill="#263D2A"
+                      ></path>
+                    </svg>
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
         </div>
         <div className="line-page"></div>
         <div className="price-item total">
           <p>Thành tiền</p>
           <p className="cost">
-            <span>{formatPrice2(total_cost)} / ngày</span>
+            <span>{formatPrice2(total_voucher)} / ngày</span>
           </p>
         </div>
         {isLoading && <Loading />}
@@ -481,6 +597,14 @@ function Booking() {
                   </div>
                 </div>
               </div>
+              <div className="time-avail">
+                <p>
+                  {" "}
+                  Quý khách hàng lưu ý: Trung tâm sẽ hỗ trợ nhận xe và trả xe{" "}
+                  vào <br /> khoảng thời gian từ 9:00 sáng và đến 21:00 tối. Xin
+                  cảm ơn
+                </p>
+              </div>
             </div>
 
             <div className="modal-footer">
@@ -509,6 +633,108 @@ function Booking() {
                     Tiếp tục
                   </a>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Popup voucher */}
+      {showVoucher && (
+        <div className="popup-overlay" onClick={() => setshowVoucher(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <div className="group-title d-flex">
+              <h5>Mã giảm giá</h5>
+              <button
+                className="btn btn-close"
+                onClick={handleCloseModal}
+              ></button>
+            </div>
+            <div className="line-page"> </div>
+            <div className="modal-body">
+              <div className="add-promotion">
+                {voucher.length > 0 ? (
+                  voucher.map((vouchers, index) => (
+                    <div className="add-promotion__item ">
+                      <div className="wrap-svg">
+                        <svg
+                          width="42"
+                          height="42"
+                          viewBox="0 0 42 42"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            opacity="0.4"
+                            d="M6.98057 25.6522L4.32059 22.9924C3.23559 21.9074 3.23559 20.1224 4.32059 19.0374L6.98057 16.3772C7.43557 15.9222 7.80307 15.0297 7.80307 14.3997V10.6373C7.80307 9.0973 9.06307 7.83725 10.6031 7.83725H14.3656C14.9956 7.83725 15.8881 7.4698 16.3431 7.0148L19.0031 4.35477C20.0881 3.26977 21.8731 3.26977 22.9581 4.35477L25.6181 7.0148C26.0731 7.4698 26.9656 7.83725 27.5956 7.83725H31.3581C32.8981 7.83725 34.1581 9.0973 34.1581 10.6373V14.3997C34.1581 15.0297 34.5256 15.9222 34.9806 16.3772L37.6406 19.0374C38.7256 20.1224 38.7256 21.9074 37.6406 22.9924L34.9806 25.6522C34.5256 26.1072 34.1581 26.9997 34.1581 27.6297V31.3922C34.1581 32.9322 32.8981 34.1922 31.3581 34.1922H27.5956C26.9656 34.1922 26.0731 34.5599 25.6181 35.0149L22.9581 37.6749C21.8731 38.7599 20.0881 38.7599 19.0031 37.6749L16.3431 35.0149C15.8881 34.5599 14.9956 34.1922 14.3656 34.1922H10.6031C9.06307 34.1922 7.80307 32.9322 7.80307 31.3922V27.6297C7.80307 26.9822 7.43557 26.0897 6.98057 25.6522Z"
+                            fill="#68C187"
+                          ></path>
+                          <path
+                            d="M26.247 28C25.267 28 24.4795 27.2125 24.4795 26.25C24.4795 25.2875 25.267 24.5 26.2295 24.5C27.192 24.5 27.9795 25.2875 27.9795 26.25C27.9795 27.2125 27.2095 28 26.247 28Z"
+                            fill="#68C187"
+                          ></path>
+                          <path
+                            d="M15.7675 17.5C14.7875 17.5 14 16.7125 14 15.75C14 14.7875 14.7875 14 15.75 14C16.7125 14 17.5 14.7875 17.5 15.75C17.5 16.7125 16.73 17.5 15.7675 17.5Z"
+                            fill="#68C187"
+                          ></path>
+                          <path
+                            d="M15.7525 27.5659C15.42 27.5659 15.0875 27.4436 14.825 27.1811C14.3175 26.6736 14.3175 25.8334 14.825 25.3259L25.3249 14.8259C25.8324 14.3184 26.6724 14.3184 27.1799 14.8259C27.6874 15.3334 27.6874 16.1735 27.1799 16.681L16.6799 27.1811C16.4174 27.4436 16.0849 27.5659 15.7525 27.5659Z"
+                            fill="#68C187"
+                          ></path>
+                        </svg>
+                      </div>
+                      <div className="promotion-info">
+                        <p className="name"> {vouchers.voucher_code} </p>
+                        <p>Giảm {vouchers.discount_percentage}%.</p>
+                        <div className="date warning">
+                          <div className="wrap-svg">
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M8 7.33398V10.4407"
+                                stroke="#666666"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              ></path>
+                              <path
+                                d="M8 6.05469C8.27614 6.05469 8.5 5.83083 8.5 5.55469C8.5 5.27855 8.27614 5.05469 8 5.05469C7.72386 5.05469 7.5 5.27855 7.5 5.55469C7.5 5.83083 7.72386 6.05469 8 6.05469Z"
+                                fill="#666666"
+                              ></path>
+                              <path
+                                d="M7.99967 14.1673C11.4054 14.1673 14.1663 11.4064 14.1663 8.00065C14.1663 4.5949 11.4054 1.83398 7.99967 1.83398C4.59392 1.83398 1.83301 4.5949 1.83301 8.00065C1.83301 11.4064 4.59392 14.1673 7.99967 14.1673Z"
+                                stroke="#666666"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              ></path>
+                            </svg>
+                          </div>
+                          <p style={{ color: "#f79009" }}>
+                            hết hạn sau ngày{" "}
+                            {new Date(
+                              vouchers.expiration_date
+                            ).toLocaleDateString("vi-VN", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            })}{" "}
+                          </p>
+                        </div>
+                      </div>
+                      <a
+                        className="btn btn-primary"
+                        onClick={handldetoggleTotalVoucher}
+                      >
+                        Áp dụng
+                      </a>
+                    </div>
+                  ))
+                ) : (
+                  <p>No vouchers available</p>
+                )}
               </div>
             </div>
           </div>

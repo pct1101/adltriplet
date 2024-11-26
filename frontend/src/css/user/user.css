@@ -791,3 +791,15 @@
   padding: 2px 0px 2px 15px;
   border-radius: 15px;
 }
+
+.promo-text-main .close {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  line-height: .5;
+  padding: 6px;
+  border-radius: 100%;
+  border: 1px solid #e0e0e0;
+  font-weight: 1000;
+}

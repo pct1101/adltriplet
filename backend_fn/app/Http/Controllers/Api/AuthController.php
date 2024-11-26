@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-
-
+use Illuminate\Support\Facades\File;
 
 class AuthController
 {
@@ -165,13 +164,48 @@ class AuthController
             $user = $request->user(); // Lấy người dùng hiện tại
             $storage = Storage::disk('public');
 
-            // Xử lý ảnh (nếu có)
+            // Xử lý ảnh nếu được tải lên
             if ($request->hasFile('image')) {
-                $authImageName = 'auth_images/' . '_auth_' .$user_id . '_img_
+                $storage = Storage::disk('public');
 
-                ' . $request->file('image')->getClientOriginalName();
-                $storage->put($authImageName, file_get_contents($request->file('image')));
-                $user->image = $authImageName; // Cập nhật đường dẫn ảnh
+                // Tạo tên file mới
+                $userImageName = 'user_images/' . 'us_id_' . $user_id . '_img_' . $request->file('image')->getClientOriginalName();
+
+                // Lưu ảnh vào thư mục storage/app/public/user_images
+                $storage->put($userImageName, file_get_contents($request->file('image')));
+
+                // Đường dẫn file nguồn (storage/app/public)
+                $sourcePath = storage_path('app/public/' . $userImageName);
+
+                // Đường dẫn file đích (public/user_images)
+                $destinationPath = public_path('user_images/' . basename($userImageName));
+
+                // Tạo thư mục public/user_images nếu chưa tồn tại
+                if (!File::exists(public_path('user_images'))) {
+                    File::makeDirectory(public_path('user_images'), 0755, true);
+                }
+
+                // Di chuyển file từ storage sang public
+                if (File::exists($sourcePath)) {
+                    File::copy($sourcePath, $destinationPath);
+                }
+
+                // Xóa ảnh cũ nếu tồn tại
+                if (!empty($user->image)) {
+                    $oldStoragePath = storage_path('app/public/' . $user->image);
+                    $oldPublicPath = public_path('user_images/' . basename($user->image));
+
+                    if (File::exists($oldStoragePath)) {
+                        File::delete($oldStoragePath);
+                    }
+
+                    if (File::exists($oldPublicPath)) {
+                        File::delete($oldPublicPath);
+                    }
+                }
+
+                // Cập nhật đường dẫn ảnh mới vào database
+                $user->image = $userImageName;
             }
 
             // Cập nhật các thông tin khác

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\DriverLicenses;
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class DriverLicenseController extends Controller
 {
@@ -23,30 +24,30 @@ class DriverLicenseController extends Controller
     public function index()
     {
         $user_id = Auth::id();
-        $driver_licenses = DriverLicenses::where('user_id', $user_id)->get();
+        $driverLicenses = DriverLicenses::where('user_id', $user_id)->get();
 
         // Kiểm tra xem người dùng có giấy phép lái xe nào không
-        if ($driver_licenses->isEmpty()) {
+        if ($driverLicenses->isEmpty()) {
             return response(['message' => 'Không tìm thấy giấy phép lái xe nào cho người dùng này'], 404);
         }
 
         // Trả về danh sách giấy phép lái xe
-        return response()->json(['driver_licenses' => $driver_licenses], 200);
+        return response()->json(['driver_licenses' => $driverLicenses], 200);
     }
 
     // Lấy ra chi tiết một giấy phép lái xe của người dùng đang đăng nhập
     public function show($id)
     {
         // Lấy ra tất cả giấy phép lái xe của người dùng theo user_id
-        $driver_license = DriverLicenses::where('driver_license_id', $id)->first();
+        $driverLicense = DriverLicenses::where('driver_license_id', $id)->first();
 
         // Kiểm tra nếu không tìm thấy
-        if (!$driver_license) {
+        if (!$driverLicense) {
             return response()->json(['message' => 'Không tìm thấy giấy phép lái xe với id: ' . $id], 404);
         }
 
         // Trả về danh sách giấy phép lái xe
-        return response()->json(['driver_licenses' => $driver_license], 200);
+        return response()->json(['driver_licenses' => $driverLicense], 200);
     }
 
     // Thêm giấy phép lái xe
@@ -64,17 +65,32 @@ class DriverLicenseController extends Controller
             try {
                 $storage = Storage::disk('public');
 
-                // Lưu ảnh mặt trước
-                $licenseImageName ='license_images/'.'us_id_' .$user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+                // Lưu ảnh vào thư mục license_images trong storage/app/public
+                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
                 $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
 
+                // Đường dẫn file nguồn (storage/app/public)
+                $sourcePath = storage_path('app/public/' . $licenseImageName);
+
+                // Đường dẫn file đích (public/license_images)
+                $destinationPath = public_path('license_images/' . basename($licenseImageName));
+
+                // Tạo thư mục public/license_images nếu chưa tồn tại
+                if (!File::exists(public_path('license_images'))) {
+                    File::makeDirectory(public_path('license_images'), 0755, true);
+                }
+
+                // Di chuyển file
+                if (File::exists($sourcePath)) {
+                    File::copy($sourcePath, $destinationPath);
+                }
             } catch (Exception $e) {
                 return response()->json(['error' => 'Lỗi khi xử lý file ảnh', 'details' => $e->getMessage()], 500);
             }
 
             // Lưu thông tin giấy phép vào cơ sở dữ liệu
             try {
-                $driver_license = DriverLicenses::create([
+                $driverLicense = DriverLicenses::create([
                     'user_id' => $user_id,
                     'license_number' => $license_number,
                     'license_holder' => $license_holder,
@@ -85,7 +101,7 @@ class DriverLicenseController extends Controller
             }
 
             // Trả về phản hồi thành công
-            return response()->json(['message' => 'Thêm giấy phép lái xe thành công', 'driver_licenses' => $driver_license], 201);
+            return response()->json(['message' => 'Thêm giấy phép lái xe thành công', 'driver_licenses' => $driverLicense], 201);
         } catch (Exception $e) {
             // Trả về phản hồi lỗi không mong muốn
             return response()->json(['error' => 'Đã xảy ra lỗi không mong muốn', 'details' => $e->getMessage()], 500);
@@ -100,47 +116,65 @@ class DriverLicenseController extends Controller
             $user_id = Auth::id();
 
             // Tìm giấy phép lái xe
-            $driver_license = DriverLicenses::where('user_id', $user_id)->where('driver_license_id', $id)->first();
-            if (!$driver_license) {
-                return response()->json(['message' => 'Không tìm thấy giấy phép lái xe với id: ' . $id], 404);
+            $driverLicense = DriverLicenses::where('user_id', $user_id)->where('driver_license_id', $id)->first();
+            if (!$driverLicense) {
+                return response()->json(['message' => 'Không tìm thấy giấy phép lái xe với ID: ' . $id], 404);
             }
 
-            // Cập nhật giấy phép lái xe
-            $driver_license->license_number = $request->license_number; // Cập nhật số giấy phép lái xe
-            $driver_license->license_holder = $request->license_holder; // Cập nhật chủ sở hữu giấy phép lái xe
+            // Cập nhật thông tin cơ bản
+            $driverLicense->license_number = $request->license_number;
+            $driverLicense->license_holder = $request->license_holder;
 
-            // Sử dụng Storage với disk 'public' để lưu ảnh
-            $storage = Storage::disk('public');
-
-            // Kiểm tra ảnh có được up
+            // Xử lý ảnh nếu được tải lên
             if ($request->hasFile('license_image')) {
-                $licenseImageContent = file_get_contents($request->file('license_image')->getRealPath());
+                $storage = Storage::disk('public');
 
-                // Xử lý ảnh mặt trước
-                if ($request->hasFile('license_image')) {
-                    if ($storage->exists($driver_license->license_image)) {
-                        $storage->delete($driver_license->license_image);
-                    }
-                    $licenseImageName = 'license_images/' .'us_id_' .$user_id  . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
-                    $storage->put($licenseImageName, $licenseImageContent);
-                    $driver_license->license_image = $licenseImageName;
+                // Tạo tên file mới
+                $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . $request->file('license_image')->getClientOriginalName();
+
+                // Lưu ảnh vào thư mục storage/app/public/license_images
+                $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
+
+                // Đường dẫn file nguồn (storage/app/public)
+                $sourcePath = storage_path('app/public/' . $licenseImageName);
+
+                // Đường dẫn file đích (public/license_images)
+                $destinationPath = public_path('license_images/' . basename($licenseImageName));
+
+                // Tạo thư mục public/license_images nếu chưa tồn tại
+                if (!File::exists(public_path('license_images'))) {
+                    File::makeDirectory(public_path('license_images'), 0755, true);
                 }
+
+                // Di chuyển file từ storage sang public
+                if (File::exists($sourcePath)) {
+                    File::copy($sourcePath, $destinationPath);
+                }
+
+                // Xóa ảnh cũ nếu tồn tại
+                if (!empty($driverLicense->license_image)) {
+                    $oldStoragePath = storage_path('app/public/' . $driverLicense->license_image);
+                    $oldPublicPath = public_path('license_images/' . basename($driverLicense->license_image));
+
+                    if (File::exists($oldStoragePath)) {
+                        File::delete($oldStoragePath);
+                    }
+
+                    if (File::exists($oldPublicPath)) {
+                        File::delete($oldPublicPath);
+                    }
+                }
+
+                // Cập nhật đường dẫn ảnh mới vào database
+                $driverLicense->license_image = $licenseImageName;
             }
 
             // Lưu các thay đổi vào database
-            $driver_license->save();
+            $driverLicense->save();
 
-            // Trả về phản hồi thành công
-            return response()->json(['message' => 'Sửa giấy phép lái xe thành công', 'driver_licenses' => $driver_license], 200);
+            return response()->json(['message' => 'Cập nhật giấy phép lái xe thành công.', 'driver_license' => $driverLicense,], 200);
         } catch (Exception $e) {
-            // Kiểm tra lỗi trùng license_number
-            if ($e->getCode() === '23000') {
-                return response()->json(['message' => 'Cập nhật giấy phép lái xe thất bại', 'error' => 'Số giấy phép đã tồn tại trong hệ thống.'], 400);
-            }
-
-            // Các lỗi khác
-            return response()->json(['message' => 'Cập nhật giấy phép lái xe thất bại', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Đã xảy ra lỗi trong quá trình cập nhật.', 'error' => $e->getMessage(),], 500);
         }
     }
-
 }

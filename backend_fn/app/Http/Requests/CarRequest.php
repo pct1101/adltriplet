@@ -34,7 +34,7 @@ class CarRequest
                     }
                 }
                 // $destinationPath = public_path('cars/image');
-                $destinationPath = public_path('storage/imgs');
+                $destinationPath = public_path('imgs');
                 $image->move($destinationPath, $image->getClientOriginalName());
                 $this->data['car_image'] = $image->getClientOriginalName();
             } else {

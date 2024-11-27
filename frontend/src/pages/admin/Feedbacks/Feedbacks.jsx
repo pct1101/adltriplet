@@ -94,7 +94,8 @@ function AdminFeedbacks() {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Id xe</th>
+                  <th>Tên xe</th>
+                  <th>Tên người dùng</th>
                   <th>Nội dung phản hồi</th>
                   <th className="text-start">Đánh giá</th>
                   <th>Ngày phản hồi</th>
@@ -112,7 +113,16 @@ function AdminFeedbacks() {
                   feedbacks.map((feedback) => (
                     <tr key={feedback.id}>
                       <td>{feedback.id}</td>
-                      <td>{feedback.car_id}</td>
+                      <td>
+                        {feedback && feedback.car && feedback.car.car_name
+                          ? feedback.car.car_name
+                          : "Không có tên xe"}
+                      </td>
+                      <td>
+                        {feedback && feedback.user && feedback.user.name
+                          ? feedback.user.name
+                          : "Không có tên người dùng"}
+                      </td>
                       <td>{feedback.content}</td>
                       <td className="text-start">{renderStars(feedback.rating)}</td>
                       <td>{feedback.feedback_date}</td>

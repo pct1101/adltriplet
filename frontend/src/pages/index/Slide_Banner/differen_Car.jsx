@@ -8,6 +8,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { API_URL_IMG } from "../../../lib/Axiosintance";
 
 function Differen_Car() {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -77,7 +79,7 @@ function Differen_Car() {
                             {" "}
                             <Link to={`/detai_product/${car.car_id}`}>
                               <img
-                                src={`http://localhost:8000/imgs/${car.car_image}`}
+                                src={`${API_URL_IMG}${car.car_image}`}
                                 className="scale-img"
                                 alt={car.car_name}
                               />

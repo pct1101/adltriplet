@@ -126,6 +126,7 @@ class BookingController extends Controller
         return response()->json(['booking' => $booking], 200);
     }
 
+    // CẬP NHẬT BOOKING
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([

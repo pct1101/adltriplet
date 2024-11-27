@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { updateCar, getCarById } from "../../../lib/Axiosintance";
+import { updateCar, getCarById, getAllCarBrands } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import Footer from "../component/footer";
 
 const EditCar = () => {
   const [carName, setCarName] = useState("");
+  const [brands, setBrands] = useState([]); // State để lưu danh sách thương hiệu
   const [seats, setSeats] = useState("");
   const [model, setModel] = useState("");
   const [licensePlate, setLicensePlate] = useState("");
@@ -14,6 +15,7 @@ const EditCar = () => {
   const [carStatus, setCarStatus] = useState(1);
   const [mileage, setMileage] = useState("");
   const [carImage, setCarImage] = useState("");
+  const [carImageFile, setCarImageFile] = useState(null); // Lưu trữ file ảnh mới
   const [carDescription, setCarDescription] = useState("");
   const [brandId, setBrandId] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -25,6 +27,7 @@ const EditCar = () => {
     if (id) {
       fetchCarData(id); // Gọi hàm fetch dữ liệu xe theo id khi component được render
     }
+    fetchCarBrands(); // Lấy danh sách thương hiệu xe
   }, [id]);
 
   // Kiểm tra quyền admin
@@ -39,58 +42,91 @@ const EditCar = () => {
     }
   };
 
+  const fetchCarBrands = async () => {
+    try {
+      const carBrands = await getAllCarBrands();
+      setBrands(carBrands); // Lưu vào state
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách thương hiệu xe:", error.message);
+    }
+  };
+
   // Lấy dữ liệu xe theo carId từ API và điền vào form
   const fetchCarData = async (carId) => {
     try {
       const car = await getCarById(carId); // Gọi API lấy thông tin xe
       console.log("Dữ liệu xe từ API:", car);
       setCarName(car.data.car_name);
-      // console.log(car.data.car_name);
+      console.log(car.data.car_name);
       setSeats(car.data.seats);
       setModel(car.data.model);
       setLicensePlate(car.data.license_plate);
       setRentalPrice(car.data.rental_price);
       setCarStatus(car.data.car_status);
-      setMileage(car.data.mileages);
+      setMileage(car.data.mileage);
       setCarImage(car.data.car_image);
       setCarDescription(car.data.car_description);
       setBrandId(car.data.brandid); // Giả sử API trả về brandid
     } catch (error) {
-      
+
       console.error("Error fetching car data:", error.message);
     }
-    
+
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setCarImageFile(file); // Cập nhật file ảnh
+    setCarImage(URL.createObjectURL(file)); // Hiển thị ảnh preview
   };
 
   // Cập nhật xe sau khi chỉnh sửa
   const handleUpdateCar = async (e) => {
     e.preventDefault();
 
-    const carData = {
-      car_name: carName,
-      seats: Number(seats),
-      model: model,
-      license_plate: licensePlate,
-      rental_price: Number(rentalPrice),
-      car_status: Number(carStatus),
-      mileage: Number(mileage),
-      car_image: carImage,
-      car_description: carDescription,
-      brandid: Number(brandId),
-    };
+    console.log("Tên xe hiện tại:", carName);
+
+    if (!carName || !seats || !model || !licensePlate || !rentalPrice || !mileage || !carDescription) {
+      alert("Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append("car_name", carName);
+    formData.append("seats", Number(seats));
+    formData.append("model", model);
+    formData.append("license_plate", licensePlate);
+    formData.append("rental_price", Number(rentalPrice));
+    formData.append("car_status", Number(carStatus));
+    formData.append("mileage", Number(mileage));
+
+    // Nếu có file mới, thêm vào formData
+    if (carImageFile) {
+      formData.append("car_image", carImageFile);
+    }
+
+    formData.append("car_description", carDescription);
+    formData.append("brandid", Number(brandId));
+
+    // Hiển thị dữ liệu trước khi gửi
+    console.log("Dữ liệu gửi lên API:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
 
     try {
-      if (id) {
-        await updateCar(id, carData); // Gọi hàm updateCar với carId và dữ liệu xe
-        alert(`Cập nhật thành công: ${carName}, Giá thuê: ${rentalPrice}`); // Hiển thị alert thông báo thành công
-        // navigate("/admin"); // Điều hướng về trang admin sau khi cập nhật thành công
-      } else {
-        console.error("Không tìm thấy id xe.");
-      }
+      const response = await updateCar(id, formData); // Gọi API update
+      console.log("Cập nhật thành công:", response.data);
+      alert("Cập nhật xe thành công!");
+      navigate("/admin");
     } catch (error) {
-      console.error("Error while updating car:", error.message);
+      console.error("Lỗi khi cập nhật xe:", error.response?.data?.message || error.message);
+      alert(`Cập nhật thất bại: ${error.response?.data?.message || error.message}`);
     }
   };
+
+
 
   return (
     <div>
@@ -141,8 +177,11 @@ const EditCar = () => {
                   onChange={(e) => setBrandId(e.target.value)}
                   required
                 >
-                  <option value={1}>Hãng Xe 1</option>
-                  <option value={2}>Hãng Xe 2</option>
+                  {brands.map((brand) => (
+                    <option key={brand.car_id} value={brand.brandid}>
+                      {brand.brand_name} - {brand.car_id}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -177,9 +216,9 @@ const EditCar = () => {
                 </select>
               </div>
               <div className="mb-3">
-                <label className="form-label">Số Km đã đi:</label>
+                <label className="form-label">Số KM đã đi:</label>
                 <input
-                  type="number"
+                  type="text"
                   className="form-control"
                   value={mileage}
                   onChange={(e) => setMileage(e.target.value)}
@@ -189,12 +228,28 @@ const EditCar = () => {
               <div className="mb-3">
                 <label className="form-label">Hình Ảnh:</label>
                 <input
-                  type="text"
+                  type="file"
                   className="form-control"
-                  value={carImage}
-                  onChange={(e) => setCarImage(e.target.value)}
-                  required
+                  onChange={handleFileChange} // Gọi hàm xử lý file
                 />
+                <div className="mt-3">
+                  <p>Ảnh hiện tại:</p>
+                  {carImageFile ? (
+                    <img
+                      src={carImage} // Hiển thị ảnh preview nếu có file mới
+                      alt="Car Preview"
+                      style={{ width: "100px", height: "auto" }}
+                    />
+                  ) : carImage ? (
+                    <img
+                      src={`http://localhost:8000/imgs/${carImage}`} // Hiển thị ảnh từ API
+                      // alt="Current Car"
+                      style={{ width: "100px", height: "auto" }}
+                    />
+                  ) : (
+                    <p>Chưa có hình ảnh</p>
+                  )}
+                </div>
               </div>
               <div className="mb-3">
                 <label className="form-label">Mô Tả:</label>

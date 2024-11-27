@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllBookings, deleteBookingById } from "../../../lib/Axiosintance";
+import { getAllBookings, deleteBookingById, updateBooking  } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 
@@ -56,10 +56,30 @@ function AdminBooking() {
       }
     }
   };
-
-  const editBooking = (BookingId) => {
-    navigate(`/admin/EditBooking/${BookingId}`);
+  // HÀM CHỈNH SỬA TRẠNG THÁI
+  const handleStatusChange = async (bookingId, newStatus) => {
+    try {
+      const updatedBookingData = { booking_status: newStatus };
+      const updatedBooking = await updateBooking(bookingId, updatedBookingData);
+      // Cập nhật lại trạng thái booking trong state sau khi thành công
+      setBookings((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking.booking_id === bookingId
+            ? { ...booking, booking_status: newStatus }
+            : booking
+        )
+      );
+      alert("Trạng thái booking đã được cập nhật thành công!");
+    } catch (error) {
+      console.error("Lỗi khi cập nhật trạng thái booking:", error);
+      alert("Thất bại trong việc cập nhật trạng thái booking: " + error.message);
+    }
   };
+
+
+  // const editBooking = (BookingId) => {
+  //   navigate(`/admin/EditBooking/${BookingId}`);
+  // };
 
   const handleViewDetail = (BookingId) => {
     navigate(`/admin/DetailBooking/${BookingId}`);
@@ -69,7 +89,7 @@ function AdminBooking() {
     display: "inline-flex",
     justifyContent: "center",
     alignItems: "center",
-    width: "200px",
+    width: "250px",
     height: "30px",
     fontSize: "14px",
     borderRadius: "15px",
@@ -102,7 +122,7 @@ function AdminBooking() {
                   <th>Ngày bắt đầu</th>
                   <th>Ngày kết thúc</th>
                   <th>Trạng thái thanh toán</th>
-                  <th>Hành động</th>
+                  <th className="text-start">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,37 +140,29 @@ function AdminBooking() {
                       <td>
                         {new Date(booking.start_date).toLocaleDateString()}
                       </td>
-                      <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
-                        <span
-                          style={{
-                            ...badgeStyle,
-                            backgroundColor:
-                              booking.booking_status === 1
-                                ? "yellow" // Chưa thanh toán
-                                : booking.booking_status === 2
-                                ? "green" // Đã thanh toán
-                                : "red", // Đã hủy
-                            color:
-                              booking.booking_status === 1
-                                ? "black" // Chữ màu đen cho nền vàng
-                                : "white", // Chữ màu trắng cho nền xanh và đỏ
-                          }}
-                        >
-                          {booking.booking_status === 1
-                            ? "Chưa thanh toán"
-                            : booking.booking_status === 2
-                            ? "Đã thanh toán"
-                            : "Đã hủy"}
-                        </span>
+                        {new Date(booking.end_date).toLocaleDateString()}
                       </td>
                       <td>
-                        <button
-                          className="btn btn-warning me-2"
-                          onClick={() => editBooking(booking.booking_id)}
+                        <select
+                          value={booking.booking_status}
+                          onChange={(e) =>
+                            handleStatusChange(booking.booking_id, e.target.value)
+                          }
+                          disabled={!isAdmin}
+                          className="form-control"
                         >
-                          Sửa
-                        </button>
+                          <option value={1} className="btn btn-primary">Booking thành công</option>
+                          <option value={2}>Đã thanh toán</option>
+                          <option value={3}>Xác nhận thanh toán</option>
+                          <option value={4}>Chờ xác nhận thanh toán</option>
+                          <option value={3}>Xác nhận thanh toán</option>
+                          <option value={5}>Hủy bởi admin</option>
+                          {/* <option value={4}>Hủy bởi user</option> */}
+                          {/* <option value={0}>Không xác định</option> */}
+                        </select>
+                      </td>
+                      <td>
                         <button
                           className="btn btn-info me-2"
                           onClick={() => handleViewDetail(booking.booking_id)}

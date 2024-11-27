@@ -14,6 +14,10 @@ import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
 import Loading from "../event/loading";
+import axios from "axios";
+import { API_URL_IMG, API_URL_IMG_THUMBS } from "../../../lib/Axiosintance";
+
+
 
 const Detail_product = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -135,14 +139,15 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src={`http://localhost:8000/storage/imgs/${car.car_image}`} // Hiển thị ảnh chính
+                src={`${API_URL_IMG}${car.car_image}`} // Hiển thị ảnh chính
               />
             </div>
             <div className="right">
               {car.images.slice(0, 3).map((image) => (
                 <div className="right-item-car" key={image.carImage_id}>
                   <img
-                    src={`http://localhost:8000/storage/Thumbs/${image.carImage_url}`} // Hiển thị từng ảnh con
+                    src={`${API_URL_IMG_THUMBS}${image.carImage_url}`}
+                    // Hiển thị từng ảnh con
                     alt={car.car_name}
                   />
                 </div>
@@ -203,9 +208,8 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className={`fav-item wrap-ic wrap-svg ${
-                      isFavorite ? "favorite-active" : ""
-                    }`} // Thêm class để đổi màu trái tim
+                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""
+                      }`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg
@@ -424,7 +428,7 @@ const Detail_product = () => {
                     </div>
                     <div className="title">
                       <p className="sub">Nhiên liệu</p>
-                      <p className="main">Xăng</p>
+                      <p className="main">{car.transmission_type}</p>
                     </div>
                   </div>
                   <div className="outstanding-features__item">
@@ -598,6 +602,11 @@ const Detail_product = () => {
                               <div className="info">
                                 <a href="#" className="name-review">
                                   <h6> ID người dùng : {feedback.user_id} </h6>
+                                </a>
+                                <a href="#" className="name-review">
+                                  <h6> ID người dùng : {feedback && feedback.car && feedback.car.car_name
+                                    ? feedback.car.car_name
+                                    : "Không có tên xe"} </h6>
                                 </a>
                                 <div className="rate">
                                   <div
@@ -831,7 +840,7 @@ const Detail_product = () => {
                       <p>Chưa có đánh giá nào cho xe này.</p> // Hiển thị thông báo nếu không có feedback
                     )}
                   </div>
-                  <div className="add-feedback">
+                  {/* <div className="add-feedback">
                     <h3>Thêm Đánh Giá</h3>
                     <form onSubmit={handleSubmitFeedback}>
                       <div className="form-group">
@@ -866,7 +875,7 @@ const Detail_product = () => {
                         {isSubmitting ? "Đang gửi..." : "Gửi đánh giá"}
                       </button>
                     </form>
-                  </div>
+                  </div> */}
                   <div></div>
                 </div>
               </div>

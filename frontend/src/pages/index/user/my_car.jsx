@@ -9,6 +9,8 @@ function My_car() {
   const [bookingData, setbookingData] = useState(null);
   const [startDateFormatted, setStartDateFormatted] = useState(null);
   const [endDateFormatted, setEndDateFormatted] = useState(null);
+  const [filteredData, setFilteredData] = useState([]); // Dữ liệu sau khi lọc
+  const [selectedStatus, setSelectedStatus] = useState("0"); // Giá trị mặc định là "Tất cả"
 
   useEffect(() => {
     const fecthBookingData = async () => {
@@ -21,6 +23,23 @@ function My_car() {
     };
     fecthBookingData();
   }, []);
+
+  // Lọc dữ liệu khi thay đổi trạng thái
+  useEffect(() => {
+    if (selectedStatus === "0") {
+      setFilteredData(bookingData); // Nếu chọn "Tất cả", hiển thị toàn bộ dữ liệu
+    } else {
+      const filtered = bookingData.filter(
+        (booking) => booking.booking_status === parseInt(selectedStatus) // So khớp chính xác trạng thái
+      );
+      setFilteredData(filtered);
+    }
+  }, [selectedStatus, bookingData]); // Lọc lại khi trạng thái hoặc dữ liệu booking thay đổi
+
+  // Xử lý sự kiện khi người dùng thay đổi trạng thái
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
 
   useEffect(() => {
     if (bookingData && bookingData[0]?.start_date) {
@@ -57,7 +76,7 @@ function My_car() {
                   <div className="filter-status">
                     <p>Trạng thái: </p>
                     <div className="custom-select">
-                      <select>
+                      <select value={selectedStatus} onChange={handleStatusChange}>
                         <option value="0">Tất cả</option>
                         <option value="2">Đã thanh toán</option>
                         <option value="1">Chưa thanh toán</option>
@@ -69,8 +88,8 @@ function My_car() {
                   </div>
                 </div>
               </div>
-              {bookingData && bookingData.length > 0 ? (
-                bookingData.slice(0, 3).map((booking) => (
+              {filteredData && filteredData.length > 0 ? (
+                filteredData.slice(0, 3).map((booking) => (
                   <div className="card-car row" key={booking.id}>
                     <div className="item-box">
                       <a href="#">

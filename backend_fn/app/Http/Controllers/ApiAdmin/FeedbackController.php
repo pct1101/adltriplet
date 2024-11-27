@@ -19,7 +19,7 @@ class FeedbackController extends Controller
     public function index()
     {
         try {
-            $feedbacks = Feedback::all();
+            $feedbacks = Feedback::with('car','user')->get();
             if ($feedbacks->isEmpty()) {
                 return $this->errorResponse("Không có feedback nào", 404);
             }

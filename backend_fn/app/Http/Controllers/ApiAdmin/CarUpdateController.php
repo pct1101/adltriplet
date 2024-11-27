@@ -47,7 +47,7 @@ class CarUpdateController extends Controller
                 $storage = Storage::disk('public');
 
                 // Tạo tên file mới
-                $carImageName = 'imgs/' . '_img_' . $request->file('car_image')->getClientOriginalName();
+                $carImageName =   $request->file('car_image')->getClientOriginalName();
 
                 // Lưu ảnh vào thư mục storage/app/public/cimgs
                 $storage->put($carImageName, file_get_contents($request->file('car_image')));

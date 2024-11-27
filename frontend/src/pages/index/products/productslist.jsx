@@ -51,7 +51,7 @@ const Productlist = () => {
                         {" "}
                         <Link to={`/detai_product/${car.car_id}`}>
                           <img
-                            src={`http://localhost:8000/storage/imgs/${car.car_image}`}
+                            src={`http://localhost:8000/imgs/${car.car_image}`}
                             className="scale-img"
                             alt={car.car_name}
                           />

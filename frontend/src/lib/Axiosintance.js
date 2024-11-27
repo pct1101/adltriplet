@@ -356,7 +356,7 @@ export const addBookingUser = async (bookingData) => {
 
   try {
     // Gửi yêu cầu POST đến API để thêm booking
-    const response = await axios.post(`${API_URL}/booking/`, bookingData, {
+    const response = await axios.post(`${API_URL}/booking`, bookingData, {
       headers: {
         Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
       },
@@ -973,6 +973,30 @@ export const getBooking = async () => {
     throw error;
   }
 };
+export const getBookingId = async () => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi yêu cầu POST đến API để thêm booking
+    const response = await axios.get(`${API_URL}/booking/{id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
+};
 // NOTE: HOÀN THÀNH THANH TOÁN
 export const payment = async (booking_id) => {
   const apiToken = localStorage.getItem("authToken");
@@ -1161,11 +1185,11 @@ export const addDriverLicense = async (licenseData) => {
         },
       }
     );
-    if (response.data) {
+    if (response.data.message) {
       console.log("xuc1h xihc1 thành công");
     }
   } catch (error) {
-    console.log(error.response.data);
+    error();
   }
 };
 

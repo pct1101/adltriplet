@@ -12,9 +12,30 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  // note: set value validate form
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    //note: email
+    if (!email) {
+      setEmailError("*Vui lòng nhập email!");
+    } else {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      if (!emailRegex.test(email)) {
+        setEmailError("*Email không hợp lệ!");
+      } else {
+        setEmailError("");
+      }
+    }
+    // note: password
+    if (!password) {
+      setPasswordError("*Vui lòng nhập mật khẩu");
+    } else {
+      setPasswordError("");
+    }
+
     try {
       const response = await login(email, password);
       console.log("Full response:", response); // Kiểm tra toàn bộ phản hồi
@@ -45,8 +66,8 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      console.error("Error during login:", error); // Kiểm tra lỗi
-      setError("Đăng nhập thất bại, vui lòng kiểm tra thông tin.");
+      console.error("Error during login:", error.response.data); // Kiểm tra lỗi
+      setError("Đăng nhập thất bại, tài khoản hoặc mật khẩu không chính xác.");
     }
   };
 
@@ -75,8 +96,10 @@ const Login = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Nhập email"
-                        required
                       />
+                      {emailError && (
+                        <p className="error-message">{emailError}</p>
+                      )}
                     </div>
 
                     <div className="mb">
@@ -90,8 +113,10 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Nhập mật khẩu"
-                        required
                       />
+                      {passwordError && (
+                        <p className="error-message">{passwordError}</p>
+                      )}
                     </div>
                     {error && <div className="alert alert-danger">{error}</div>}
                     <div className="forgot-password">
@@ -114,7 +139,7 @@ const Login = () => {
                 </div>
                 <div className="text-center">
                   <p>
-                    Đăng ký ngay để nhận ngay
+                    Đăng ký ngay để
                     <a href="/signup" className="tk text-primary">
                       nhận ngay
                     </a>

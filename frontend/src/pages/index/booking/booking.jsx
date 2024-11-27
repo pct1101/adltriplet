@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { useParams } from "react-router-dom";
 import ModalPopup from "../event/popup";
@@ -33,6 +33,7 @@ function Booking() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
+
   // note: set value voucher
   const [voucher, setVoucher] = useState([]);
   // note:allow state user voucher
@@ -96,10 +97,10 @@ function Booking() {
       car_id: carId,
       start_date: formattedStartDate,
       end_date: formattedEndDate,
-      rental_price: total_cost,
       booking_date: new Date().toISOString(),
       city: selectedProvince ? selectedProvince.label : null,
       address: selectedDistrict ? selectedDistrict.label : null,
+      voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
     };
     console.log(bookingData);
 
@@ -256,7 +257,6 @@ function Booking() {
   };
 
   // Idea: voucher
-
   const handleToggleVoucher = (event) => {
     setshowVoucher(!showVoucher);
   };
@@ -282,14 +282,18 @@ function Booking() {
   const handldetoggleTotalVoucher = (voucher) => {
     setSelectedVoucher(voucher);
   };
-  // note:
-  const total_voucher = selectedVoucher
-    ? total_cost - total_cost * ((voucher[0]?.discount_percentage || 0) / 100)
-    : total_cost;
+  // note: usememo giúp lưu lại giá trị tính toán
+  // note: Tính toán giá giảm (memoized)
+  const discountAmount = useMemo(() => {
+    return selectedVoucher
+      ? (total_cost * (selectedVoucher.discount_percentage || 0)) / 100
+      : 0;
+  }, [selectedVoucher, total_cost]);
 
-  // note: price after amount
-  const discountAmount =
-    (total_cost * (voucher[0]?.discount_percentage || 0)) / 100;
+  //note: Tổng tiền sau giảm giá (memoized)
+  const total_voucher = useMemo(() => {
+    return selectedVoucher ? total_cost - discountAmount : total_cost;
+  }, [selectedVoucher, total_cost, discountAmount]);
 
   return (
     <div>
@@ -380,7 +384,7 @@ function Booking() {
                           ></path>
                         </svg>
                       </div>
-                      <p>{voucher[0]?.voucher_code}</p>
+                      <p>{selectedVoucher.voucher_code}</p>{" "}
                       <div className="close" onClick={handleRemoveVoucher}>
                         x
                       </div>
@@ -654,7 +658,10 @@ function Booking() {
               <div className="add-promotion">
                 {voucher.length > 0 ? (
                   voucher.map((vouchers, index) => (
-                    <div className="add-promotion__item ">
+                    <div
+                      className="add-promotion__item "
+                      key={vouchers.voucher_id}
+                    >
                       <div className="wrap-svg">
                         <svg
                           width="42"
@@ -726,7 +733,7 @@ function Booking() {
                       </div>
                       <a
                         className="btn btn-primary"
-                        onClick={handldetoggleTotalVoucher}
+                        onClick={() => handldetoggleTotalVoucher(vouchers)}
                       >
                         Áp dụng
                       </a>

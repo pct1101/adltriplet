@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
 
+
 function Differen_Car() {
   const [swiperRef, setSwiperRef] = useState(null);
 
@@ -80,6 +81,7 @@ function Differen_Car() {
                             <Link to={`/detai_product/${car.car_id}`}>
                               <img
                                 src={`${API_URL_IMG}${car.car_image}`}
+
                                 className="scale-img"
                                 alt={car.car_name}
                               />

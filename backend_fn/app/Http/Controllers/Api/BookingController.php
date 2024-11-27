@@ -103,7 +103,7 @@ class BookingController
         return response()->json([
             'message' => 'Booking thành công',
             'booking' => $booking,
-            // 'totalCost_after_voucher' => $totalCost_after_voucher, // Trả về số tiền đã tính toán
+            'totalCost_after_voucher' => $totalCost_after_voucher, // Trả về số tiền đã tính toán
         ], 201);
     }
 

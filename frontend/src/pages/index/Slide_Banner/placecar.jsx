@@ -8,6 +8,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
+import { img_url } from "../../../lib/Axiosintance";
 
 function Placecar() {
   const [swiperRef, setSwiperRef] = useState(null);
@@ -61,6 +62,7 @@ function Placecar() {
                 <Card.Img
                   variant="sales"
                   src={`http://localhost:8000/imgs/${slideBanner.car_image}`}
+
                 />
                 <p>
                   {slideBanner.car_name} <span> {slideBanner.seats} chỗ </span>{" "}

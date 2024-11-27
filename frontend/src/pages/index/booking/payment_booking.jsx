@@ -11,8 +11,6 @@ import { getUserProfile } from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
 
 const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
-// const API_URL = "http://localhost:8000"  
-
 export default function Payment_booking() {
   const [userData, setUserData] = useState(null);
   const { booking_id } = useParams();
@@ -24,8 +22,6 @@ export default function Payment_booking() {
   useEffect(() => {
     const storedBookingId = localStorage.getItem("booking_id");
     setBookingData(storedBookingId);
-
-    console.log("Booking ID from URL:", booking_id);
   }, [booking_id]);
 
   // NOTE: handle post
@@ -90,6 +86,7 @@ export default function Payment_booking() {
     selectedProvince,
     selectedDistrict,
   } = useBooking();
+  console.log(bookings);
 
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelectChange = (event) => {

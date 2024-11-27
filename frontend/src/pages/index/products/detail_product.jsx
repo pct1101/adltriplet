@@ -19,6 +19,7 @@ import { API_URL_IMG, API_URL_IMG_THUMBS } from "../../../lib/Axiosintance";
 
 
 
+
 const Detail_product = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
@@ -140,6 +141,7 @@ const Detail_product = () => {
                 className="scale-img"
                 alt="Main Image"
                 src={`${API_URL_IMG}${car.car_image}`} // Hiển thị ảnh chính
+
               />
             </div>
             <div className="right">
@@ -148,6 +150,7 @@ const Detail_product = () => {
                   <img
                     src={`${API_URL_IMG_THUMBS}${image.carImage_url}`}
                     // Hiển thị từng ảnh con
+
                     alt={car.car_name}
                   />
                 </div>

@@ -14,6 +14,7 @@ import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
 import Loading from "../event/loading";
+import { img_url } from "../../../lib/Axiosintance";
 
 const Detail_product = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -135,14 +136,14 @@ const Detail_product = () => {
               <img
                 className="scale-img"
                 alt="Main Image"
-                src={`http://localhost:8000/storage/imgs/${car.car_image}`} // Hiển thị ảnh chính
+                src={`${img_url}${car.car_image}`} // Hiển thị ảnh chính
               />
             </div>
             <div className="right">
               {car.images.slice(0, 3).map((image) => (
                 <div className="right-item-car" key={image.carImage_id}>
                   <img
-                    src={`http://localhost:8000/storage/Thumbs/${image.carImage_url}`} // Hiển thị từng ảnh con
+                    src={`http://localhost:8000/Thumbs/${image.carImage_url}`} // Hiển thị từng ảnh con
                     alt={car.car_name}
                   />
                 </div>

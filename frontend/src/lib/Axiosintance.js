@@ -2,6 +2,7 @@ import axios from "axios";
 
 // Định nghĩa baseURL của API
 const API_URL = "http://localhost:8000/api";
+export const img_url = "http://localhost:8000/imgs/";
 
 // Lấy tất cả sản phẩm (sp)
 export const getAllCars = () => {
@@ -39,7 +40,7 @@ export const login = (email, password) => {
       }
     })
     .catch((error) => {
-      console.error("Login error: ", error);
+      console.error("Login error: ", error.response.data);
       throw error; // Ném lỗi để xử lý ở nơi gọi API
     });
 };

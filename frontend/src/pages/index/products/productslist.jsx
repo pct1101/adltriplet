@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllCars } from "../../../lib/Axiosintance";
 import "../../../css/index/home.css";
+import { img_url } from "../../../lib/Axiosintance";
 
 const Productlist = () => {
   const [cars, setCars] = useState([]);
@@ -25,9 +26,6 @@ const Productlist = () => {
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
 
-  // Ví dụ sử dụng
-  const rentalPrice = 1126000;
-  console.log(formatPrice(rentalPrice)); // Output: "1,126K/ngày"
   return (
     <div className="bgr-products">
       <div className="section-intro"></div>
@@ -51,7 +49,7 @@ const Productlist = () => {
                         {" "}
                         <Link to={`/detai_product/${car.car_id}`}>
                           <img
-                            src={`http://localhost:8000/storage/imgs/${car.car_image}`}
+                            src={`${img_url}${car.car_image}`}
                             className="scale-img"
                             alt={car.car_name}
                           />

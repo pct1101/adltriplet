@@ -55,10 +55,6 @@ function User_favorite() {
     navigate(`/user_favorite`);
   };
 
-  if (loading) {
-    return <div>{isLoading && <Loading />} </div>;
-  }
-
   if (error) {
     return <div>{error}</div>;
   }

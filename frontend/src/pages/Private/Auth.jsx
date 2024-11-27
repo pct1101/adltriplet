@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   if (loading) {
-    return null; // Hoặc có thể trả về loading spinner để tránh render khi chưa xác thực
+    return <div>Loading...</div>; // Hoặc sử dụng spinner component
   }
 
   return (

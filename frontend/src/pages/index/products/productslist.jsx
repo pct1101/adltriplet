@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllCars } from "../../../lib/Axiosintance";
 import "../../../css/index/home.css";
-import { img_url } from "../../../lib/Axiosintance";
-
+import { API_URL_IMG } from "../../../lib/Axiosintance";
 const Productlist = () => {
   const [cars, setCars] = useState([]);
 
@@ -49,8 +48,7 @@ const Productlist = () => {
                         {" "}
                         <Link to={`/detai_product/${car.car_id}`}>
                           <img
-
-                            src={`${img_url}${car.car_image}`}
+                            src={`${API_URL_IMG}${car.car_image}`}
                             className="scale-img"
                             alt={car.car_name}
                           />

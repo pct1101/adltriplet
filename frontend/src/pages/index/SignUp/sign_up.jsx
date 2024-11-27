@@ -37,17 +37,21 @@ const Dangky = () => {
   // Xử lý khi submit form đăng ký
   const handleRegister = async (e) => {
     e.preventDefault();
+    let hasError = false;
     // note: validate
-
     //note: name
     if (!formData.name) {
       setNameError("*Vui lòng nhập tên!");
+      hasError = true;
     } else if (/[0-9]/.test(formData.name)) {
       setNameError("*Tên không được chứa số!");
-    } else if (/[@!#$%^&*(),.?":{}|<>]/.test(formData.name)) {
+      hasError = true;
+    } else if (/[@!#$%^&*(),.?":{}[|<>]/.test(formData.name)) {
       setNameError("*Tên không được chứa ký tự đặc biệt!");
+      hasError = true;
     } else if (formData.name.length > 255) {
       setNameError("*Tên không được vượt quá 255 ký tự!");
+      hasError = true;
     } else {
       setNameError(""); // Không có lỗi
     }
@@ -55,10 +59,12 @@ const Dangky = () => {
     //note: email
     if (!formData.email) {
       setEmailError("*Vui lòng nhập email!");
+      hasError = true;
     } else {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       if (!emailRegex.test(formData.email)) {
         setEmailError("*Email không hợp lệ!");
+        hasError = true;
       } else {
         setEmailError("");
       }
@@ -67,10 +73,12 @@ const Dangky = () => {
     // note: phone
     if (!formData.phone) {
       setPhoneError("*Vui lòng nhập số điện thoại!");
+      hasError = true;
     } else {
       const phoneRegex = /^0\d{9}$/; // Bắt đầu bằng 0, theo sau là 9 chữ số
       if (!phoneRegex.test(formData.phone)) {
         setPhoneError("* Số điện thoại phải có 10 số và bắt đầu bằng số 0.");
+        hasError = true;
       } else {
         setPhoneError("");
       }
@@ -78,6 +86,7 @@ const Dangky = () => {
     // note: password
     if (!formData.password) {
       setPasswordError("*Vui lòng nhập mật khẩu");
+      hasError = true;
     } else {
       const passwordRegex =
         /^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])(?=.{6,21}$)/;
@@ -87,6 +96,7 @@ const Dangky = () => {
         setPasswordError(
           "*Mật khẩu phải có từ 6 đến 21 ký tự và bao gồm ít nhất 1 ký tự đặc biệt."
         );
+        hasError = true;
       } else {
         setPasswordError("");
       }
@@ -94,10 +104,12 @@ const Dangky = () => {
     // note: confirm_password
     if (!formData.password_confirmation) {
       setPasswordConfirmError("*Vui lòng xác nhận mật khẩu");
+      hasError = true;
     } else if (formData.password_confirmation !== formData.password) {
       setPasswordConfirmError(
         "*Mật khẩu xác nhận không khớp với mật khẩu đã nhập"
       );
+      hasError = true;
     } else {
       setPasswordConfirmError("");
     }
@@ -106,9 +118,16 @@ const Dangky = () => {
       setAgreeError(
         "*Vui lòng đọc kỹ và đồng ý với chính sách & quy định để tiếp tục."
       );
+      hasError = true;
       return; // Ngăn form gửi nếu chưa tích
+    } else {
+      setAgreeError(""); // Xóa lỗi nếu đã tích
     }
-    setAgreeError(""); // Xóa lỗi nếu đã tích
+
+    if (hasError) {
+      console.log("đang có lỗi xảy ra vui lòng kiểm tra lại");
+      return;
+    }
 
     try {
       const response = await register(formData);
@@ -119,7 +138,7 @@ const Dangky = () => {
       if (response.data.api_token) {
         localStorage.setItem("api_token", response.data.api_token);
       }
-
+      setError("");
       setTimeout(() => {
         navigate("/Login");
       }, 2000);

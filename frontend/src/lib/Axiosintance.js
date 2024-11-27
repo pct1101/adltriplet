@@ -119,12 +119,16 @@ export const updateCar = async (id, formData) => {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
   try {
-    const response = await axios.post(`${API_URL}/admin/carupdate/${id}`, formData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await axios.post(
+      `${API_URL}/admin/carupdate/${id}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error updating car:", error);
@@ -268,16 +272,23 @@ export const updateUserProfile = async (updatedData) => {
   }
 
   try {
-    const response = await axios.put(`${API_URL}/auth/update-profile`, updatedData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.put(
+      `${API_URL}/auth/update-profile`,
+      updatedData,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response.data; // Dữ liệu trả về từ server
   } catch (error) {
-    console.error("Lỗi khi cập nhật thông tin người dùng:", error.response?.data || error.message);
+    console.error(
+      "Lỗi khi cập nhật thông tin người dùng:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 };
@@ -307,7 +318,6 @@ export const logout = async () => {
     throw error;
   }
 };
-
 
 //////////////////////////////                  //////////////////////////////
 
@@ -1246,7 +1256,7 @@ export const getvoucher = async () => {
   }
 };
 
-// LẤY TOÀN BỘ THƯƠNG HIỆU XE 
+// LẤY TOÀN BỘ THƯƠNG HIỆU XE
 export const getAllCarBrands = async () => {
   const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
   if (!apiToken) {

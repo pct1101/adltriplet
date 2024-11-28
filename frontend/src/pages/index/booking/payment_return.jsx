@@ -43,24 +43,23 @@ export default function PaymentReturn() {
               ></button>
             </div>
             <div className="line-page"> </div>
-            <div className="modal-body-text">
+            <div className="modal-body">
               <div className="block-content">
-                {" "}
-                <h5>1. Thông Báo Xác Nhận</h5>
+                <img src="../upload/camon.jpg" /> <h5>1. Thông Báo Xác Nhận</h5>
                 <ul>
                   <li>
-                    Sau khi thanh toán, bạn sẽ nhận được email/SMS với các thông
-                    tin sau:
+                    - Sau khi thanh toán, bạn sẽ nhận được email/SMS với các
+                    thông tin sau:
                     <ul>
-                      <li>Thời gian nhận xe.</li>
+                      <li>+ Thời gian nhận xe.</li>
                       <li>
-                        Địa điểm nhận xe:{" "}
-                        <span class="highlight">
+                        + Địa điểm nhận xe:{" "}
+                        <span className="highlight">
                           Văn phòng, bãi xe, hoặc trung tâm giao dịch.
                         </span>
                       </li>
-                      <li>Chi tiết xe: Loại xe, biển số, trạng thái.</li>
-                      <li>Hotline hỗ trợ.</li>
+                      <li>+ Chi tiết xe: Loại xe, biển số, trạng thái.</li>
+                      <li>+ Hotline hỗ trợ.</li>
                     </ul>
                   </li>
                 </ul>
@@ -80,13 +79,13 @@ export default function PaymentReturn() {
                 <h5>4. Kiểm Tra Và Ký Biên Bản</h5>
                 <ul>
                   <li>
-                    Kiểm tra tình trạng xe:
+                    - Kiểm tra tình trạng xe:
                     <ul>
-                      <li>Bề ngoài và nội thất xe.</li>
-                      <li>Nhiên liệu và các thiết bị đi kèm.</li>
+                      <li>+ Bề ngoài và nội thất xe.</li>
+                      <li>+ Nhiên liệu và các thiết bị đi kèm.</li>
                     </ul>
                   </li>
-                  <li>Ký biên bản bàn giao hoặc hợp đồng nhận xe.</li>
+                  <li>- Ký biên bản bàn giao hoặc hợp đồng nhận xe.</li>
                 </ul>
                 <h5>5. Nhận Chìa Khóa Và Khởi Hành</h5>
                 <ul>
@@ -97,6 +96,11 @@ export default function PaymentReturn() {
                   <strong>Lưu ý:</strong> Hãy kiểm tra kỹ tình trạng xe và báo
                   ngay nếu có vấn đề.
                 </div>
+                <span>
+                  Mọi chi tiết và thắc mắc xin liên hệ qua hotline: <br /> 0765
+                  801 204 hoặc 0399 558 442 để được giải đáp.
+                </span>
+                <strong>ADL TRIPEL T XIN CHÂN THÀNH CẢM ƠN</strong>
               </div>
             </div>
           </div>

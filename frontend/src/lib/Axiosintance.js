@@ -1016,6 +1016,11 @@ export const getBooking = async () => {
   }
 };
 export const getBookingId = async () => {
+  const storedBookingId = localStorage.getItem("booking_id");
+  if (!storedBookingId) {
+    console.error("Không có booking_id hợp lệ");
+    return;
+  }
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
   // Kiểm tra nếu không có token
@@ -1023,15 +1028,13 @@ export const getBookingId = async () => {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
-
   try {
     // Gửi yêu cầu POST đến API để thêm booking
-    const response = await axios.get(`${API_URL}/booking/{id}`, {
+    const response = await axios.get(`${API_URL}/booking/${storedBookingId}`, {
       headers: {
         Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
       },
     });
-    // Nếu thành công, trả về dữ liệu phản hồi từ API
     return response.data;
   } catch (error) {
     console.log(error);
@@ -1297,11 +1300,16 @@ export const addDriverLicense = async (licenseData) => {
         },
       }
     );
-    if (response.data.message) {
-      console.log("xuc1h xihc1 thành công");
+    if (response.data) {
+      console.log("thêm thành công");
+      return { message: "Thêm thành công", data: response.data };
     }
   } catch (error) {
-    error();
+    console.error(
+      "Lỗi trong khi gửi yêu cầu:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
   }
 };
 // NOTE: getgplx user

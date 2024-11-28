@@ -5,9 +5,7 @@ namespace App\Http\Controllers\ApiAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DriverLicenseRequest;
 use App\Models\DriverLicenses;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Exception;
+use Carbon\Carbon;
 
 class DriverLicenseController extends Controller
 {
@@ -23,7 +21,7 @@ class DriverLicenseController extends Controller
     public function index()
     {
         // Lấy ra tất cả giấy phép lái xe
-        $driver_licenses = DriverLicenses::all();
+        $driver_licenses = DriverLicenses::with('user')->get();
 
         // Kiểm tra xem có giấy phép lái xe nào không
         if ($driver_licenses->isEmpty()) {
@@ -59,59 +57,21 @@ class DriverLicenseController extends Controller
                 return response()->json(['message', 'không tìm thấy giấy phép lái xe với id:'. $id], 404);
             }
 
+            // Kiểm tra nếu trạng thái chuyển thành 'invalid' thì lý do hủy là bắt buộc
+            if ($request->license_status === 'invalid' && empty($request->rejection_reason)) {
+                return response()->json(['message' => 'Bạn cần cung cấp lý do hủy (rejection_reason)'], 422);
+            }
+
             // Cập nhật giấy phép lái xe
-            $driverLicense->license_number = $request->license_number;
-            $driverLicense->license_holder = $request->license_holder;
             $driverLicense->license_type = $request->license_type;
             $driverLicense->license_status = $request->license_status;
-            $driverLicense->issue_date = $request->issue_date;
             $driverLicense->expiry_date = $request->expiry_date;
             $driverLicense->issued_by = $request->issued_by;
 
-            // Xử lý ảnh nếu được tải lên
-            if ($request->hasFile('license_image')) {
-                $storage = Storage::disk('public');
-
-                // Tạo tên file mới
-                $licenseImageName = 'license_images/' . 'us_id_' . $driverLicense->user_id . '_lc_img_' . now('Asia/Ho_Chi_Minh')->format('Y-m-d_H-i-s') . '.' . $request->file('license_image')->getClientOriginalName();
-
-                // Lưu ảnh vào thư mục storage/app/public/license_images
-                $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
-
-                // Đường dẫn file nguồn (storage/app/public)
-                $sourcePath = storage_path('app/public/' . $licenseImageName);
-
-                // Đường dẫn file đích (public/license_images)
-                $destinationPath = public_path('license_images/' . basename($licenseImageName));
-
-                // Tạo thư mục public/license_images nếu chưa tồn tại
-                if (!File::exists(public_path('license_images'))) {
-                    File::makeDirectory(public_path('license_images'), 0755, true);
-                }
-
-                // Di chuyển file từ storage sang public
-                if (File::exists($sourcePath)) {
-                    File::copy($sourcePath, $destinationPath);
-                }
-
-                // Xóa ảnh cũ nếu tồn tại
-                if (!empty($driverLicense->license_image)) {
-                    $oldStoragePath = storage_path('app/public/' . $driverLicense->license_image);
-                    $oldPublicPath = public_path('license_images/' . basename($driverLicense->license_image));
-
-                    if (File::exists($oldStoragePath)) {
-                        File::delete($oldStoragePath);
-                    }
-
-                    if (File::exists($oldPublicPath)) {
-                        File::delete($oldPublicPath);
-                    }
-                }
-
-                // Cập nhật đường dẫn ảnh mới vào database
-                $driverLicense->license_image = $licenseImageName;
+            // Chỉ cập nhật rejection_reason nếu trạng thái là 'invalid'
+            if ($request->license_status === 'invalid') {
+                $driverLicense->rejection_reason = $request->rejection_reason;
             }
-
 
             // Lưu các thay đổi vào database
             $driverLicense->save();

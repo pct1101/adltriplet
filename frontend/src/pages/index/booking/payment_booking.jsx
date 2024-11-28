@@ -7,7 +7,7 @@ import { useBooking } from "../../Private/bookingContext";
 import dayjs from "dayjs";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserProfile } from "../../../lib/Axiosintance.js";
+import { getBookingId, getUserProfile } from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
 import { API_URL_IMG } from "../../../lib/Axiosintance.js";
 
@@ -15,15 +15,28 @@ const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
 export default function Payment_booking() {
   const [userData, setUserData] = useState(null);
   const { booking_id } = useParams();
-  console.log(booking_id);
 
-  const [bookingData, setBookingData] = useState(null);
+  const [bookingData, setBookingData] = useState();
 
   // NOTE: get Booking_id
   useEffect(() => {
     const storedBookingId = localStorage.getItem("booking_id");
     setBookingData(storedBookingId);
   }, [booking_id]);
+  // note: getdetailbooking
+  useEffect(() => {
+    const fetchBookingDetails = async () => {
+      try {
+        // Gửi request để lấy thông tin chi tiết booking
+        const response = await getBookingId();
+        console.log(response);
+        setBookingData(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchBookingDetails();
+  }, []);
 
   // NOTE: handle post
   const handlePayment = async (event) => {
@@ -44,9 +57,8 @@ export default function Payment_booking() {
       txt_inv_customer: userData?.name,
       txt_inv_company: "ABC Co., Ltd",
       txt_inv_taxcode: "123456789",
-      total_cost: totalCost * 100,
+      total_cost_after_voucher: bookingData.total_cost_after_voucher,
     };
-
     console.log("Payment data:", paymentData);
     try {
       const response = await payment(booking_id, paymentData);
@@ -54,7 +66,6 @@ export default function Payment_booking() {
 
       if (response?.data) {
         const paymentUrl = response.data;
-        alert("Đang chuyển hướng tới cổng thanh toán...");
         window.location.href = paymentUrl;
       }
     } catch (error) {
@@ -87,7 +98,6 @@ export default function Payment_booking() {
     selectedProvince,
     selectedDistrict,
   } = useBooking();
-  console.log(bookings);
 
   const [selectedOption, setSelectedOption] = useState("");
   const handleSelectChange = (event) => {
@@ -254,7 +264,12 @@ export default function Payment_booking() {
                     </div>
                     <div className="total-price-car">
                       <h6> Tổng tiền :</h6>
-                      <span> {formatPrice2(totalCost)} </span>
+                      <span>
+                        {" "}
+                        {bookingData
+                          ? formatPrice2(bookingData.total_cost_after_voucher)
+                          : "Đang tải..."}{" "}
+                      </span>
                     </div>
                   </div>
                 </div>

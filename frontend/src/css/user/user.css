@@ -800,6 +800,10 @@
   padding: 15px;
 }
 
+.block-content ul {
+  margin: 0px !important;
+}
+
 .block-content h5 {
   color: #5FCF86;
 }

@@ -105,25 +105,38 @@ function My_car() {
                       </a>
                       <div className="desc-car">
                         <div
-                          className="note success"
+                          className="note success w-250px"
                           style={{
                             backgroundColor:
                               booking.booking_status === 1
-                                ? "yellow" // Chưa thanh toán
+                                ? "#ffc107" // Chờ thanh toán (vàng)
                                 : booking.booking_status === 2
-                                ? "green" // Đã thanh toán
-                                : "red", // Đã hủy
+                                  ? "#0d6efd" // Đã thanh toán (xanh dương)
+                                  : booking.booking_status === 3
+                                    ? "#fd7e14" // Xác nhận thanh toán (cam)
+                                    : booking.booking_status === 4
+                                      ? "#ffc107" // Chờ xác nhận thanh toán (vàng)
+                                      : booking.booking_status === 5
+                                        ? "#dc3545" // Hủy bởi admin (đỏ)
+                                        : "#198754", // Trạng thái khác (xanh lá)
                             color:
-                              booking.booking_status === 1
-                                ? "black" // Chữ màu đen cho nền vàng
-                                : "white", // Chữ màu trắng cho nền xanh và đỏ
+                              booking.booking_status === 1 || booking.booking_status === 4
+                                ? "black" // Chữ màu đen cho trạng thái vàng
+                                : "white", // Chữ màu trắng cho trạng thái khác
+                                fontSize: ".550rem"
                           }}
                         >
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                            ? "Đã thanh toán"
-                            : "Đã hủy"}
+                              ? "Đã thanh toán"
+                              : booking.booking_status === 3
+                                ? "Xác nhận thanh toán"
+                                : booking.booking_status === 4
+                                  ? "Chờ xác nhận thanh toán"
+                                  : booking.booking_status === 5
+                                    ? "Hủy bởi admin"
+                                    : "Trạng thái không xác định"}
                         </div>
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>

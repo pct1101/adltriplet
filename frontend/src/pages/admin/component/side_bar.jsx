@@ -33,7 +33,7 @@ function Side_bar() {
             <li className="nav-item">
               <a href="/admin/products">
                 <span className="icon">
-                  <i className="fa-solid fa-store"></i>
+                  <i className="fa-solid fa-car"></i>{" "}
                 </span>
                 <span className="text">Car</span>
               </a>
@@ -49,7 +49,7 @@ function Side_bar() {
             <li className="nav-item">
               <a href="/admin/feedbacks">
                 <span className="icon">
-                  <i className="fa-solid fa-table-list"></i>
+                  <i className="fa-regular fa-comment"></i>
                 </span>
                 <span className="text">Feedbacks</span>
               </a>
@@ -57,7 +57,7 @@ function Side_bar() {
             <li className="nav-item">
               <a href="/admin/favorite">
                 <span className="icon">
-                  <i className="fa-solid fa-table-list"></i>
+                  <i className="fa-regular fa-star"></i>{" "}
                 </span>
                 <span className="text">Favorites</span>
               </a>
@@ -70,14 +70,6 @@ function Side_bar() {
                 <span className="text">License Driver</span>
               </a>
             </li>{" "}
-            <li className="nav-item">
-              <a href="/admin/license">
-                <span className="icon">
-                  <i className="fa-solid fa-box-open"></i>
-                </span>
-                <span className="text">License</span>
-              </a>
-            </li>
             <li className="nav-item">
               <a href="/admin/order">
                 <span className="icon">

@@ -67,7 +67,7 @@ function My_car() {
         <div className="group-user">
           <div className="right-user">
             <Side_bar></Side_bar>
-          </div>
+          </div>c
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">

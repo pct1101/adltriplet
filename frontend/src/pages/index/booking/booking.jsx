@@ -101,7 +101,10 @@ function Booking() {
       city: selectedProvince ? selectedProvince.label : null,
       address: selectedDistrict ? selectedDistrict.label : null,
       voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
+      total_cost: total_cost,
+      total_cost_after_voucher: total_voucher,
     };
+
     console.log(bookingData);
 
     try {

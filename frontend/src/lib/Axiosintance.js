@@ -4,7 +4,7 @@ import axios from "axios";
 const API_URL = "http://localhost:8000/api";
 const API_URL_IMG = "http://localhost:8000/imgs/";
 const API_URL_IMG_THUMBS = "http://localhost:8000/Thumbs/";
-const API_URL_IMG_LICENSE_DRIVER = "http://localhost:8000/license_images/";
+const API_URL_IMG_LICENSE_DRIVER = "http://localhost:8000/";
 export { API_URL_IMG, API_URL_IMG_THUMBS, API_URL_IMG_LICENSE_DRIVER };
 
 // Lấy tất cả sản phẩm (sp)
@@ -1205,7 +1205,7 @@ export const getDriverLicenseByUserId = async (id) => {
   }
 };
 
-// add giấy phép lái xe
+// NOTE: add giấy phép lái xe user
 export const addDriverLicense = async (licenseData) => {
   // Lấy remember_token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
@@ -1230,6 +1230,27 @@ export const addDriverLicense = async (licenseData) => {
     }
   } catch (error) {
     error();
+  }
+};
+// NOTE: getgplx user
+export const getDriverLicense = async () => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    // Gửi request tới API với token trong headers
+    const response = await axios.get(`${API_URL}/driverlicense`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+      },
+    });
+    return response.data;
+  } catch (error) {
+    error("lỗi nè", error);
+    throw error;
   }
 };
 

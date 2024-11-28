@@ -131,17 +131,7 @@ function Header() {
                         Thông báo
                       </a>
                     </li>
-                    <li>
-                      <a href="#0">
-                        <i className="lni lni-inbox"></i>
-                        Tin nhắn
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#0">
-                        <i className="lni lni-cog"></i> Cài đặt
-                      </a>
-                    </li>
+
                     <li className="divider"></li>
                     <li>
                       <a href="#" onclick="" onClick={handleLogout}>

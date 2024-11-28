@@ -9,6 +9,7 @@ import { useAuth } from "../../Private/Auth";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUserProfile } from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
+import { API_URL_IMG } from "../../../lib/Axiosintance.js";
 
 const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
 export default function Payment_booking() {
@@ -198,7 +199,7 @@ export default function Payment_booking() {
                       <div className="car-img">
                         <img
                           className="scale-img"
-                          src={`http://localhost:8000/storage/imgs/${bookings.car_image}`}
+                          src={`${API_URL_IMG}${bookings.car_image}`}
                           alt="Car"
                         />
                       </div>

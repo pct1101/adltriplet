@@ -6,47 +6,27 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../../../css/index/home.css";
-import { getAllCars } from "../../../lib/Axiosintance";
+import { getBrandCar } from "../../../lib/Axiosintance";
+import { API_URL_LOGO } from "../../../lib/Axiosintance";
 
 function CarDelivery() {
   const [swiperRef, setSwiperRef] = useState(null);
-  const [cars, setCars] = useState([]);
+
+  const [brand, setbrand] = useState([]);
 
   useEffect(() => {
-    // Gọi API để lấy danh sách xe
-    getAllCars()
-      .then((response) => {
-        setCars(response.data); // Cập nhật state với dữ liệu nhận được
-      })
-      .catch((error) => {
-        console.error("Error fetching car list:", error);
-      });
+    const fetchBrand = async () => {
+      try {
+        const response = await getBrandCar();
+        console.log(response.data.data);
+        setbrand(response.data.data);
+      } catch (error) {
+        console.log("failed to load data brand", error);
+      }
+    };
+    fetchBrand();
   }, []);
 
-  // Create array with 500 slides
-  const [slides, setSlides] = useState(
-    Array.from({ length: 10 }).map((_, index) => `Slide ${index + 1}`)
-  );
-  const [slide, setSlide] = useState([
-    "/upload/banner 1.jpg",
-    "/upload/banner 2.jpg",
-    "/upload/banner 3.jpg",
-    "/upload/banner 4.jpg",
-    "/upload/banner 5.jpg",
-    "/upload/banner 6.jpg",
-    "/upload/banner 7.jpg",
-    "/upload/banner 8.jpg",
-    "/upload/banner 9.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-    "/upload/banner 10.jpg",
-  ]);
   return (
     <div>
       <div className="container airport d-flex mt-4">
@@ -74,13 +54,16 @@ function CarDelivery() {
             }}
             loop={true}
           >
-            {slide.map((slideBanner, index) => (
+            {brand.map((slideBanner, index) => (
               <SwiperSlide key={slideBanner} virtualIndex={index}>
                 <div className="airports-item">
                   <div className="fix-img2">
-                    <img variant="" src={slideBanner} />
+                    <img
+                      variant=""
+                      src={`${API_URL_LOGO}${slideBanner.brand_logo}`}
+                    />
                   </div>
-                  <p>Youden Four</p>
+                  <p>{slideBanner.brand_name} </p>
                   <span>1000+ xe chờ</span>
                 </div>
               </SwiperSlide>

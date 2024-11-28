@@ -70,6 +70,7 @@ function Gplx() {
       const response = await addDriverLicense(formData);
       if (response) {
         setSuccessMessage("Thêm thành công");
+        window.location.reload();
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {

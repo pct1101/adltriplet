@@ -3,9 +3,15 @@ import axios from "axios";
 // Định nghĩa baseURL của API
 const API_URL = "http://localhost:8000/api";
 const API_URL_IMG = "http://localhost:8000/imgs/";
+const API_URL_LOGO = "http://localhost:8000/brand_logo/";
 const API_URL_IMG_THUMBS = "http://localhost:8000/Thumbs/";
 const API_URL_IMG_LICENSE_DRIVER = "http://localhost:8000/";
-export { API_URL_IMG, API_URL_IMG_THUMBS, API_URL_IMG_LICENSE_DRIVER };
+export {
+  API_URL_IMG,
+  API_URL_IMG_THUMBS,
+  API_URL_IMG_LICENSE_DRIVER,
+  API_URL_LOGO,
+};
 
 // Lấy tất cả sản phẩm (sp)
 export const getAllCars = () => {
@@ -1287,12 +1293,12 @@ export const getvoucher = async () => {
 
 // LẤY TOÀN BỘ THƯƠNG HIỆU XE
 export const getAllCarBrands = async () => {
-  const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token"); // Lấy api_token từ localStorage
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
   try {
-    const response = await axios.get(`${API_URL}/admin/car-brands`, {
+    const response = await axios.get(`${API_URL}/brand`, {
       headers: {
         Authorization: `Bearer ${apiToken}`,
       },
@@ -1305,6 +1311,28 @@ export const getAllCarBrands = async () => {
       console.error("Dữ liệu thương hiệu không phải mảng:", response.data);
       return []; // Trả về mảng rỗng nếu không phải mảng hợp lệ
     }
+  } catch (error) {
+    console.error("Error fetching car brands:", error);
+    throw error;
+  }
+};
+
+// note: get brand car
+
+export const getBrandCar = async () => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const response = await axios.get(`${API_URL}/admin/car-brands`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log(response);
+
+    return response;
   } catch (error) {
     console.error("Error fetching car brands:", error);
     throw error;

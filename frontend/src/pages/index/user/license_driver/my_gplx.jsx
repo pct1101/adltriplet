@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getDriverLicense } from "../../../lib/Axiosintance";
-import { API_URL_IMG_LICENSE_DRIVER } from "../../../lib/Axiosintance";
+import { getDriverLicense } from "../../../../lib/Axiosintance";
+import { API_URL_IMG_LICENSE_DRIVER } from "../../../../lib/Axiosintance";
 function My_gplx() {
   const [gplx, setgplx] = useState([]);
 
@@ -53,7 +53,7 @@ function My_gplx() {
                         src={`${API_URL_IMG_LICENSE_DRIVER}${license.license_image}`}
                         alt={license.license_holder || "License"}
                         style={{
-                          width: "100px",
+                          width: "200px",
                           height: "auto",
                           padding: "5px",
                         }}

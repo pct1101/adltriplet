@@ -35,6 +35,8 @@ import EditDriverLicense from "./pages/admin/LicenseController/EditDriverLicense
 import AdminDriverLicenseDetails from "./pages/admin/LicenseController/DetailDriverLicense.jsx";
 import AddDriverLicense from "./pages/admin/LicenseController/AddDriverLicense.jsx";
 import PaymentReturn from "./pages/index/booking/payment_return.jsx";
+import Gplx from "./pages/index/user/license_driver/layout_GPLX.jsx";
+import Layout_GPLX from "./pages/index/user/license_driver/layout_GPLX.jsx";
 
 function App() {
   return (
@@ -278,6 +280,7 @@ function App() {
                 element={<User_change_password />}
               />
               <Route path="/user_car" element={<My_car />} />
+              <Route path="/gplx" element={<Layout_GPLX />} />
 
               {/* Payment */}
               <Route

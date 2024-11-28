@@ -20,6 +20,7 @@ class Booking extends Model
         'start_date',
         'end_date',
         'total_cost',
+        'total_cost_after_voucher',
         'booking_status',
         'user_id',
         'car_id',

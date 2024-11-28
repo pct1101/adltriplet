@@ -93,6 +93,7 @@ class BookingController
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'total_cost' => $totalCost,
+            'total_cost_after_voucher' => $totalCost_after_voucher,
             'booking_status' => 1, // Đặt trạng thái mặc định là pending
             'address' => $request->address, // Lưu địa chỉ
             'city' => $request->city, // Lưu city

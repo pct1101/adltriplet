@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { addDriverLicense } from "../../../lib/Axiosintance";
-import "../../../css/user/user.css";
+import { addDriverLicense } from "../../../../lib/Axiosintance";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
@@ -18,6 +17,8 @@ function Gplx() {
   // Toggle edit mode
   const toggleEdit = () => {
     setIsEditing(!isEditing);
+    setError("");
+    setSuccessMessage("");
   };
 
   // Handle image upload
@@ -52,6 +53,8 @@ function Gplx() {
 
   // Handle form submission to add GPLX
   const handleSubmit = async () => {
+    setError("");
+    setSuccessMessage("");
     if (!license_number || !license_holder || !selectedImage) {
       setError("Vui lòng nhập đầy đủ thông tin.");
       return; // prevent submission if any field is missing
@@ -61,14 +64,27 @@ function Gplx() {
       formData.append("license_number", license_number);
       formData.append("license_holder", license_holder);
       formData.append("license_image", selectedImage); // Chuyển ảnh tệp vào FormData
-      // Call API to add driver license
-      await addDriverLicense(formData);
-      setIsEditing(false); // Switch to view mode
+
+      setIsEditing(false);
 
       const response = await addDriverLicense(formData);
+      if (response) {
+        setSuccessMessage("Thêm thành công");
+      }
     } catch (err) {
-      setError("Đã xảy ra lỗi, vui lòng thử lại.");
-      console.log(err);
+      if (err.response && err.response.data && err.response.data.errors) {
+        const errors = err.response.data.errors;
+        const errorMessage = errors.license_number
+          ? errors.license_number[0]
+          : "Đã xảy ra lỗi, vui lòng thử lại.";
+        setError(errorMessage);
+      } else {
+        setError("Đã xảy ra lỗi, vui lòng thử lại.");
+      }
+      console.log(
+        "Lỗi trong khi gửi yêu cầu:",
+        err.response ? err.response.data : err.message
+      );
     }
   };
   return (
@@ -82,18 +98,13 @@ function Gplx() {
             {isEditing ? "Cập nhật" : "Chỉnh sửa"}
           </a>
         </div>
-        <div class="note-license">
+        <div className="note-license">
           <p>
             <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
             <u>người đặt xe</u> trên Mioto (đã xác thực GPLX) <b>ĐỒNG THỜI </b>
             phải là <u>người nhận xe.</u>
           </p>
         </div>
-
-        {error && <div className="error-message">{error}</div>}
-        {successMessage && (
-          <div style={{ color: "green" }}>{successMessage}</div>
-        )}
 
         <div className="content">
           <div className="info-license position-relative">
@@ -176,6 +187,10 @@ function Gplx() {
                 </div>
               </div>
             </div>
+            {error && <div className="error-message">{error}</div>}
+            {successMessage && (
+              <div className="alert alert-success">{successMessage}</div>
+            )}
             <button className="btn btn-primary" onClick={handleSubmit}>
               Thêm Giấy phép lái xe
             </button>

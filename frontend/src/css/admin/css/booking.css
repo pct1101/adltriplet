@@ -1,0 +1,25 @@
+/* Màu sắc dropdown */
+.booking-success {
+    background-color: #28a745; /* Màu xanh lá */
+    color: #fff;
+  }
+  
+  .booking-paid {
+    background-color: #007bff; /* Màu xanh dương */
+    color: #fff;
+  }
+  
+  .booking-confirm {
+    background-color: #fd7e14; /* Màu cam */
+    color: #fff;
+  }
+  
+  .booking-pending {
+    background-color: #ffc107; /* Màu vàng */
+    color: #000;
+  }
+  
+  .booking-cancelled {
+    background-color: #dc3545; /* Màu đỏ */
+    color: #fff;
+  }

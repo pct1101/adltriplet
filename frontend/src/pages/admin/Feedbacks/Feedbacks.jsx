@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { getAllFeedbacks, deleteFeedbackById } from "../../../lib/Axiosintance"; // Import API liên quan đến feedbacks
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
+import "../../../css/admin/css/feedback.css";
 
 function AdminFeedbacks() {
   const [feedbacks, setFeedbacks] = useState([]); // Đảm bảo feedbacks là một mảng trống ban đầu
@@ -62,15 +63,23 @@ function AdminFeedbacks() {
   };
 
   const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);  // Lấy phần nguyên của rating
-    const emptyStars = 5 - fullStars;      // Tính số sao còn lại (max là 5 sao)
-  
-    // Tạo chuỗi sao đầy đủ và chuỗi sao trống
-    const fullStarStr = '★'.repeat(fullStars);
-    const emptyStarStr = '☆'.repeat(emptyStars);
-  
-    // Kết hợp chúng lại để hiển thị
-    return fullStarStr + emptyStarStr;
+    const fullStars = Math.floor(rating); // Lấy phần nguyên của rating
+    const emptyStars = 5 - fullStars; // Tính số sao còn lại (max là 5 sao)
+
+    return (
+      <span>
+        {Array(fullStars)
+          .fill(0)
+          .map((_, index) => (
+            <span key={`full-${index}`} className="star full-star">★</span>
+          ))}
+        {Array(emptyStars)
+          .fill(0)
+          .map((_, index) => (
+            <span key={`empty-${index}`} className="star empty-star">☆</span>
+          ))}
+      </span>
+    );
   };
 
   return (
@@ -131,15 +140,16 @@ function AdminFeedbacks() {
                           className="btn btn-warning me-2"
                           onClick={() => editFeedback(feedback.id)}
                         >
-                          Sửa
+                          <i className="fas fa-wrench"></i> {/* Icon cái kềm */}
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => deleteFeedback(feedback.id)}
                         >
-                          Xóa
+                          <i className="fas fa-trash"></i> {/* Icon thùng rác */}
                         </button>
                       </td>
+
                     </tr>
                   ))
                 )}

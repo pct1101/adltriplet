@@ -46,13 +46,13 @@ function EditDriverLicense() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setLicense({ ...license, [name]: value });
+    setLicense((prevLicense) => ({ ...prevLicense, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    
+
     // Xây dựng lại dữ liệu để gửi đúng cấu trúc
     const updatedLicenseData = {
       license_number: license.license_number,
@@ -64,7 +64,7 @@ function EditDriverLicense() {
       issued_by: license.issued_by,
       license_image: license.license_image,
     };
-    
+
     try {
       await updateDriverLicense(id, updatedLicenseData); // Gửi dữ liệu đã chuẩn hóa
       alert("Cập nhật giấy phép thành công!")
@@ -72,7 +72,7 @@ function EditDriverLicense() {
     } catch (err) {
       setError("Lỗi khi cập nhật giấy phép. Vui lòng thử lại.");
     }
-};
+  };
 
   if (loading) return <div>Đang tải dữ liệu...</div>;
   if (error) return <div className="text-danger">{error}</div>;
@@ -105,13 +105,17 @@ function EditDriverLicense() {
         </div>
         <div className="mb-3">
           <label className="form-label">Loại giấy phép</label>
-          <input
-            type="text"
+          <select
             name="license_type"
-            className="form-control"
+            className="form-select"
             value={license.license_type}
             onChange={handleInputChange}
-          />
+          >
+            <option value="B2">B2</option>
+            <option value="C">C</option>
+            <option value="C">D</option>
+            <option value="E">E</option>
+          </select>
         </div>
         <div className="mb-3">
           <label className="form-label">Trạng thái</label>
@@ -120,9 +124,10 @@ function EditDriverLicense() {
             className="form-select"
             value={license.license_status}
             onChange={handleInputChange}
+            required
           >
-            <option value="active">Kích hoạt</option>
-            <option value="inactive">Không kích hoạt</option>
+            <option value="active">Xác nhận</option>
+            <option value="inactive">Chưa xác nhận</option>
           </select>
         </div>
         <div className="mb-3">

@@ -100,8 +100,8 @@ function My_gplx() {
                       )}
                     </td>
                     <td>{license.license_number || "N/A"}</td>
-                    <td>{license.issueDate || "N/A"}</td>
-                    <td>{license.category || "N/A"}</td>
+                    <td>{license.issue_date || "N/A"}</td>
+                    <td>{license.license_type || "N/A"}</td>
                   </tr>
                 ))}
             </tbody>

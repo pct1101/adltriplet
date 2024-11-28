@@ -1,0 +1,25 @@
+.star {
+    font-size: 1.2rem; /* Tùy chỉnh kích thước sao */
+    margin-right: 2px; /* Tạo khoảng cách giữa các sao */
+  }
+  
+  .full-star {
+    color: gold; /* Màu vàng cho sao đầy đủ */
+  }
+  
+  .empty-star {
+    color: lightgray; /* Màu xám cho sao trống */
+  }
+  .star {
+    font-size: 1.2rem; /* Tùy chỉnh kích thước sao */
+    margin-right: 2px; /* Tạo khoảng cách giữa các sao */
+  }
+  
+  .full-star {
+    color: gold; /* Màu vàng cho sao đầy đủ */
+  }
+  
+  .empty-star {
+    color: lightgray; /* Màu xám cho sao trống */
+  }
+    

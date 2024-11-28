@@ -35,6 +35,8 @@ import EditDriverLicense from "./pages/admin/LicenseController/EditDriverLicense
 import AdminDriverLicenseDetails from "./pages/admin/LicenseController/DetailDriverLicense.jsx";
 import AddDriverLicense from "./pages/admin/LicenseController/AddDriverLicense.jsx";
 import PaymentReturn from "./pages/index/booking/payment_return.jsx";
+import AdminVoucher from "./pages/admin/Voucher/AdminVoucher.jsx";
+import AdminAddVoucher from "./pages/admin/Voucher/AdminAddVoucher.jsx";
 
 function App() {
   return (
@@ -266,6 +268,22 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AddDriverLicense />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/Voucher"
+                element={
+                  <PrivateRoute>
+                    <AdminVoucher />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/addVoucher"
+                element={
+                  <PrivateRoute>
+                    <AdminAddVoucher />
                   </PrivateRoute>
                 }
               />

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllBookings, deleteBookingById, updateBooking  } from "../../../lib/Axiosintance";
+import { getAllBookings, deleteBookingById, updateBooking } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
+import "../../../css/admin/css/booking.css";
 
 function AdminBooking() {
   const [bookings, setBookings] = useState([]);
@@ -56,12 +57,12 @@ function AdminBooking() {
       }
     }
   };
-  // HÀM CHỈNH SỬA TRẠNG THÁI
+
+  // Cập nhật trạng thái
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const updatedBookingData = { booking_status: newStatus };
-      const updatedBooking = await updateBooking(bookingId, updatedBookingData);
-      // Cập nhật lại trạng thái booking trong state sau khi thành công
+      await updateBooking(bookingId, updatedBookingData);
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking.booking_id === bookingId
@@ -69,39 +70,54 @@ function AdminBooking() {
             : booking
         )
       );
-      alert("Trạng thái booking đã được cập nhật thành công!");
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái booking:", error);
-      alert("Thất bại trong việc cập nhật trạng thái booking: " + error.message);
     }
   };
 
+  // Hàm xử lý cho hai nút "Hủy bởi admin" và "Xác nhận thanh toán"
+  const handleSpecialStatus = async (bookingId, specialStatus) => {
+    await handleStatusChange(bookingId, specialStatus);
+    alert(
+      specialStatus === "3"
+        ? "Trạng thái đã được chuyển thành 'Xác nhận thanh toán'!"
+        : "Booking đã bị hủy bởi admin!"
+    );
+  };
 
-  // const editBooking = (BookingId) => {
-  //   navigate(`/admin/EditBooking/${BookingId}`);
-  // };
+  // Áp dụng màu sắc dựa trên trạng thái
+  const getStatusStyle = (status) => {
+    if (!status) {
+      console.warn("Trạng thái không hợp lệ:", status); // Cảnh báo khi trạng thái không hợp lệ
+      return { backgroundColor: "#6c757d", color: "white" }; // Màu mặc định (xám)
+    }
+  
+    switch (status) {
+      case "1":
+        return { backgroundColor: "#198754", color: "white" };
+      case "2":
+        return { backgroundColor: "#0d6efd", color: "white" };
+      case "3":
+        return { backgroundColor: "#fd7e14", color: "white" };
+      case "4":
+        return { backgroundColor: "#ffc107", color: "black" };
+      case "5":
+        return { backgroundColor: "#dc3545", color: "white" };
+      default:
+        return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
+        
+    }
+  };
 
   const handleViewDetail = (BookingId) => {
     navigate(`/admin/DetailBooking/${BookingId}`);
   };
-  // CSS cho các badge
-  const badgeStyle = {
-    display: "inline-flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "250px",
-    height: "30px",
-    fontSize: "14px",
-    borderRadius: "15px",
-    textAlign: "center",
-    whiteSpace: "nowrap",
-  };
 
   return (
     <div>
-      <Side_bar></Side_bar>
+      <Side_bar />
       <div className="main-wrapper section">
-        <Header></Header>
+        <Header />
         <div className="d-flex">
           <h1 className="title">Quản lý Booking</h1>
           <button className="btn ms-auto">
@@ -121,8 +137,8 @@ function AdminBooking() {
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
                   <th>Ngày kết thúc</th>
-                  <th>Trạng thái thanh toán</th>
-                  <th className="text-start">Hành động</th>
+                  <th className="text-center">Trạng thái thanh toán</th>
+                  <th className="text-center">Hành động</th>
                 </tr>
               </thead>
               <tbody>
@@ -147,35 +163,46 @@ function AdminBooking() {
                         <select
                           value={booking.booking_status}
                           onChange={(e) =>
-                            handleStatusChange(booking.booking_id, e.target.value)
+                            handleStatusChange(
+                              booking.booking_id,
+                              e.target.value
+                            )
                           }
-                          disabled={!isAdmin}
-                          className="form-control"
+                          style={getStatusStyle(booking.booking_status)}
+                          className="form-select text-center"
                         >
-                          <option value={1} className="btn btn-primary">Booking thành công</option>
-                          <option value={2}>Đã thanh toán</option>
-                          <option value={3}>Xác nhận thanh toán</option>
-                          <option value={4}>Chờ xác nhận thanh toán</option>
-                          <option value={3}>Xác nhận thanh toán</option>
-                          <option value={5}>Hủy bởi admin</option>
-                          {/* <option value={4}>Hủy bởi user</option> */}
-                          {/* <option value={0}>Không xác định</option> */}
+                          <option value="1">Booking thành công</option>
+                          <option value="2">Đã thanh toán</option>
+                          <option value="4">Chờ xác nhận thanh toán</option>
+                          <option value="3">Xác nhận thanh toán</option>
+                          <option value="5">Hủy bởi admin</option>
+
                         </select>
                       </td>
                       <td>
                         <button
                           className="btn btn-info me-2"
-                          onClick={() => handleViewDetail(booking.booking_id)}
+                          onClick={() =>
+                            handleSpecialStatus(booking.booking_id, "3")
+                          }
                           disabled={!isAdmin}
                         >
-                          Chi tiết
+                          Xác nhận thanh toán
                         </button>
                         <button
-                          className="btn btn-danger"
-                          onClick={() => deleteBooking(booking.booking_id)}
+                          className="btn btn-danger me-2"
+                          onClick={() =>
+                            handleSpecialStatus(booking.booking_id, "5")
+                          }
                           disabled={!isAdmin}
                         >
-                          Xóa
+                          Hủy booking
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleViewDetail(booking.booking_id)}
+                        >
+                          <i className="fas fa-eye"></i>
                         </button>
                       </td>
                     </tr>

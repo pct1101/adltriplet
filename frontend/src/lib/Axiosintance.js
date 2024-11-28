@@ -319,7 +319,7 @@ export const logout = async () => {
   }
 };
 
-//////////////////////////////                  //////////////////////////////
+//////////////////////////////    BOOKING ADMIN              //////////////////////////////
 
 // Thêm booking admin
 export const addBooking = async (bookingData) => {
@@ -988,7 +988,9 @@ export const getFeedbackByCarId = async (carId) => {
     throw new Error("Không thể lấy feedback từ API.");
   }
 };
-//  NOTE: getbooking
+
+
+////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
 export const getBooking = async () => {
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
@@ -1169,6 +1171,76 @@ export const deleteDriverLicenseById = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Lỗi khi xóa giấy phép lái xe:", error);
+    throw error;
+  }
+};
+
+////////////////////// VOUCHER ADMIN /////////////////////////
+
+// Hàm lấy tất cả voucher
+export const getAllVouchers = async () => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/voucher`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data; // Trả về dữ liệu phản hồi từ API
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách voucher:", error);
+    throw error;
+  }
+};
+
+// Hàm thêm 1 voucher 
+export const addVoucher = async (voucherData) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    const response = await axios.post(`${API_URL}/admin/voucher`, voucherData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data; // Trả về dữ liệu phản hồi từ API
+  } catch (error) {
+    console.error("Lỗi khi thêm voucher:", error);
+    throw error;
+  }
+};
+
+// Hàm xóa 1 voucher theo id
+export const deleteVoucherById = async (voucherId, apiToken) => {
+  try {
+    await axios.delete(`${API_URL}/admin/voucher/${voucherId}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi khi xóa voucher:", error);
     throw error;
   }
 };

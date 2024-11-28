@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {getAllDriverLicenses , deleteDriverLicenseById } from "../../../lib/Axiosintance";
+import { getAllDriverLicenses, deleteDriverLicenseById } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 
@@ -58,11 +58,11 @@ function AdminDriverLicense() {
 
     const editDriverLicense = (licenseId) => {
         navigate(`/admin/EditDriverLicense/${licenseId}`);
-      };
+    };
 
-      const handleViewDetail = (driverLicenseId) => {
+    const handleViewDetail = (driverLicenseId) => {
         navigate(`/admin/DetailDriverLicense/${driverLicenseId}`);
-      };
+    };
 
     return (
         <div>
@@ -103,15 +103,21 @@ function AdminDriverLicense() {
                                             <td>
                                                 <span
                                                     className={`badge ${license.license_status === "active"
-                                                            ? "bg-success"
-                                                            : "bg-warning"
+                                                        ? "bg-success"  // Màu xanh cho active
+                                                        : license.license_status === "inactive"
+                                                            ? "bg-warning"  // Màu vàng cho inactive
+                                                            : "bg-danger"   // Màu đỏ cho trạng thái không xác định (dự phòng)
                                                         }`}
+                                                    value={license.license_status} // Thêm value trạng thái
                                                 >
                                                     {license.license_status === "active"
-                                                        ? "Đang Hoạt động"
-                                                        : "Chưa hoạt động"}
+                                                        ? "Đã xác nhận"
+                                                        : license.license_status === "inactive"
+                                                            ? "Chưa xác nhận"
+                                                            : "Không xác định"} {/* Nội dung fallback cho trạng thái khác */}
                                                 </span>
                                             </td>
+
                                             <td>
                                                 {license.issue_date
                                                     ? new Date(license.issue_date).toLocaleDateString()
@@ -127,7 +133,7 @@ function AdminDriverLicense() {
                                                     className="btn btn-warning me-2"
                                                     onClick={() => editDriverLicense(license.driver_license_id)}
                                                 >
-                                                    Sửa
+                                                    <i className="fas fa-wrench"></i>
                                                 </button>
                                                 <button
                                                     className="btn btn-info me-2"
@@ -136,16 +142,7 @@ function AdminDriverLicense() {
                                                     }
                                                     disabled={!isAdmin}
                                                 >
-                                                    Chi tiết
-                                                </button>
-                                                <button
-                                                    className="btn btn-danger"
-                                                    onClick={() =>
-                                                        deleteDriverLicense(license.driver_license_id)
-                                                    }
-                                                    disabled={!isAdmin}
-                                                >
-                                                    Xóa
+                                                    <i className="fas fa-eye"></i>
                                                 </button>
                                             </td>
                                         </tr>

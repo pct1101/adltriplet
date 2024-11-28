@@ -77,6 +77,13 @@ function Side_bar() {
                 </span>
                 <span className="text">Đơn hàng</span>
               </a>
+            </li><li className="nav-item">
+              <a href="/admin/voucher">
+                <span className="icon">
+                  <i className="fa-solid fa-gift"></i>
+                </span>
+                <span className="text">Vouchers</span>
+              </a>
             </li>
             <li className="nav-item">
               <a href="/admin/user">

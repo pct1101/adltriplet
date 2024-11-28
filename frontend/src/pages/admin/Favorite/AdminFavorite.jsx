@@ -80,7 +80,7 @@ function AdminFavorite() {
                 <tr>
                   <th>ID</th>
                   <th>Ngày yêu thích</th>
-                  <th>Tên xe</th>
+                  <th>ID xe</th>
                   <th>Ngày yêu thích</th>
                   <th>Hành động</th>
                 </tr>
@@ -92,9 +92,7 @@ function AdminFavorite() {
                       <td>{favorite.favorite_id}</td>
                       <td>{favorite.date_favorite}</td>
                       <td>
-                        {favorite && favorite.car && favorite.car.car_name
-                          ? favorite.car.car_name
-                          : "Không có tên xe"}
+                        {favorite.car_id}
                       </td>
                       <td>
                         {new Date(favorite.date_favorite).toLocaleDateString()}
@@ -104,14 +102,14 @@ function AdminFavorite() {
                           onClick={() => handleViewDetail(favorite)}
                           className="btn btn-info me-2"
                         >
-                          Chi tiết
+                          <i className="fas fa-eye"></i>
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => deleteFavorite(favorite.favorite_id)}
                           disabled={!isAdmin}
                         >
-                          Xóa
+                          <i className="fas fa-trash"></i>
                         </button>
                       </td>
                     </tr>

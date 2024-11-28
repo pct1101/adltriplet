@@ -217,14 +217,14 @@ const getBrandName = (brandid) => {
                         className="btn btn-warning me-2"
                         onClick={() => editCar(car.car_id)}
                       >
-                        Sửa
+                        <i className="fas fa-wrench"></i>
                       </button>
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteCar(car.car_id)}
                         disabled={!isAdmin}
                       >
-                        Xóa
+                        <i className="fas fa-trash"></i> 
                       </button>
                     </td>
                   </tr>

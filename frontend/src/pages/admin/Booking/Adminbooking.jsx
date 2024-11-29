@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllBookings, deleteBookingById, updateBooking } from "../../../lib/Axiosintance";
+import {
+  getAllBookings,
+  deleteBookingById,
+  updateBooking,
+} from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import "../../../css/admin/css/booking.css";
@@ -91,7 +95,7 @@ function AdminBooking() {
       console.warn("Trạng thái không hợp lệ:", status); // Cảnh báo khi trạng thái không hợp lệ
       return { backgroundColor: "#6c757d", color: "white" }; // Màu mặc định (xám)
     }
-  
+
     switch (status) {
       case "1":
         return { backgroundColor: "#198754", color: "white" };
@@ -105,7 +109,6 @@ function AdminBooking() {
         return { backgroundColor: "#dc3545", color: "white" };
       default:
         return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
-        
     }
   };
 
@@ -131,8 +134,7 @@ function AdminBooking() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>ID Đơn hàng</th>
-                  <th>ID người đặt</th>
+                  <th>ID Booking</th>
                   <th>Tên sản phẩm</th>
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
@@ -146,7 +148,6 @@ function AdminBooking() {
                   bookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td>{booking.booking_id}</td>
-                      <td>{booking.user_id}</td>
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
                       </td>
@@ -156,9 +157,7 @@ function AdminBooking() {
                       <td>
                         {new Date(booking.start_date).toLocaleDateString()}
                       </td>
-                      <td>
-                        {new Date(booking.end_date).toLocaleDateString()}
-                      </td>
+                      <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <select
                           value={booking.booking_status}
@@ -173,44 +172,46 @@ function AdminBooking() {
                         >
                           <option value="1">Booking thành công</option>
                           <option value="2">Đã thanh toán</option>
-                          <option value="4">Chờ xác nhận thanh toán</option>
-                          <option value="3">Xác nhận thanh toán</option>
+                          <option value="4">Chờ xác nhận </option>
+                          <option value="3">Xác nhận </option>
                           <option value="5">Hủy bởi admin</option>
-
                         </select>
                       </td>
                       <td>
-                        <button
-                          className="btn btn-info me-2"
-                          onClick={() =>
-                            handleSpecialStatus(booking.booking_id, "3")
-                          }
-                          disabled={!isAdmin}
-                        >
-                          Xác nhận thanh toán
-                        </button>
-                        <button
-                          className="btn btn-danger me-2"
-                          onClick={() =>
-                            handleSpecialStatus(booking.booking_id, "5")
-                          }
-                          disabled={!isAdmin}
-                        >
-                          Hủy booking
-                        </button>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => handleViewDetail(booking.booking_id)}
-                        >
-                          <i className="fas fa-eye"></i>
-                        </button>
+                        <div className="d-flex">
+                          {" "}
+                          <button
+                            className="btn btn-info me-2"
+                            onClick={() =>
+                              handleSpecialStatus(booking.booking_id, "3")
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Xác nhận
+                          </button>
+                          <button
+                            className="btn btn-danger me-2"
+                            onClick={() =>
+                              handleSpecialStatus(booking.booking_id, "5")
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Hủy booking
+                          </button>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleViewDetail(booking.booking_id)}
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan="9" className="text-center">
-                      Không có booking nào
+                      Không có booking
                     </td>
                   </tr>
                 )}

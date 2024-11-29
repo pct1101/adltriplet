@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "../../../css/index/home.css";
-import { getBrandCar } from "../../../lib/Axiosintance";
+import { getAllCarBrands } from "../../../lib/Axiosintance";
 import { API_URL_LOGO } from "../../../lib/Axiosintance";
 
 function CarDelivery() {
@@ -17,9 +17,9 @@ function CarDelivery() {
   useEffect(() => {
     const fetchBrand = async () => {
       try {
-        const response = await getBrandCar();
-        console.log(response.data.data);
-        setbrand(response.data.data);
+        const response = await getAllCarBrands();
+
+        setbrand(response);
       } catch (error) {
         console.log("failed to load data brand", error);
       }
@@ -29,18 +29,31 @@ function CarDelivery() {
 
   return (
     <div>
-      <div className="container airport d-flex mt-4">
-        <h1 className="airport-head">
-          Dòng xe tại
-          <br />
-          ADL TRIPLE T
-        </h1>
+      <div className="container airport mt-4">
+        <h1 className="airport-head">Dòng xe tại ADL TRIPLE T</h1>
         <>
           <Swiper
             className="airports"
             modules={[Virtual, Navigation, Pagination, Autoplay]}
             onSwiper={setSwiperRef}
             slidesPerView={4}
+            breakpoints={{
+              1024: {
+                // Khi màn hình >= 1024px
+                slidesPerView: 3,
+              },
+              768: {
+                // Khi màn hình >= 768px
+                slidesPerView: 2,
+              },
+              480: {
+                // Khi màn hình >= 480px
+                slidesPerView: 1,
+              },
+              0: {
+                slidesPerView: 1,
+              },
+            }}
             centeredSlides={false}
             spaceBetween={15}
             navigation={{

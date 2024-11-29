@@ -14,7 +14,7 @@ function News() {
               <h2 className="title">Tin tức &amp; Sự kiện</h2>
               <h3>Về ADL TRIPLE T</h3>
             </div>
-            <div className="newstop d-flex justify-content-between gap-4 ">
+            <div className="newstop">
               <div className="left-news">
                 <div className="item">
                   <a

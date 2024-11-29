@@ -14,6 +14,13 @@
     background-image: linear-gradient(0deg, #5FCF86, #ffffff)
 }
 
+.form-login {
+    max-width: 600px !important;
+    background-color: white;
+    border-radius: 15px;
+    padding: 15px;
+}
+
 /* CSS để điều chỉnh padding trong form */
 .container.login {
     padding-top: 10px;

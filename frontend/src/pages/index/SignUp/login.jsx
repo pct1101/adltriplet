@@ -78,74 +78,72 @@ const Login = () => {
         <div className="background-login-signup"></div>
         <div className="group-login-signup">
           <div className="row justify-content-center">
-            <div className="col-md-6">
-              <div className="card">
-                <div className="title-login text-center">
-                  <h2>Đăng Nhập</h2>
-                </div>
-                <div className="card-body">
-                  <form onSubmit={handleLogin}>
-                    <div className=" mb">
-                      <label htmlFor="email" className="form-label">
-                        Tài khoản gmail
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        id="loginEmail"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Nhập email"
-                      />
-                      {emailError && (
-                        <p className="error-message">{emailError}</p>
-                      )}
-                    </div>
+            <div className="form-login">
+              <div className="title-login text-center">
+                <h2>Đăng Nhập</h2>
+              </div>
+              <div className="card-body">
+                <form onSubmit={handleLogin}>
+                  <div className=" mb">
+                    <label htmlFor="email" className="form-label">
+                      Tài khoản gmail
+                    </label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="loginEmail"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Nhập email"
+                    />
+                    {emailError && (
+                      <p className="error-message">{emailError}</p>
+                    )}
+                  </div>
 
-                    <div className="mb">
-                      <label htmlFor="password" className="form-label">
-                        Mật khẩu
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        id="loginPassword"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Nhập mật khẩu"
-                      />
-                      {passwordError && (
-                        <p className="error-message">{passwordError}</p>
-                      )}
-                    </div>
-                    {error && <div className="alert alert-danger">{error}</div>}
-                    <div className="forgot-password">
-                      <a href="#"> Quên mật khẩu?</a>
-                    </div>
-                    <div className="d-grid">
-                      <button
-                        type="submit"
-                        className="btn btn-primary"
-                        style={{
-                          height: "45px",
-                          fontSize: "1.2rem",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Đăng nhập
-                      </button>
-                    </div>
-                  </form>
-                </div>
-                <div className="text-center">
-                  <p>
-                    Đăng ký ngay để
-                    <a href="/signup" className="tk text-primary">
-                      nhận ngay
-                    </a>
-                    10% ưu đãi từ ADL TRIPEL T
-                  </p>
-                </div>
+                  <div className="mb">
+                    <label htmlFor="password" className="form-label">
+                      Mật khẩu
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="loginPassword"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Nhập mật khẩu"
+                    />
+                    {passwordError && (
+                      <p className="error-message">{passwordError}</p>
+                    )}
+                  </div>
+                  {error && <div className="alert alert-danger">{error}</div>}
+                  <div className="forgot-password">
+                    <a href="#"> Quên mật khẩu?</a>
+                  </div>
+                  <div className="d-grid">
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      style={{
+                        height: "45px",
+                        fontSize: "1.2rem",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Đăng nhập
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="text-center">
+                <p>
+                  Đăng ký ngay để
+                  <a href="/signup" className="tk text-primary">
+                    nhận ngay
+                  </a>
+                  10% ưu đãi từ ADL TRIPEL T
+                </p>
               </div>
             </div>
           </div>

@@ -1,0 +1,167 @@
+/* Mobile (≤ 480px) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .header {
+        padding: 0px;
+    }
+
+    .navbar-collapse {
+        border-radius: 15px;
+        background-color: whitesmoke;
+        padding: 1rem;
+    }
+
+    .navbar.navbar-expand-lg.navbar-light.bg-light {
+        width: 100%;
+        max-width: 480px;
+    }
+
+    .carousel-caption h3 {
+        font-size: .900rem;
+    }
+
+    .search-option {
+        display: none;
+    }
+
+    .container .title {
+        margin-top: 8rem;
+    }
+
+    .container-news {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .newstop d-flex justify-content-between gap-4 {
+        display: none !important;
+    }
+
+    .banner-register {
+        display: none;
+    }
+
+    .wrapper-content {
+        width: 480px;
+        max-width: min(100% - 20px, var(--width));
+        margin: 0 auto;
+    }
+
+    .item-box .discount {
+        display: none;
+    }
+
+    .container-news {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .col4-mg20 .item {
+        width: 100%;
+    }
+
+    .container-news .intro-left {
+        width: 100%;
+    }
+
+    .container-news .intro-right {
+        width: 100%;
+    }
+
+    .container-news .intro-left .newstop {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container-news .intro-left .newstop .left-news {
+        width: 100%;
+    }
+
+    .container-news .intro-left .newstop .right-news {
+        width: 100%;
+    }
+
+    .container.airport {
+        display: block;
+    }
+
+    h1.airport-head {
+        display: flex;
+        justify-content: center;
+    }
+
+    .custom-button-prev,
+    .custom-button-next {
+        display: none;
+    }
+
+    .form-login {
+        width: 400px !important;
+        margin: 10px;
+    }
+
+
+
+}
+
+/* Tablet dọc (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
+
+/* Tablet ngang hoặc laptop nhỏ (769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    * {
+        box-sizing: border-box;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .navbar.navbar-expand-lg.navbar-light.bg-light {
+        width: 100%;
+        max-width: 1024px;
+    }
+
+    .container-news {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+/* Laptop lớn (1025px - 1440px) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+    .sidebar {
+        display: block;
+        width: 300px;
+    }
+
+    .container {
+        max-width: 1000px;
+    }
+}
+
+/* Desktop lớn (≥ 1441px) */
+@media (min-width: 1441px) {
+    body {
+        font-size: 18px;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+}

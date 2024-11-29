@@ -1,11 +1,11 @@
 import axios from "axios";
 
 // Định nghĩa baseURL của API
-const API_URL = "http://localhost:8000/api";
-const API_URL_IMG = "http://localhost:8000/imgs/";
-const API_URL_LOGO = "http://localhost:8000/brand_logo/";
-const API_URL_IMG_THUMBS = "http://localhost:8000/Thumbs/";
-const API_URL_IMG_LICENSE_DRIVER = "http://localhost:8000/";
+const API_URL = "https://api.thuexetulai.online/api";
+const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
+const API_URL_LOGO = "https://api.thuexetulai.online/brand_logo/";
+const API_URL_IMG_THUMBS = "https://api.thuexetulai.online/Thumbs/";
+const API_URL_IMG_LICENSE_DRIVER = "https://api.thuexetulai.online/";
 export {
   API_URL_IMG,
   API_URL_IMG_THUMBS,
@@ -995,7 +995,6 @@ export const getFeedbackByCarId = async (carId) => {
   }
 };
 
-
 ////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
 export const getBooking = async () => {
   // Lấy token từ localStorage
@@ -1213,7 +1212,7 @@ export const getAllVouchers = async () => {
   }
 };
 
-// Hàm thêm 1 voucher 
+// Hàm thêm 1 voucher
 export const addVoucher = async (voucherData) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -1375,14 +1374,7 @@ export const getAllCarBrands = async () => {
         Authorization: `Bearer ${apiToken}`,
       },
     });
-
-    // Kiểm tra dữ liệu trả về từ API
-    if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data; // Trả về mảng dữ liệu từ data
-    } else {
-      console.error("Dữ liệu thương hiệu không phải mảng:", response.data);
-      return []; // Trả về mảng rỗng nếu không phải mảng hợp lệ
-    }
+    return response.data;
   } catch (error) {
     console.error("Error fetching car brands:", error);
     throw error;

@@ -15,6 +15,7 @@ class UserRequest extends FormRequest
 
     public function rules(): array
     {
+        $userId = $this->route('id');
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -23,19 +24,20 @@ class UserRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
+                Rule::unique(User::class)->ignore($userId, 'id'),
             ],
+            'password' => ['required', 'string', 'max:255'],
             'image' => ['nullable', 'file', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'gender' => ['nullable', 'in:male,female,other'],
             'birth_date' => ['nullable', 'date', 'before:today'],
             'phone' => [
-                'nullable',
+                'required',
                 'string',
-                'regex:/^(?:\+?84|0)(?:\d{9}|\d{10})$/', // Định dạng số điện thoại Việt Nam
-                Rule::unique(User::class)->ignore($this->user()->id),
+                'regex:/^(?:\+?84|0)(?:\d{9})$/',
+                Rule::unique(User::class)->ignore($userId, 'id'),
             ],
             'address' => ['nullable', 'string', 'max:255'],
-            'role' => ['required', 'in:user,admin'],
+            'role' => ['nullable', 'in:user,admin'],
         ];
     }
 
@@ -51,23 +53,21 @@ class UserRequest extends FormRequest
         'email.email' => 'Email không hợp lệ.',
         'email.max' => 'Email không được vượt quá 255 ký tự.',
         'email.unique' => 'Email đã được sử dụng.',
-        'image.nullable' => 'Ảnh đại diện có thể để trống.',
+        'password.required' => 'Mật khẩu là bắt buộc',
+        'password.string' => 'Mật khẩu phải là chuỗi ký tự',
+        'password.max' => 'Mật khẩu không được vượt quá 255 ký tự',
         'image.file' => 'Ảnh đại diện phải là một tệp tin hợp lệ.',
         'image.mimes' => 'Ảnh đại diện phải có định dạng jpeg, png, jpg, gif hoặc svg.',
         'image.max' => 'Ảnh đại diện không được vượt quá 2MB.',
-        'gender.nullable' => 'Giới tính có thể để trống.',
         'gender.in' => 'Giới tính phải là male, female hoặc other.',
-        'birth_date.nullable' => 'Ngày sinh có thể để trống.',
         'birth_date.date' => 'Ngày sinh phải là một ngày hợp lệ.',
         'birth_date.before' => 'Ngày sinh phải trước ngày hiện tại.',
-        'phone.nullable' => 'Số điện thoại có thể để trống.',
+        'phone.required' => 'Số điện thoại là bắt buộc',
         'phone.string' => 'Số điện thoại phải là chuỗi ký tự.',
-        'phone.regex' => 'Số điện thoại không đúng định dạng (+84 hoặc 0, với 9 hoặc 10 chữ số).',
+        'phone.regex' => 'Số điện thoại không đúng định dạng (+84 Bắt đầu bằng 0 với 9 số khác).',
         'phone.unique' => 'Số điện thoại đã được sử dụng.',
-        'address.nullable' => 'Địa chỉ có thể để trống.',
         'address.string' => 'Địa chỉ phải là chuỗi ký tự.',
         'address.max' => 'Địa chỉ không được vượt quá 255 ký tự.',
-        'role.required' => 'Vai trò là bắt buộc.',
         'role.in' => 'Vai trò phải là user hoặc admin.',
     ];
 }

@@ -46,7 +46,7 @@ class DriverLicenseRequest extends FormRequest
     {
         return [
             'license_number.required' => 'Số giấy phép là bắt buộc.',
-            'license_number.digits' => 'Số giấy phép phải gồm đúng 12 chữ số.',
+            'license_number.digits' => 'Số giấy phép phải gồm đúng 12 số.',
             'license_number.unique' => 'Số giấy phép đã tồn tại trong hệ thống.',
             'license_holder.required' => 'Tên người sở hữu giấy phép là bắt buộc.',
             'license_holder.string' => 'Tên người sở hữu giấy phép phải là một chuỗi ký tự hợp lệ.',

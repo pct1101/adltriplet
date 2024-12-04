@@ -60,11 +60,6 @@ const Login = () => {
         setError("Không có token trả về từ server.");
       }
       // Kiểm tra vai trò người dùng để điều hướng
-      if (user.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
-      }
     } catch (error) {
       console.error("Error during login:", error.response.data); // Kiểm tra lỗi
       setError("Đăng nhập thất bại, tài khoản hoặc mật khẩu không chính xác.");

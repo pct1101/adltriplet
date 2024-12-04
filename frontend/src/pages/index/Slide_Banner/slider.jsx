@@ -1,54 +1,50 @@
 import Carousel from "react-bootstrap/Carousel";
 import "../../../css/index/slider.css";
-import React, { useEffect, useState } from "react";
-import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { getAllCars } from "../../../lib/Axiosintance";
 // note:import data cho form booking
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { useBooking } from "../../Private/bookingContext";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
 
+dayjs.locale("vi");
 function Slider() {
-  // note: set days
-  const [startDate, setStartDate] = useState(dayjs());
-  console.log(startDate);
+  // note: car
+  const [cars, setcars] = useState([]);
+  const [selectedCar, setSelectedCar] = useState(null);
 
-  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
-  // note: format dayjs
-  const formattedStartDate = startDate.format("DD/MM/YYYY");
-  const formattedEndDate = endDate.format("DD/MM/YYYY");
-  // note: formate ngày
-  const formatDate = (date) => {
-    const validDate = dayjs(date);
-
-    //note: Kiểm tra xem đối tượng dayjs có hợp lệ không
-    if (validDate.isValid()) {
-      return validDate.format("DD/MM/YYYY"); //note: nếu hợp lệ, định dạng theo dạng DD/MM/YYYY
-    }
-
-    return "Ngày không hợp lệ"; // note:nếu không hợp lệ, trả về thông báo lỗi
-  };
-  // note: set time
-  const [selectedTimes, setSelectedTimes] = useState({
-    nhanXe: dayjs().add(1, "hour").format("HH:mm"),
-    traXe: dayjs().add(4, "hour").format("HH:mm"),
-  });
-  //note:    set value for booking
+  const [openDropdown, setOpenDropdown] = useState(null);
+  //note: show date/time
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
+  // note: open modal
+  const [openModal, setOpenModal] = useState(false);
+  // note:close
   const handleCloseModal = () => {
     setOpenModal(false);
     setShowDatePicker(false);
   };
 
-  // note:  set value for dropdown and time
-  const [openDropdown, setOpenDropdown] = useState(null);
+  // note: formdate
+  const {
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    selectedTimes,
+    setSelectedTimes,
+  } = useBooking();
+
   // note:Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
     //note: open dropdown or none
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
-  //  note: handle
+
+  // note:  show data handleToggleDatePicker
   const handleToggleDatePicker = (event) => {
     setShowDatePicker(!showDatePicker);
 
@@ -66,6 +62,7 @@ function Slider() {
     //note: Cập nhật ngày kết thúc
     setEndDate(nextDay);
   };
+
   const generateTimeOptions = (startHour, startMinute) => {
     const times = [];
     let hour = startHour;
@@ -113,6 +110,47 @@ function Slider() {
     }
     setOpenDropdown(null);
   };
+
+  // note: fetch car
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await getAllCars();
+        console.log("cars", response.data);
+        setcars(response.data);
+      } catch (error) {
+        console.log("ko thể lấy đuộcxe", error);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
+  // note: selected car
+  useEffect(() => {
+    if (Array.isArray(cars) && cars.length > 0) {
+      const defaultCar = cars.find((car) => car.car_id === 1) || cars[0];
+      setSelectedCar(defaultCar);
+    }
+  }, [cars]);
+
+  const handleSelectCar = (car) => {
+    setSelectedCar(car); // Cập nhật xe được chọn
+    setOpenDropdown(false); // Đóng dropdown sau khi chọn
+  };
+
+  //  note: formatdate
+  const formatDate = (date) => {
+    const validDate = dayjs(date);
+
+    //note: Kiểm tra xem đối tượng dayjs có hợp lệ không
+    if (validDate.isValid()) {
+      return validDate.format("DD/MM/YYYY"); //note: nếu hợp lệ, định dạng theo dạng DD/MM/YYYY
+    }
+
+    return "Ngày không hợp lệ"; // note:nếu không hợp lệ, trả về thông báo lỗi
+  };
+
   //note:  all days user book
   const calculateTotalDays = (startDate, endDate) => {
     const start = new Date(startDate);
@@ -121,8 +159,8 @@ function Slider() {
     const totalDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); //note: Số ngày giữa hai ngày
     return totalDays > 0 ? totalDays : 0;
   };
-  //note: Số ngày thuê
-  const totalDays = calculateTotalDays(startDate, endDate);
+
+  const toggleDropdown = () => setOpenDropdown(!openDropdown);
   return (
     <div className="banner-section" style={{ marginBottom: "-115px" }}>
       <div className="container-slider">
@@ -158,7 +196,7 @@ function Slider() {
           </Carousel.Item>
         </Carousel>
       </div>
-      <div className="search-option" onClick={handleToggleDatePicker}>
+      <div className="search-option">
         <div className="search">
           <div className="search-form sd">
             <div className="search-form__item address">
@@ -189,10 +227,37 @@ function Slider() {
                 </div>
                 <p>Hãng xe</p>
               </div>
-              <div className="choose">
+              <div className="choose" onClick={toggleDropdown}>
                 <div className="choose-item has-arrow" for="1">
                   <div className="here-autocomplete">
-                    <p className="address pointer ">Hồ Chí Minh</p>
+                    <p className="address pointer ">
+                      {" "}
+                      <div
+                        className={`dropdown-time ${
+                          openDropdown ? "show" : "hide"
+                        }`}
+                      >
+                        {cars.map((car, index) => (
+                          <div
+                            className="custom-radio"
+                            key={index}
+                            onClick={() => handleSelectCar(car)}
+                          >
+                            <input
+                              type="radio"
+                              id={`car${index}`}
+                              name="car"
+                              checked={selectedCar?.car_id === car.car_id}
+                              readOnly
+                            />
+                            <label htmlFor={`car${index}`}>
+                              {car.car_name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                      {selectedCar ? selectedCar.car_name : "Chọn xe"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -282,15 +347,15 @@ function Slider() {
                     ></path>
                   </svg>
                 </div>
-                <p>Thời gian thuê</p>
+                <p>Đặt lịch</p>
               </div>
-              <div className="choose">
-                <label className="choose-item has-arrow">
-                  <span className="value">
-                    {formattedStartDate},{selectedTimes.nhanXe} -
-                    {formattedEndDate},{selectedTimes.traXe}
-                  </span>
-                </label>
+              <div className="choose" onClick={handleToggleDatePicker}>
+                {" "}
+                <span>
+                  {" "}
+                  {selectedTimes.nhanXe}, {formatDate(startDate)} -{" "}
+                  {selectedTimes.traXe}, {formatDate(endDate)}{" "}
+                </span>
               </div>
             </div>
             <a className="btn btn-primary" target="">
@@ -318,6 +383,7 @@ function Slider() {
                     <DateCalendar
                       value={startDate}
                       minDate={dayjs()} // Đặt ngày nhỏ nhất cho ngày nhận xe là hôm nay
+                      locale="vi" // Đảm bảo locale là tiếng Việt
                       onChange={(newValue) => setStartDate(newValue)}
                     />
                   </DemoItem>
@@ -325,6 +391,7 @@ function Slider() {
                     <DateCalendar
                       value={endDate}
                       minDate={startDate.add(1, "day")} // Đặt ngày trả xe không thể trước ngày nhận xe
+                      locale="vi"
                       onChange={(newValue) => setEndDate(newValue)}
                     />
                   </DemoItem>
@@ -430,6 +497,14 @@ function Slider() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="time-avail">
+                <p>
+                  {" "}
+                  Quý khách hàng lưu ý: Trung tâm sẽ hỗ trợ nhận xe và trả xe
+                  vào <br /> khoảng thời gian từ 9:00 sáng và đến 21:00 tối. Xin
+                  cảm ơn
+                </p>
               </div>
             </div>
 

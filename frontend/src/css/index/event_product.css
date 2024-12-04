@@ -144,6 +144,24 @@
   z-index: 1;
 }
 
+.address .dropdown-time {
+  position: absolute;
+  width: 46%;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  left: 0;
+  top: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 16px;
+  gap: 16px;
+  max-height: 173px;
+  overflow: auto;
+  background-color: #fff;
+  z-index: 1;
+}
+
 .custom-radio {
   position: relative;
 }

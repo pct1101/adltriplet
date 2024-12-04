@@ -8,11 +8,20 @@
   height: 100px;
 }
 
+
+
 .navbar.navbar-expand-lg.navbar-light.bg-light {
   width: 100%;
   position: fixed;
   z-index: 999;
   background: #ffffff !important;
+  top: 0;
+  transition: top 0.3s ease-in-out;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.navbar-hidden {
+  top: -90px;
 }
 
 #navbarNav.collapse.navbar-collapse {

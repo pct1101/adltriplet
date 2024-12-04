@@ -12,6 +12,14 @@
         padding: 0px;
     }
 
+    .login {
+        padding: 1rem;
+        background: #5fcf86;
+        width: 400px;
+        margin: auto !important;
+        border-radius: 15px;
+    }
+
     .navbar-collapse {
         border-radius: 15px;
         background-color: whitesmoke;
@@ -24,15 +32,28 @@
     }
 
     .carousel-caption h3 {
-        font-size: .900rem;
+        font-size: .900rem !important;
     }
 
     .search-option {
-        display: none;
+        bottom: 70px;
+    }
+
+    .search-form a.btn {
+        margin: 0px;
+        margin-top: 10px;
+    }
+
+    .search-option .search {
+        margin: 0 20px;
+    }
+
+    .search-form {
+        flex-direction: column;
     }
 
     .container .title {
-        margin-top: 8rem;
+        margin-top: 2rem;
     }
 
     .container-news {
@@ -49,8 +70,7 @@
     }
 
     .wrapper-content {
-        width: 480px;
-        max-width: min(100% - 20px, var(--width));
+        width: 400px;
         margin: 0 auto;
     }
 
@@ -107,8 +127,121 @@
         margin: 10px;
     }
 
+    .banner-content h1 {
+        font-size: calc(1.375rem + 1.5vw);
+    }
+
+    .title-form {
+        margin-top: 15px;
+    }
+
+    /* note: product-detail */
+    .product-detail .main-item {
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    .main-item .right {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+    }
+
+    .main-item .left {
+        width: 100%;
+    }
 
 
+    .sub-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sub-item .group-right {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .sub-item .group-left {
+        width: 100%;
+    }
+
+    .outstanding-features__item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .outstanding-features__item .title {
+        margin-top: 0px;
+    }
+
+    .space.sec {
+        padding: 1px 0px 10px 0px;
+    }
+
+    /* note: popup css */
+    .modal-body {
+        padding: 0px !important;
+    }
+
+    .popup-content {
+        width: 100%;
+        max-width: 480px;
+        margin: 1rem;
+    }
+
+    .css-1rv8zyt-MuiStack-root {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    .css-5wchs2-MuiDateCalendar-root {
+        width: 100%;
+        margin: 0 auto !important;
+    }
+
+    .modal-calendar modal-body {
+        padding: 0px !important;
+    }
+
+    /* note: form-login */
+    .form-group-payment {
+        flex-direction: column;
+
+    }
+
+    .form-group-payment .left-user {
+        width: 100% !important;
+    }
+
+    .payment-form {
+        width: 100% !important;
+    }
+
+    .form-group-payment .left-user .item-box {
+        flex-direction: column;
+    }
+
+    .item-box .img-car .car-img {
+        width: 100% !important;
+    }
+
+    /* note: sucssec */
+    .tb-success {
+        width: 400px !important;
+        height: auto !important;
+    }
+
+    .tb-success a {
+        width: 250px;
+        font-size: 12px !important;
+    }
+
+    .address .dropdown-time {
+        top: 35%;
+        width: 100%;
+    }
 }
 
 /* Tablet dọc (481px - 768px) */

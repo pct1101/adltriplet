@@ -10,8 +10,6 @@ import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
 function Placecar() {
-  const [swiperRef, setSwiperRef] = useState(null);
-
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
@@ -34,9 +32,12 @@ function Placecar() {
         <Swiper
           className="cartop"
           modules={[Virtual, Navigation, Pagination, Autoplay]}
-          onSwiper={setSwiperRef}
           slidesPerView={4}
           breakpoints={{
+            1920: {
+              // Khi màn hình >= 1024px
+              slidesPerView: 4, // Hiển thị 3 slide
+            },
             1024: {
               // Khi màn hình >= 1024px
               slidesPerView: 3, // Hiển thị 3 slide

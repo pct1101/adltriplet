@@ -13,6 +13,25 @@ export {
   API_URL_LOGO,
 };
 
+//  note: new
+export const getUserProfile = async () => {
+  const apiToken = localStorage.getItem("remember_token");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error; // Ném lỗi để xử lý ở nơi gọi API
+  }
+};
+
 // Lấy tất cả sản phẩm (sp)
 export const getAllCars = () => {
   return axios.get(`${API_URL}/cars`);
@@ -34,7 +53,6 @@ export const login = (email, password) => {
     .post(`${API_URL}/auth/login`, { login: email, password })
     .then((response) => {
       console.log("Login response from API:", response);
-
       // Kiểm tra sự tồn tại của token và thông tin người dùng trong response.data
       if (response.data && response.data.token) {
         // Lưu token vào localStorage
@@ -247,25 +265,6 @@ export const deleteFeedbackById = async (id) => {
     return response.data;
   } catch (error) {
     console.error("Error deleting feedback:", error);
-    throw error;
-  }
-};
-////////////////////////////// PROFILE NGƯỜI DÙNG //////////////////////////////
-// Lấy thông tin người dùng
-export const getUserProfile = async () => {
-  const apiToken = localStorage.getItem("remember_token"); // Lấy api_token từ localStorage
-  if (!apiToken) {
-    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
-  }
-  try {
-    const response = await axios.get(`${API_URL}/auth/profile/`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Lỗi không hiển thị thông tin người dùng:", error);
     throw error;
   }
 };
@@ -1295,16 +1294,12 @@ export const addDriverLicense = async (licenseData) => {
   }
   try {
     // Gửi request tới API với token trong headers
-    const response = await axios.post(
-      `${API_URL}/driverlicense/`,
-      licenseData,
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
-          "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/driverlicense`, licenseData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+        "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
+      },
+    });
     if (response.data) {
       console.log("thêm thành công");
       return { message: "Thêm thành công", data: response.data };

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Mail\MailBill;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Http\Controllers\Controller;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Api\BookingController;
 use App\Models\PaymentModel;
+use Illuminate\Support\Facades\Mail;
+
 
 class PaymentController extends Controller
 {
@@ -27,7 +30,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = $booking->booking_id; // Mã đơn hàng
         $vnp_OrderInfo = $request->input('order_desc', 'thanh toan hoa don');
         $vnp_OrderType = $request->input('order_type', 'billpayment');
-        $vnp_Amount = $booking->total_cost_after_voucher*100;
+        $vnp_Amount = $booking->total_cost_after_voucher * 100;
         $vnp_Locale = $request->input('language', 'vn');
         $vnp_BankCode = $request->input('bank_code', 'NCB');
         $vnp_IpAddr = $request->ip();
@@ -89,6 +92,7 @@ class PaymentController extends Controller
         $vnp_TxnRef = $request->input('vnp_TxnRef'); // Mã đơn hàng
         $booking = Booking::with('user')->where('booking_id', $vnp_TxnRef)->first();
         $fullname = $booking->user->name;
+        $email = $booking->user->email;
         $vnp_amount = $request->input('vnp_Amount');
 
         // Kiểm tra trạng thái giao dịch
@@ -102,12 +106,25 @@ class PaymentController extends Controller
                 $booking->save();
 
                 $payment = PaymentModel::create([
-                    'payment_amount' => $vnp_amount/100,
+                    'payment_amount' => $vnp_amount / 100,
                     'payment_date' => now(),
                     'payment_method' => 'VNPAY',
                     'user_id' => $booking->user_id,
                     'booking_id' => $vnp_TxnRef,
                 ]);
+
+                //Gửi hóa đơn cho khách hàng
+                try {
+                    $payment_amount = $vnp_amount / 100;
+                    $payment_date = now();
+                    $payment_method = 'VNPAY';
+                    $payment_fullname = $fullname;
+                    $customerEmail = $email; // Gửi thư đến ban quản trị
+
+                    Mail::mailer('smtp')->to($customerEmail)
+                        ->send(new MailBill($payment_amount, $payment_date, $payment_method, $payment_fullname));
+                } catch (\Exception $e) {
+                }
             }
         } else {
             // toastr()->error('Thanh toán thất bại');

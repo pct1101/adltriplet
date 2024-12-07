@@ -25,6 +25,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('activation_token')->nullable();
+            $table->string('reset_password_token')->nullable();
+            $table->timestamp('reset_password_expires_at')->nullable();
             $table->string('api_token', 8)->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();

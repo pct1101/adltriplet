@@ -28,6 +28,8 @@ class User extends Authenticatable
         'address',
         'activation_token',
         'api_token',
+        'reset_password_token',
+        'reset_password_expires_at',
     ];
 
     /**

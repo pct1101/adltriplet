@@ -37,7 +37,7 @@ class ForgotPasswordController extends Controller
     ]);
 
     // Tạo URL reset password
-    $resetUrl = url("/api/reset-password");
+    $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
 
     // Gửi email với đường dẫn reset password
     Mail::raw("Nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn: \n\n{$resetUrl}", function ($message) use ($user) {
@@ -57,7 +57,6 @@ class ForgotPasswordController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
-            'token' => 'required',
             'password' => 'required|min:8|confirmed',
         ]);
 
@@ -67,7 +66,6 @@ class ForgotPasswordController extends Controller
 
         // Lấy người dùng theo email và token
         $user = \App\Models\User::where('email', $request->email)
-            ->where('reset_password_token', $request->token)
             ->where('reset_password_expires_at', '>=', now())
             ->first();
 

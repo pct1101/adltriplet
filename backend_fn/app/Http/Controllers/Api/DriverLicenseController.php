@@ -117,9 +117,12 @@ class DriverLicenseController extends Controller
 
             // Tìm giấy phép lái xe
             $driverLicense = DriverLicenses::where('user_id', $user_id)->where('driver_license_id', $id)->first();
+
             if (!$driverLicense) {
                 return response()->json(['message' => 'Không tìm thấy giấy phép lái xe với ID: ' . $id], 404);
             }
+
+            $driverLicense->license_status = 'inactive';
 
             // Cập nhật thông tin cơ bản
             $driverLicense->license_number = $request->license_number;

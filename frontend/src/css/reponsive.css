@@ -205,6 +205,10 @@
         padding: 0px !important;
     }
 
+    .search-form__item .choose span {
+        font-size: .875rem;
+    }
+
     /* note: form-login */
     .form-group-payment {
         flex-direction: column;

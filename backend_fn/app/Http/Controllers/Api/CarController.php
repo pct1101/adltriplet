@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -89,9 +90,56 @@ class CarController
             }
 
             // Áp dụng các bộ lọc thông qua phương thức filter của model Car
-            $cars = Car::filter($filters)->with('brand')->get();
+            $cars = Car::filter($filters)->get();
 
             // Kiểm tra nếu không có dữ liệu sau khi lọc
+            if ($cars->isEmpty()) {
+                return response()->json(['message' => 'Không tìm thấy xe nào phù hợp với tiêu chí lọc'], 404);
+            }
+
+            // Kiểm tra bộ lọc start_date và end_date
+            if ($request->has('start_date') && $request->has('end_date')) {
+                $startDate = $request->query('start_date');
+                $endDate = $request->query('end_date');
+
+                if (!\Carbon\Carbon::hasFormat($startDate, 'Y-m-d') || !\Carbon\Carbon::hasFormat($endDate, 'Y-m-d')) {
+                    return response()->json(['error' => 'Ngày không hợp lệ. Định dạng phải là Y-m-d'], 400);
+                }
+
+                if (\Carbon\Carbon::parse($startDate)->greaterThanOrEqualTo(\Carbon\Carbon::parse($endDate))) {
+                    return response()->json(['error' => 'Ngày kết thúc phải lớn hơn ngày bắt đầu'], 400);
+                }
+            }
+
+            // Kiểm tra lọc theo brandid (hãng xe)
+            if ($request->has('brandid')) {
+                $brandId = $request->query('brandid');
+                if (!is_numeric($brandId)) {
+                    return response()->json(['error' => 'ID thương hiệu phải là một số hợp lệ'], 400);
+                }
+            }
+
+            // Query danh sách xe
+            $cars = Car::query()
+                ->when($request->has('start_date') && $request->has('end_date'), function ($query) use ($request) {
+                    $startDate = $request->query('start_date');
+                    $endDate = $request->query('end_date');
+
+                    // Chỉ lấy các xe không có booking nào trong thời gian này
+                    $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
+                        $q->where('booking_status', 1) // Chỉ kiểm tra các booking đang hoạt động
+                            ->where(function ($query) use ($startDate, $endDate) {
+                                $query->whereBetween('start_date', [$startDate, $endDate])
+                                    ->orWhereBetween('end_date', [$startDate, $endDate])
+                                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                                        $q->where('start_date', '<=', $startDate)
+                                            ->where('end_date', '>=', $endDate);
+                                    });
+                            });
+                    });
+                })
+                ->get();
+
             if ($cars->isEmpty()) {
                 return response()->json(['message' => 'Không tìm thấy xe nào phù hợp với tiêu chí lọc'], 404);
             }
@@ -162,48 +210,4 @@ class CarController
     //     return response()->json(['message' => 'Danh sách xe']);
     // }
 
-    public function filterCars(Request $request)
-    {
-        $query = Car::query();
-        if ($request->has('seats')) {
-            $carSeat = Car::where('seats')->get();
-        }
-
-
-
-        // Lọc theo số ghế
-        if ($request->has('seats') && $request->seats !== null) {
-            $query->where('seats', $request->seats);
-        }
-
-        // Lọc theo loại hộp số
-        if ($request->has('transmission_type') && $request->transmission_type !== null) {
-            $query->where('transmission_type', $request->transmission_type);
-        }
-
-        // Lọc theo loại nhiên liệu
-        if ($request->has('fuel_type') && $request->fuel_type !== null) {
-            $query->where('fuel_type', $request->fuel_type);
-        }
-
-        // Lọc theo năm sản xuất
-        if ($request->has('model') && $request->model !== null) {
-            $query->where('model', $request->model);
-        }
-
-        // Lọc theo trạng thái xe
-        if ($request->has('car_status') && $request->car_status !== null) {
-            $query->where('car_status', $request->car_status);
-        }
-
-        // Lấy kết quả
-        $cars = $query->get();
-
-        // Kiểm tra nếu không có xe nào phù hợp
-        if ($cars->isEmpty()) {
-            return response()->json(['message' => 'Không tìm thấy xe phù hợp với tiêu chí lọc'], 404);
-        }
-
-        return response()->json(['message' => 'Danh sách xe phù hợp', 'cars' => $cars]);
-    }
 }

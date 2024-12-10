@@ -123,6 +123,12 @@ class Car extends Model
         return $this->belongsTo(CarBrand::class, 'brandid'); // Mối quan hệ nhiều-1
     }
 
+    // Thiết lập mối quan hệ với bảng booking
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'car_id'); // Mối quan hệ 1-n với bookings
+    }
+
     // Thiết lập mối quan hệ với bảng car_image
     public function images()
     {

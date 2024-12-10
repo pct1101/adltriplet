@@ -231,7 +231,6 @@ class AuthController
 
             // Cập nhật các thông tin khác
             $user->name = $request->input('name', $user->name);
-            $user->email = $request->input('email', $user->email);
             $user->phone = $request->input('phone', $user->phone);
             $user->gender = $request->input('gender', $user->gender);
             $user->birth_date = $request->input('birth_date', $user->birth_date);

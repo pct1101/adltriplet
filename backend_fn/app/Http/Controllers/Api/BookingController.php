@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Models\Booking;
+use App\Models\DriverLicenses;
 use App\Models\Car;
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -14,6 +15,19 @@ class BookingController
 {
     public function create(Request $request)
     {
+        // Lấy ID người dùng hiện tại
+        $userId = Auth::id();
+
+        $driver_license_status = DriverLicenses::where('user_id', $userId)->first();
+
+        if (!$driver_license_status) {
+            return response()->json(['message' => 'Bạn chưa đăng ký giấy phép lái xe'], 400);
+        }
+
+        if ($driver_license_status->license_status !== 'active') {
+            return response()->json(['message' => 'Bạn không thể đặt xe vì giấy phép lái xe không hợp lệ'], 400);
+        }
+
         // Xác thực đầu vào
         $request->validate([
             'car_id' => 'required|exists:car,car_id', // Kiểm tra car_id phải tồn tại trong bảng car
@@ -24,9 +38,6 @@ class BookingController
             'state' => 'nullable|string',    // Tình trạng có thể để trống
             'voucher_id' => 'nullable|exists:voucher,voucher_id', // Kiểm tra voucher nếu có
         ]);
-
-        // Lấy ID người dùng hiện tại
-        $userId = Auth::id();
 
         // Kiểm tra xung đột thời gian booking cho người dùng
         $conflictUserBooking = Booking::where('user_id', $userId)

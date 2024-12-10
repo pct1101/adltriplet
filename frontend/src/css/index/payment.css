@@ -7,7 +7,6 @@
   box-sizing: border-box;
   outline: none;
   border: none;
-  text-transform: capitalize;
   transition: all .2s linear;
 }
 
@@ -215,7 +214,7 @@ form.payment-form .submit-btn:hover {
 }
 
 .select-icons img {
-  width: 100%;  
+  width: 100%;
   max-width: 40px;
   position: relative;
   top: 5px;

@@ -611,6 +611,10 @@
 }
 
 .content-account .title .title-edit p {
+  margin: 0px;
+}
+
+.content-account .title .title-edit p {
   font-size: 14px;
 }
 

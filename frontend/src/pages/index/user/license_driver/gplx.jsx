@@ -8,6 +8,7 @@ function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
   const [license_holder, setLicenseName] = useState("");
   const [gplx, setgplx] = useState([]);
+  
   const [isAdded, setIsAdded] = useState(false);
   // const [licenseType, setLicenseType] = useState(""); // Thay đổi từ birthDate thành licenseType
   const [selectedImage, setSelectedImage] = useState(null);
@@ -75,8 +76,6 @@ function Gplx() {
       const response = await addDriverLicense(formData);
       if (response) {
         setSuccessMessage("Thêm thành công, vui lòng chờ xác nhận");
-        setIsAdded(true);
-        localStorage.setItem("isAdded", true);
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
@@ -93,6 +92,7 @@ function Gplx() {
         err.response ? err.response.data : err.message
       );
     }
+    setIsAdded(true);
   };
 
   const handleEdit = async () => {
@@ -104,13 +104,6 @@ function Gplx() {
       setSuccessMessage("");
     }
   };
-
-  useEffect(() => {
-    const addedStatus = localStorage.getItem("isAdded");
-    if (addedStatus === "true") {
-      setIsAdded(true);
-    }
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -288,19 +281,15 @@ function Gplx() {
             </div>
             {error && <div className="error-message">{error}</div>}
             {successMessage && (
-              <div style={{ margin: "0px" }} className="alert alert-success">
-                {successMessage}
-              </div>
+              <div className="alert alert-success">{successMessage}</div>
             )}
             {!isAdded ? (
               <button className="btn btn-primary" onClick={handleSubmit}>
-                {" "}
-                Thêm giấy phép lái xe{" "}
+                Thêm giấy phép lái xe
               </button>
             ) : (
               <button className="btn btn-primary" onClick={handleEdit}>
-                {" "}
-                Sửa giấy phép lái xe{" "}
+                Sửa giấy phép lái xe
               </button>
             )}
           </div>

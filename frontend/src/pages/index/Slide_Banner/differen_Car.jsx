@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
 
-
 function Differen_Car() {
   const [swiperRef, setSwiperRef] = useState(null);
 
@@ -26,7 +25,7 @@ function Differen_Car() {
     // Gọi API để lấy danh sách xe
     getAllCars()
       .then((response) => {
-        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+        setCars(response.data.cars); // Cập nhật state với dữ liệu nhận được
       })
       .catch((error) => {
         console.error("Error fetching car list:", error);
@@ -81,7 +80,6 @@ function Differen_Car() {
                             <Link to={`/detai_product/${car.car_id}`}>
                               <img
                                 src={`${API_URL_IMG}${car.car_image}`}
-
                                 className="scale-img"
                                 alt={car.car_name}
                               />

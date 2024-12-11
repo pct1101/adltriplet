@@ -1335,6 +1335,36 @@ export const getDriverLicense = async () => {
   }
 };
 
+// NOTE: editGPLX user
+export const editDriverLicense = async () => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi request tới API với token trong headers và method PUT thông qua _method
+    const response = await axios.post(
+      `${API_URL}/driverlicense`,
+      {
+        _method: "PUT", // Dùng method override để thực hiện PUT request
+        // Các dữ liệu cần thiết khác để chỉnh sửa GPLX có thể được thêm vào đây
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi nè", error);
+    throw error;
+  }
+};
+
 // note: voucher
 export const getvoucher = async () => {
   // Lấy remember_token từ localStorage

@@ -358,3 +358,30 @@ input:disabled {
   height: -webkit-min-content;
   height: min-content;
 }
+
+/* note: pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.pagination li {
+  margin: 10px;
+  cursor: pointer;
+
+}
+
+.pagination li.active {
+  font-weight: bold;
+  color: white;
+  background-color: #5fcf86;
+  padding: 5px 10px;
+  border-radius: 5px;
+}

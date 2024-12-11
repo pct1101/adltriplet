@@ -266,9 +266,10 @@
 
 /* Search Car */
 .search-option {
-  bottom: 100px;
+  bottom: 60px;
   z-index: 3;
   position: relative;
+  margin-bottom: 50px;
 }
 
 
@@ -309,7 +310,7 @@
 .search {
   display: flex;
   flex-direction: column;
-  margin: 0 300px;
+  margin: 0 500px;
   padding: 16px;
   border-radius: 16px;
   background-color: #fff;
@@ -317,11 +318,8 @@
 }
 
 
-.search-option .search-form:first-child {
-  padding-top: 36px;
-}
-
 .search-form {
+  align-items: center;
   position: relative;
   display: flex;
   padding: 8px 16px;
@@ -417,7 +415,6 @@ p.address {
 /* productlist */
 .bgr-products {
   background-color: #f5fff5;
-  padding-bottom: 35px;
 }
 
 .card {

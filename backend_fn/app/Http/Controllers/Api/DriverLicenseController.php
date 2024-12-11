@@ -57,6 +57,14 @@ class DriverLicenseController extends Controller
             // Lấy ID người dùng đang đăng nhập
             $user_id = Auth::id();
 
+            // Kiểm tra người dùng đã có giấy phép lái xe chưa
+            $existingLicense = DriverLicenses::where('user_id', $user_id)->first();
+            if ($existingLicense) {
+                return response()->json([
+                    'error' => 'Bạn đã có giấy phép lái xe, không thể thêm mới.'
+                ], 409); 
+            }
+
             // Lấy thông tin từ request
             $license_number = $request->license_number;
             $license_holder = $request->license_holder;

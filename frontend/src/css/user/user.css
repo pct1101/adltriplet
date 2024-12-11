@@ -218,6 +218,10 @@
   background: #ffd0cd;
 }
 
+.title-item__info.invalid {
+  background-color: #f4f8a5;
+}
+
 .title-item__info {
   max-width: 140px;
   display: flex;

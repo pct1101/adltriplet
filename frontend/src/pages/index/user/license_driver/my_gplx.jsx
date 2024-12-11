@@ -9,6 +9,7 @@ function My_gplx() {
       try {
         const response = await getDriverLicense();
         setgplx(response.driver_licenses);
+        console.log(response);
       } catch (error) {
         console.log(error);
       }

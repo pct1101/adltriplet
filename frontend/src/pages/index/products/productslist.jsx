@@ -7,6 +7,7 @@ import ReactPaginate from "react-paginate";
 
 const Productlist = () => {
   const [cars, setCars] = useState([]);
+
   const [currentPage, setCurrentPage] = useState(0);
   const carsPerPage = 8;
 
@@ -14,6 +15,7 @@ const Productlist = () => {
     // Gọi API để lấy danh sách xe
     getAllCars()
       .then((response) => {
+        console.log(response.data);
         setCars(response.data); // Cập nhật state với dữ liệu nhận được
       })
       .catch((error) => {

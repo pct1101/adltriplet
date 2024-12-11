@@ -68,16 +68,6 @@ class AuthController
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
 
-        // Kiểm tra nếu status của người dùng không phải là 1 (tài khoản chưa kích hoạt)
-        if ($user->status != 1) {
-            // Tạo link kích hoạt
-        $activation_link = route('activate.account', ['token' => $user->activation_token]);
-
-        return response()->json([
-            'message' => 'Tài khoản của bạn chưa được kích hoạt. Bạn có thể kích vào link này để kích hoạt tài khoản: ' . $activation_link
-        ], 401);
-        }
-
         // Tạo token cho người dùng
         $token = $user->createToken('auth_token')->plainTextToken;
 

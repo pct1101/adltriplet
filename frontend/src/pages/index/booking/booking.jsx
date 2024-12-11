@@ -122,8 +122,7 @@ function Booking() {
         console.log("lõi ne", Error);
       }
     } catch (error) {
-      console.error("Có lỗi khi đặt xe:", error);
-
+      console.error("Có lỗi khi đặt xe:", error.response?.data?.message);
       //note: Lấy thông báo lỗi từ error (có thể từ error.response hoặc error.message)
       setModalMessage(error.response?.data?.message);
       setModalType("error"); //note: Loại thông báo lỗi

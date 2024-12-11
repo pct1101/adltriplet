@@ -411,18 +411,16 @@ export const addBookingUser = async (bookingData) => {
     return response.data;
   } catch (error) {
     // Kiểm tra lỗi từ API response
-    if (error.response) {
+    if (error) {
       // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
       console.error("API Error:", error.response.data);
       console.error("API Error Status:", error.response.status);
-
       // Nếu là lỗi 401, có thể là do token không hợp lệ
       if (error.response.status === 401) {
         console.error(
           "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
         );
       }
-
       // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
     } else if (error.request) {
       // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)

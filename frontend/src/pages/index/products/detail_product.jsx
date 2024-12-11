@@ -17,9 +17,6 @@ import Loading from "../event/loading";
 import axios from "axios";
 import { API_URL_IMG, API_URL_IMG_THUMBS } from "../../../lib/Axiosintance";
 
-
-
-
 const Detail_product = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
@@ -141,7 +138,6 @@ const Detail_product = () => {
                 className="scale-img"
                 alt="Main Image"
                 src={`${API_URL_IMG}${car.car_image}`} // Hiển thị ảnh chính
-
               />
             </div>
             <div className="right">
@@ -211,8 +207,9 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""
-                      }`} // Thêm class để đổi màu trái tim
+                    className={`fav-item wrap-ic wrap-svg ${
+                      isFavorite ? "favorite-active" : ""
+                    }`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg
@@ -492,7 +489,7 @@ const Detail_product = () => {
                 <div className="line-page"></div>
                 <div className="info-car-desc">
                   <h6>Mô tả</h6>
-                  <pre className="">{car?.car_description}</pre>
+                  <p className="">{car?.car_description}</p>
                 </div>
                 <div className="line-page"></div>
                 <div className="info-car-desc">
@@ -607,9 +604,15 @@ const Detail_product = () => {
                                   <h6> ID người dùng : {feedback.user_id} </h6>
                                 </a>
                                 <a href="#" className="name-review">
-                                  <h6> ID người dùng : {feedback && feedback.car && feedback.car.car_name
-                                    ? feedback.car.car_name
-                                    : "Không có tên xe"} </h6>
+                                  <h6>
+                                    {" "}
+                                    ID người dùng :{" "}
+                                    {feedback &&
+                                    feedback.car &&
+                                    feedback.car.car_name
+                                      ? feedback.car.car_name
+                                      : "Không có tên xe"}{" "}
+                                  </h6>
                                 </a>
                                 <div className="rate">
                                   <div

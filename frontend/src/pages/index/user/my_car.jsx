@@ -67,7 +67,8 @@ function My_car() {
         <div className="group-user">
           <div className="right-user">
             <Side_bar></Side_bar>
-          </div>c
+          </div>
+          c
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">
@@ -76,7 +77,10 @@ function My_car() {
                   <div className="filter-status">
                     <p>Trạng thái: </p>
                     <div className="custom-select">
-                      <select value={selectedStatus} onChange={handleStatusChange}>
+                      <select
+                        value={selectedStatus}
+                        onChange={handleStatusChange}
+                      >
                         <option value="0">Tất cả</option>
                         <option value="2">Đã thanh toán</option>
                         <option value="1">Chưa thanh toán</option>
@@ -111,32 +115,33 @@ function My_car() {
                               booking.booking_status === 1
                                 ? "#ffc107" // Chờ thanh toán (vàng)
                                 : booking.booking_status === 2
-                                  ? "#0d6efd" // Đã thanh toán (xanh dương)
-                                  : booking.booking_status === 3
-                                    ? "#fd7e14" // Xác nhận thanh toán (cam)
-                                    : booking.booking_status === 4
-                                      ? "#ffc107" // Chờ xác nhận thanh toán (vàng)
-                                      : booking.booking_status === 5
-                                        ? "#dc3545" // Hủy bởi admin (đỏ)
-                                        : "#198754", // Trạng thái khác (xanh lá)
+                                ? "#0d6efd" // Đã thanh toán (xanh dương)
+                                : booking.booking_status === 3
+                                ? "#fd7e14" // Xác nhận thanh toán (cam)
+                                : booking.booking_status === 4
+                                ? "#ffc107" // Chờ xác nhận thanh toán (vàng)
+                                : booking.booking_status === 5
+                                ? "#dc3545" // Hủy bởi admin (đỏ)
+                                : "#198754", // Trạng thái khác (xanh lá)
                             color:
-                              booking.booking_status === 1 || booking.booking_status === 4
+                              booking.booking_status === 1 ||
+                              booking.booking_status === 4
                                 ? "black" // Chữ màu đen cho trạng thái vàng
                                 : "white", // Chữ màu trắng cho trạng thái khác
-                                fontSize: ".550rem"
+                            fontSize: ".550rem",
                           }}
                         >
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                              ? "Đã thanh toán"
-                              : booking.booking_status === 3
-                                ? "Xác nhận thanh toán"
-                                : booking.booking_status === 4
-                                  ? "Chờ xác nhận thanh toán"
-                                  : booking.booking_status === 5
-                                    ? "Hủy bởi admin"
-                                    : "Trạng thái không xác định"}
+                            ? "Đã thanh toán"
+                            : booking.booking_status === 3
+                            ? "Xác nhận thanh toán"
+                            : booking.booking_status === 4
+                            ? "Chờ xác nhận thanh toán"
+                            : booking.booking_status === 5
+                            ? "Hủy bởi admin"
+                            : "Trạng thái không xác định"}
                         </div>
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>

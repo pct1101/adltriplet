@@ -15,6 +15,9 @@ const Login = () => {
   // note: set value validate form
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  // note: showForget password
+  const [showForgerPassword, setShowForgerPassword] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -66,6 +69,16 @@ const Login = () => {
     }
   };
 
+  //  note: forget password
+  const handleForgetPassword = () => {
+    setShowForgerPassword(!showForgerPassword);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setShowForgerPassword(false);
+  };
+
   return (
     <div>
       <Header />
@@ -113,7 +126,10 @@ const Login = () => {
                     )}
                   </div>
                   {error && <div className="alert alert-danger">{error}</div>}
-                  <div className="forgot-password">
+                  <div
+                    className="forgot-password"
+                    onClick={handleForgetPassword}
+                  >
                     <a href="#"> Quên mật khẩu?</a>
                   </div>
                   <div className="d-grid">
@@ -145,6 +161,25 @@ const Login = () => {
         </div>
       </div>
       <Footer />
+      {showForgerPassword && (
+        <div
+          className="popup-overlay"
+          onClick={() => setShowForgerPassword(false)}
+        >
+          <div className="popup-content">
+            <div className="group-title d-flex">
+              <h5>Quên mật khẩu</h5>
+              <button
+                className="btn btn-close"
+                onClick={handleCloseModal}
+              ></button>
+            </div>
+            <div className="line-page"> </div>
+            <div className="modal-calendar modal-body"> </div>
+            <div className="modal-footer"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

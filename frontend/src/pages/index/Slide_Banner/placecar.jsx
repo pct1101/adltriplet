@@ -16,7 +16,7 @@ function Placecar() {
     // Gọi API để lấy danh sách xe
     getAllCars()
       .then((response) => {
-        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+        setCars(response.data.cars); // Cập nhật state với dữ liệu nhận được
       })
       .catch((error) => {
         console.error("Error fetching car list:", error);

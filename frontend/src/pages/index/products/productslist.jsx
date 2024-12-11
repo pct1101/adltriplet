@@ -7,7 +7,6 @@ import ReactPaginate from "react-paginate";
 
 const Productlist = () => {
   const [cars, setCars] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(0);
   const carsPerPage = 8;
 
@@ -15,8 +14,7 @@ const Productlist = () => {
     // Gọi API để lấy danh sách xe
     getAllCars()
       .then((response) => {
-        console.log(response.data);
-        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+        setCars(response.data.cars);
       })
       .catch((error) => {
         console.error("Error fetching car list:", error);
@@ -37,6 +35,8 @@ const Productlist = () => {
     (currentPage + 1) * carsPerPage
   );
 
+  console.log(displayedCars);
+
   // note: Xử lý khi người dùng chuyển trang
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -55,7 +55,7 @@ const Productlist = () => {
         <div className="container">
           <div className="col4-mg20">
             {displayedCars.map((car) => (
-              <div className="item item-car">
+              <div className="item item-car" key={car.car_id}>
                 <div className="item-box">
                   <div className="img-car">
                     <div className="fix-img">

@@ -63,8 +63,8 @@ const AdminProducts = () => {
   const fetchCars = async () => {
     try {
       const response = await getAllCars();
-      setCars(response.data);
-      setFilteredCars(response.data); // Cập nhật danh sách ban đầu
+      setCars(response.data.cars);
+      setFilteredCars(response.data.cars); // Cập nhật danh sách ban đầu
     } catch (error) {
       console.error("Failed to fetch cars", error);
     }

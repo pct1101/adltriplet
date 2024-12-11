@@ -1066,7 +1066,8 @@ export const payment = async (booking_id) => {
 
 // --------------------------------------- GIẤY PHÉP LÁI XE -----------------------------------------
 // Lấy danh sách giấy phép lái xe
-export const getAllDriverLicenses = async () => {
+// Lấy danh sách giấy phép lái xe
+export const getAllDriverLicenses = async (licenseStatus = "") => {
   const apiToken = localStorage.getItem("authToken");
 
   if (!apiToken) {
@@ -1079,6 +1080,7 @@ export const getAllDriverLicenses = async () => {
       headers: {
         Authorization: `Bearer ${apiToken}`,
       },
+      params: { license_status: licenseStatus }, // Truyền tham số lọc
     });
     return response.data;
   } catch (error) {

@@ -7,7 +7,7 @@ function EditDriverLicense() {
   const navigate = useNavigate();
 
   // Trạng thái giấy phép
-  const [license, setLicense] = useState({
+  const [formData, setFormData] = useState({
     license_number: "",
     license_holder: "",
     license_type: "",
@@ -16,6 +16,7 @@ function EditDriverLicense() {
     expiry_date: "",
     issued_by: "",
     license_image: null, // Dùng để upload ảnh
+    rejection_reason: "", // Thêm biến rejection_reason
   });
 
   // Trạng thái loading và lỗi
@@ -25,17 +26,18 @@ function EditDriverLicense() {
   // Lấy thông tin giấy phép khi tải trang
   useEffect(() => {
     fetchDriverLicense();
-  }, []);
+  }, []); // Chạy khi component mount
 
   const fetchDriverLicense = async () => {
     setLoading(true);
     setError("");
     try {
       const data = await getDriverLicenseById(id);
-      setLicense({
+      setFormData({
         ...data,
-        issue_date: data.issue_date?.slice(0, 10) || "",
-        expiry_date: data.expiry_date?.slice(0, 10) || "",
+        issue_date: data.issue_date?.slice(0, 10) || "", // Format lại ngày
+        expiry_date: data.expiry_date?.slice(0, 10) || "", // Format lại ngày
+        rejection_reason: data.rejection_reason || "", // Lý do không hợp lệ
       });
     } catch (err) {
       setError("Lỗi khi lấy thông tin giấy phép. Vui lòng thử lại.");
@@ -46,28 +48,28 @@ function EditDriverLicense() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setLicense((prevLicense) => ({ ...prevLicense, [name]: value }));
+    setFormData((prevLicense) => ({ ...prevLicense, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    // Xây dựng lại dữ liệu để gửi đúng cấu trúc
     const updatedLicenseData = {
-      license_number: license.license_number,
-      license_holder: license.license_holder,
-      license_type: license.license_type,
-      license_status: license.license_status,
-      issue_date: license.issue_date, // Đảm bảo không gửi null
-      expiry_date: license.expiry_date, // Đảm bảo không gửi null
-      issued_by: license.issued_by,
-      license_image: license.license_image,
+      license_number: formData.license_number,
+      license_holder: formData.license_holder,
+      license_type: formData.license_type,
+      license_status: formData.license_status,
+      issue_date: formData.issue_date, 
+      expiry_date: formData.expiry_date, 
+      issued_by: formData.issued_by,
+      license_image: formData.license_image,
+      rejection_reason: formData.license_status === "invalid" ? formData.rejection_reason : null,
     };
 
     try {
-      await updateDriverLicense(id, updatedLicenseData); // Gửi dữ liệu đã chuẩn hóa
-      alert("Cập nhật giấy phép thành công!")
+      await updateDriverLicense(id, updatedLicenseData);
+      alert("Cập nhật giấy phép thành công!");
       navigate("/admin/license");
     } catch (err) {
       setError("Lỗi khi cập nhật giấy phép. Vui lòng thử lại.");
@@ -87,7 +89,7 @@ function EditDriverLicense() {
             type="text"
             name="license_number"
             className="form-control"
-            value={license.license_number}
+            value={formData.license_number}
             onChange={handleInputChange}
             required
           />
@@ -98,7 +100,7 @@ function EditDriverLicense() {
             type="text"
             name="license_holder"
             className="form-control"
-            value={license.license_holder}
+            value={formData.license_holder}
             onChange={handleInputChange}
             required
           />
@@ -108,12 +110,12 @@ function EditDriverLicense() {
           <select
             name="license_type"
             className="form-select"
-            value={license.license_type}
+            value={formData.license_type}
             onChange={handleInputChange}
           >
             <option value="B2">B2</option>
             <option value="C">C</option>
-            <option value="C">D</option>
+            <option value="D">D</option>
             <option value="E">E</option>
           </select>
         </div>
@@ -122,21 +124,34 @@ function EditDriverLicense() {
           <select
             name="license_status"
             className="form-select"
-            value={license.license_status}
+            value={formData.license_status}
             onChange={handleInputChange}
             required
           >
             <option value="active">Xác nhận</option>
             <option value="inactive">Chưa xác nhận</option>
+            <option value="invalid">Không hợp lệ</option>
           </select>
         </div>
+        {formData.license_status === "invalid" && (
+          <div className="mb-3">
+            <label className="form-label">Lý do không hợp lệ</label>
+            <textarea
+              name="rejection_reason"
+              className="form-control"
+              value={formData.rejection_reason}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        )}
         <div className="mb-3">
           <label className="form-label">Ngày cấp</label>
           <input
             type="date"
             name="issue_date"
             className="form-control"
-            value={license.issue_date}
+            value={formData.issue_date}
             onChange={handleInputChange}
           />
         </div>
@@ -146,7 +161,7 @@ function EditDriverLicense() {
             type="date"
             name="expiry_date"
             className="form-control"
-            value={license.expiry_date}
+            value={formData.expiry_date}
             onChange={handleInputChange}
           />
         </div>
@@ -156,7 +171,7 @@ function EditDriverLicense() {
             type="text"
             name="issued_by"
             className="form-control"
-            value={license.issued_by}
+            value={formData.issued_by}
             onChange={handleInputChange}
           />
         </div>

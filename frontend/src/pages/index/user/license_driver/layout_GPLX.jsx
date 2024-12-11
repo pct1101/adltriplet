@@ -17,6 +17,7 @@ function Layout_GPLX() {
           </div>
           <div className="left-user">
             <Gplx></Gplx>
+            <My_gplx></My_gplx>
           </div>
         </div>
       </div>

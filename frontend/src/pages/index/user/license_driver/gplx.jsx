@@ -1,9 +1,13 @@
-import React, { useState } from "react";
-import { addDriverLicense } from "../../../../lib/Axiosintance";
+import React, { useEffect, useState } from "react";
+import {
+  addDriverLicense,
+  getDriverLicense,
+} from "../../../../lib/Axiosintance";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
   const [license_holder, setLicenseName] = useState("");
+  const [gplx, setgplx] = useState([]);
   // const [licenseType, setLicenseType] = useState(""); // Thay đổi từ birthDate thành licenseType
   const [selectedImage, setSelectedImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -88,6 +92,19 @@ function Gplx() {
       );
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getDriverLicense();
+        setgplx(response.driver_licenses);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
       <div className="content-item driver-license">

@@ -14,102 +14,45 @@ class CarController
     public function index(Request $request)
     {
         try {
-            // Lấy tất cả các tham số lọc từ query string
+            // Lấy tất cả query parameters
             $filters = $request->query();
-            $rentalPriceFilters = [];
 
-            // Kiểm tra và tách các tham số min và max cho rental_price
-            if ($request->has('min') || $request->has('max')) {
-                $min = $request->query('min');
-                $max = $request->query('max');
-
-                // Kiểm tra giá trị min và max có phải là số không
-                if ($min && !is_numeric($min)) {
-                    return response()->json(['error' => 'Giá min phải là một số hợp lệ'], 400);
+            // Kiểm tra min/max price
+            $minPrice = $request->query('min');
+            $maxPrice = $request->query('max');
+            if ($minPrice || $maxPrice) {
+                if ($minPrice && !is_numeric($minPrice)) {
+                    return response()->json(['error' => 'Giá min phải là số'], 400);
                 }
-
-                if ($max && !is_numeric($max)) {
-                    return response()->json(['error' => 'Giá max phải là một số hợp lệ'], 400);
+                if ($maxPrice && !is_numeric($maxPrice)) {
+                    return response()->json(['error' => 'Giá max phải là số'], 400);
                 }
-
-                // Kiểm tra min phải nhỏ hơn max nếu cả 2 đều có giá trị
-                if ($min && $max && $min > $max) {
-                    return response()->json(['error' => 'Giá min phải nhỏ hơn giá max'], 400);
+                if ($minPrice && $maxPrice && $minPrice > $maxPrice) {
+                    return response()->json(['error' => 'Giá min không được lớn hơn giá max'], 400);
                 }
-
-                $rentalPriceFilters = [
-                    'min' => $min,
-                    'max' => $max,
-                ];
             }
 
-            // Chèn các tham số rental_price vào bộ lọc chung
-            if ($rentalPriceFilters) {
-                $filters['rental_price'] = $rentalPriceFilters;
-            }
-
+            // Kiểm tra ngày bắt đầu và kết thúc
             $startDate = $request->query('start_date');
             $endDate = $request->query('end_date');
-
-            // Kiểm tra ngày bắt đầu và ngày kết thúc
             if ($startDate && $endDate && strtotime($endDate) <= strtotime($startDate)) {
-                return response()->json([
-                    'message' => 'Ngày kết thúc phải sau ngày bắt đầu.',
-                ], 422);
+                return response()->json(['error' => 'Ngày kết thúc phải sau ngày bắt đầu'], 422);
             }
-            
-            // Query danh sách xe
-            $cars = Car::query()
-                // Lọc theo rental_price
-                ->when(isset($rentalPriceFilters['min']), function ($query) use ($rentalPriceFilters) {
-                    $query->where('rental_price', '>=', $rentalPriceFilters['min']);
-                })
-                ->when(isset($rentalPriceFilters['max']), function ($query) use ($rentalPriceFilters) {
-                    $query->where('rental_price', '<=', $rentalPriceFilters['max']);
-                })
-                // Lọc theo car_name
-                ->when($request->has('car_name'), function ($query) use ($request) {
-                    $carName = $request->query('car_name');
-                    return $query->where('car_name', 'like', "%$carName%");
-                })
-                // Lọc theo số ghế
-                ->when($request->has('seats'), function ($query) use ($request) {
-                    $seats = $request->query('seats');
-                    return $query->where('seats', '=', $seats);
-                })
-                // Lọc theo transmission_type
-                ->when($request->has('transmission_type'), function ($query) use ($request) {
-                    $transmissionType = $request->query('transmission_type');
-                    return $query->where('transmission_type', $transmissionType);
-                })
-                // Lọc theo fuel_type
-                ->when($request->has('fuel_type'), function ($query) use ($request) {
-                    $fuelType = $request->query('fuel_type');
-                    return $query->where('fuel_type', $fuelType);
-                })
-                // Lọc theo model (năm sản xuất)
-                ->when($request->has('model'), function ($query) use ($request) {
-                    $model = $request->query('model');
-                    return $query->whereYear('model', $model);
-                })
-                // Lọc theo car_status
-                ->when($request->has('car_status'), function ($query) use ($request) {
-                    $carStatus = $request->query('car_status');
-                    return $query->where('car_status', $carStatus);
-                })
-                // Lọc theo brandid (hãng xe)
-                ->when($request->has('brandid'), function ($query) use ($request) {
-                    $brandId = $request->query('brandid');
-                    return $query->where('brandid', $brandId);
-                })
-                // Kiểm tra ngày bắt đầu và ngày kết thúc
-                ->when($request->has('start_date') && $request->has('end_date'), function ($query) use ($request) {
-                    $startDate = $request->query('start_date');
-                    $endDate = $request->query('end_date');
 
-                    // Chỉ lấy các xe không có booking nào trong thời gian này
+            // Tạo query với các bộ lọc
+            $cars = Car::query()
+                ->when($minPrice, fn($query) => $query->where('rental_price', '>=', $minPrice))
+                ->when($maxPrice, fn($query) => $query->where('rental_price', '<=', $maxPrice))
+                ->when($request->has('car_name'), fn($query) => $query->where('car_name', 'like', '%' . $filters['car_name'] . '%'))
+                ->when($request->has('seats'), fn($query) => $query->where('seats', $filters['seats']))
+                ->when($request->has('transmission_type'), fn($query) => $query->where('transmission_type', $filters['transmission_type']))
+                ->when($request->has('fuel_type'), fn($query) => $query->where('fuel_type', $filters['fuel_type']))
+                ->when($request->has('model'), fn($query) => $query->whereYear('model', $filters['model']))
+                ->when($request->has('car_status'), fn($query) => $query->where('car_status', $filters['car_status']))
+                ->when($request->has('brandid'), fn($query) => $query->where('brandid', $filters['brandid']))
+                ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                     $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
-                        $q->where('booking_status', 1) // Chỉ kiểm tra các booking đang hoạt động
+                        $q->where('booking_status', 1)
                             ->where(function ($query) use ($startDate, $endDate) {
                                 $query->whereBetween('start_date', [$startDate, $endDate])
                                     ->orWhereBetween('end_date', [$startDate, $endDate])
@@ -122,16 +65,14 @@ class CarController
                 })
                 ->get();
 
+            // Trả về kết quả nếu có dữ liệu
             if ($cars->isEmpty()) {
                 return response()->json(['message' => 'Không tìm thấy xe nào phù hợp với tiêu chí lọc'], 404);
             }
 
-            // Trả về kết quả nếu không có lỗi
-            return response()->json($cars);
-        } catch (\Illuminate\Database\QueryException $e) {
-            return response()->json(['error' => 'Lỗi trong quá trình lọc dữ liệu: ' . $e->getMessage()], 400);
+            return response()->json(['cars' => $cars], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Đã xảy ra lỗi không mong muốn: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Lỗi không mong muốn: ' . $e->getMessage()], 500);
         }
     }
 
@@ -166,31 +107,4 @@ class CarController
         // Trả về danh sách xe
         return response()->json($cars);
     }
-
-    public function getCarsBySeat($id)
-    {
-        $cars = Car::where('seats', $id)->get();
-        if ($cars->isEmpty()) {
-            return response()->json(['message' => 'Không tìm thấy xe với số ghế tương tự'], 404);
-        }
-        return response()->json(['message' => 'Danh sách xe có ' . $id . ' ghế', 'cars' => $cars]);
-    }
-    public function getCarsByTransmissionType(Request $request)
-    {
-        $cars = Car::where('transmission_type', $request->transmission_type)->get();
-        if ($cars->isEmpty()) {
-            return response()->json(['message' => 'Không tìm thấy xe'], 404);
-        }
-        return response()->json(['message' => 'Danh sách xe']);
-    }
-
-    // public function getCarsByFuelType($id)
-    // {
-    //     $cars = Car::where('fuel_type', $id)->get();
-    //     if ($cars->isEmpty()) {
-    //         return response()->json(['message' => 'Không tìm thấy xe với nhiên liệu '. $], 404);
-    //     }
-    //     return response()->json(['message' => 'Danh sách xe']);
-    // }
-
 }

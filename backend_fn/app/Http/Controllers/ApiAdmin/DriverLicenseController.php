@@ -20,12 +20,20 @@ class DriverLicenseController extends Controller
     // Lấy danh dách tất cả các giấy phép lái xe
     public function index()
     {
-        // Lấy ra tất cả giấy phép lái xe
-        $driver_licenses = DriverLicenses::with('user')->get();
+        // Lấy ra trạng thái từ quey parameter
+        $license_status = request()->query('license_status');
+
+        // Nếu có license_status, Lọc theo trạng thái nếu không lấy ra tất cả
+        $query = DriverLicenses::with('user');
+        if($license_status){
+            $query->where('license_status', $license_status);
+        }
+
+        $driver_licenses = $query->get();
 
         // Kiểm tra xem có giấy phép lái xe nào không
         if ($driver_licenses->isEmpty()) {
-            return response(['error' => 'Không tìm thấy giấy phép lái xe'], 404);
+            return response(['error' => 'Không tìm thấy giấy phép lái xe với trạng thái:'. $license_status], 404);
         }
         // Trả về danh sách các giấy phép lái xe
         return response()->json(['driver_licenses' => $driver_licenses], 200);
@@ -84,5 +92,4 @@ class DriverLicenseController extends Controller
             return response()->json(['message' => 'Cập nhật giấy phép lái xe thất bại', 'error' => $e->getMessage()], 500);
         }
     }
-
 }

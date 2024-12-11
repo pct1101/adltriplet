@@ -48,52 +48,12 @@ class AuthController
                 return response()->json(['message' => 'Không thể tạo người dùng'], 500);
             }
 
-            // Gửi email kích hoạt
-            $this->sendActivationEmail($request->email, $activation_token);
-
-            return response()->json(['message' => 'Đăng ký thành công. Vui lòng kiểm tra Gmail và kích hoạt tài khoản của bạn', 'user' => $user], 201);
+            return response()->json(['message' => 'Đăng ký thành công.', 'user' => $user], 201);
         } catch (\Exception $e) {
             // Log lỗi và trả về thông báo lỗi
             Log::error("Lỗi khi tạo người dùng: " . $e->getMessage());
             return response()->json(['message' => 'Có lỗi xảy ra trong quá trình đăng ký'], 500);
         }
-    }
-
-    // Gửi kích hoạt email
-    public function sendActivationEmail($email, $token)
-    {
-        // Tạo liên kết kích hoạt
-        $activation_link = route('activate.account', ['token' => $token]);
-
-        // Gửi email với nội dung raw text
-        Mail::raw("Kích hoạt tài khoản của bạn: $activation_link", function ($message) use ($email) {
-            $message->to($email);
-            $message->subject('Kích hoạt tài khoản của bạn');
-        });
-    }
-
-    // Kích hoạt tài khoản
-    public function activateAccount($token)
-    {
-        $user = $this->getUserByToken($token);
-        if ($user) {
-            $this->activateUserAccount($token);
-            return response()->json(['message' => 'Tài khoản của bạn đã được kích hoạt']);
-        } else {
-            return response()->json(['message' => 'Mã kích hoạt không hợp lệ']);
-        }
-    }
-
-    // Lấy token người dùng
-    public function getUserByToken($token)
-    {
-        return User::where('activation_token', $token)->first();
-    }
-
-    // Kích hoạt tài khoản người dùng
-    public function activateUserAccount($token)
-    {
-        return User::where('activation_token', $token)->update(['activation_token' => null, 'status' => 1]);
     }
 
     public function login(Request $request)
@@ -106,16 +66,6 @@ class AuthController
         // Kiểm tra người dùng tồn tại, mật khẩu đúng và status = 1
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
-        }
-
-        // Kiểm tra nếu status của người dùng không phải là 1 (tài khoản chưa kích hoạt)
-        if ($user->status != 1) {
-            // Tạo link kích hoạt
-        $activation_link = route('activate.account', ['token' => $user->activation_token]);
-
-        return response()->json([
-            'message' => 'Tài khoản của bạn chưa được kích hoạt. Bạn có thể kích vào link này để kích hoạt tài khoản: ' . $activation_link
-        ], 401);
         }
 
         // Tạo token cho người dùng

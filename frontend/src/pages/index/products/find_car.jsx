@@ -121,8 +121,7 @@ function Find_car() {
     const fetchCars = async () => {
       try {
         const response = await getAllCars();
-        console.log("cars", response.data);
-        setcars(response.data);
+        setcars(response.data.cars);
       } catch (error) {
         error("ko thể lấy đuộcxe");
       }

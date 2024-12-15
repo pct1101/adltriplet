@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
   addDriverLicense,
+  editDriverLicense,
   getDriverLicense,
 } from "../../../../lib/Axiosintance";
+const BASE_URL = "http://localhost:8000/";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
   const [license_holder, setLicenseName] = useState("");
   const [gplx, setgplx] = useState([]);
-  
-  const [isAdded, setIsAdded] = useState(false);
+
   // const [licenseType, setLicenseType] = useState(""); // Thay đổi từ birthDate thành licenseType
   const [selectedImage, setSelectedImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,11 +70,12 @@ function Gplx() {
       const formData = new FormData();
       formData.append("license_number", license_number);
       formData.append("license_holder", license_holder);
-      formData.append("license_image", selectedImage); // Chuyển ảnh tệp vào FormData
-
+      formData.append("license_image", selectedImage);
       setIsEditing(false);
 
       const response = await addDriverLicense(formData);
+      console.log(response);
+      window.location.reload();
       if (response) {
         setSuccessMessage("Thêm thành công, vui lòng chờ xác nhận");
       }
@@ -92,16 +94,28 @@ function Gplx() {
         err.response ? err.response.data : err.message
       );
     }
-    setIsAdded(true);
   };
 
-  const handleEdit = async () => {
-    if (isEditing) {
-      handleSubmit();
-    } else {
-      setIsEditing(true);
-      setError("");
-      setSuccessMessage("");
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      // Chuẩn bị dữ liệu
+      const formData = new FormData();
+      formData.append("license_number", license_number);
+      formData.append("license_holder", license_holder);
+      formData.append("license_image", selectedImage);
+
+      // Gửi request tới API chỉnh sửa
+      const response = await editDriverLicense(
+        gplx[0].driver_license_id,
+        formData
+      );
+      console.log("tui là editgplx", response);
+      setSuccessMessage("Sửa giấy phép lái xe thành công!");
+      window.location.reload();
+    } catch (error) {
+      setError("Có lỗi xảy ra khi sửa giấy phép lái xe.");
+      setSuccessMessage(null);
     }
   };
 
@@ -109,7 +123,6 @@ function Gplx() {
     const fetchData = async () => {
       try {
         const response = await getDriverLicense();
-        console.log(response.driver_licenses);
         setgplx(response.driver_licenses);
       } catch (error) {
         console.log(error);
@@ -117,8 +130,6 @@ function Gplx() {
     };
     fetchData();
   }, []);
-
-  console.log(gplx);
 
   return (
     <div>
@@ -218,7 +229,11 @@ function Gplx() {
                   <img
                     loading="lazy"
                     className="img-license"
-                    src="/upload/upload.png"
+                    src={
+                      gplx[0]?.license_image
+                        ? `${BASE_URL}${gplx[0].license_image}`
+                        : "/upload/upload.png"
+                    }
                     alt="upload"
                   />
                 )}
@@ -283,14 +298,22 @@ function Gplx() {
             {successMessage && (
               <div className="alert alert-success">{successMessage}</div>
             )}
-            {!isAdded ? (
-              <button className="btn btn-primary" onClick={handleSubmit}>
+            {gplx.length === 0 ? (
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setIsEditing(false); // Đảm bảo không phải chế độ chỉnh sửa
+                  handleSubmit();
+                }}
+              >
                 Thêm giấy phép lái xe
               </button>
-            ) : (
+            ) : isEditing ? (
               <button className="btn btn-primary" onClick={handleEdit}>
-                Sửa giấy phép lái xe
+                Cập nhật giấy phép lái xe
               </button>
+            ) : (
+              ""
             )}
           </div>
         </div>

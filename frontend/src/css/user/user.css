@@ -319,6 +319,9 @@
   object-fit: cover;
 }
 
+img.img-license {
+  max-height: 300px !important;
+}
 
 .info-license__title p {
   font-weight: 600;

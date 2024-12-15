@@ -6,6 +6,7 @@ import "../../../css/admin/css/lineicons.css";
 import "../../../css/admin/css/materialdesignicons.min.css";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate } from "react-router-dom";
+import "../../../css/reponsive.css";
 
 function Header() {
   const { logout } = useAuth(); // Lấy hàm logout từ context

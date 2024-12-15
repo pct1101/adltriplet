@@ -113,6 +113,12 @@
   width: 62.8%;
 }
 
+.intro-left .newstop {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
 .right-news {
   width: calc(100% - 44.7%);
 }
@@ -260,9 +266,10 @@
 
 /* Search Car */
 .search-option {
-  bottom: 100px;
+  bottom: 60px;
   z-index: 3;
   position: relative;
+  margin-bottom: 50px;
 }
 
 
@@ -303,22 +310,16 @@
 .search {
   display: flex;
   flex-direction: column;
-  margin: 0 300px;
+  margin: 0 500px;
   padding: 16px;
   border-radius: 16px;
   background-color: #fff;
   box-shadow: 0 -3px 12px rgba(0, 0, 0, .1), 0 9px 12px rgba(75, 75, 75, .1);
 }
 
-.search-option .search-form:last-child {
-  padding-bottom: 16px;
-}
-
-.search-option .search-form:first-child {
-  padding-top: 16px;
-}
 
 .search-form {
+  align-items: center;
   position: relative;
   display: flex;
   padding: 8px 16px;
@@ -332,6 +333,49 @@
   width: 24px;
   height: 24px;
   pointer-events: none;
+}
+
+.search-form__item .title {
+  gap: 1rem;
+}
+
+.search-form__item .choose span {
+  color: #000;
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
+  line-height: 30px;
+}
+
+.find-car .search-option {
+  bottom: -100px;
+  position: relative;
+  transform: translateY(0);
+}
+
+.find-car .search-option-fixed {
+  position: fixed;
+  top: 0;
+  opacity: 1;
+  transition: transform 1s ease-out, box-shadow 1s ease-out;
+  width: 100%;
+  transform: translateY(0);
+  z-index: 1000;
+}
+
+.find-car .search-option.search-option-fixed {
+  transform: translateY(20px);
+  width: 70%;
+  right: 285px;
+
+
+}
+
+
+.find-car .search-option .search {
+  padding: 0;
+  margin: 0;
+  border-radius: 0px;
 }
 
 .search-option .search-form__item {
@@ -371,7 +415,6 @@ p.address {
 /* productlist */
 .bgr-products {
   background-color: #f5fff5;
-  padding-bottom: 35px;
 }
 
 .card {
@@ -1070,6 +1113,7 @@ span.tag-item.discount-booking {
 
 /* carDelivery */
 .container.airport {
+  display: flex;
   position: relative;
   width: 100%;
   height: 240px;
@@ -1202,6 +1246,12 @@ span.discount {
   margin: 12px 0;
 }
 
+
+.url_succsess {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
 
 
 

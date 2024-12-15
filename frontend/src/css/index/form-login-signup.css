@@ -2,6 +2,7 @@
     width: 100%;
     margin-top: 140px;
     z-index: 2;
+    margin-bottom: 20px;
 }
 
 .background-login-signup {
@@ -9,9 +10,16 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 1340px;
+    height: 150vh;
     z-index: 1;
     background-image: linear-gradient(0deg, #5FCF86, #ffffff)
+}
+
+.form-login {
+    max-width: 600px !important;
+    background-color: white;
+    border-radius: 15px;
+    padding: 15px;
 }
 
 /* CSS để điều chỉnh padding trong form */

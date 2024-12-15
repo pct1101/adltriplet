@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController
 {
@@ -23,75 +24,46 @@ class AuthController
      * @return \Illuminate\Http\JsonResponse
      */
 
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
-        // In ra dữ liệu nhận được
-        Log::info($request->all());
+        // Tạo token kích hoạt ngẫu nhiên
+        $activation_token = Str::random(8);
 
-        // Xác thực đầu vào
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'phone' => 'required|string|max:15|unique:users', // Đảm bảo phone là duy nhất
-            'image' => 'nullable|string',
-            'gender' => 'nullable|in:male,female,other',
-            'birth_date' => 'nullable|date',
-            'address' => 'nullable|string',
-        ]);
+        try {
+            // Tạo người dùng mới
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'image' => $request->image,
+                'gender' => $request->gender,
+                'birth_date' => $request->birth_date,
+                'address' => $request->address,
+                'activation_token' => $activation_token,
+            ]);
 
-        // Kiểm tra nếu có lỗi trong việc xác thực
-        if ($validator->fails()) {
-            // Lấy lỗi và thông báo
-            $errors = $validator->errors();
-
-            // Thông báo riêng biệt nếu có lỗi liên quan đến email hoặc phone
-            if ($errors->has('email')) {
-                return response()->json(['message' => 'Email has already been taken.'], 422);
+            // Kiểm tra nếu user không được tạo
+            if (!$user) {
+                return response()->json(['message' => 'Không thể tạo người dùng'], 500);
             }
 
-            if ($errors->has('phone')) {
-                return response()->json(['message' => 'Phone has already been taken.'], 422);
-            }
-
-            // Nếu có lỗi khác, trả về lỗi chung
-            return response()->json($errors, 422);
+            return response()->json(['message' => 'Đăng ký thành công.', 'user' => $user], 201);
+        } catch (\Exception $e) {
+            // Log lỗi và trả về thông báo lỗi
+            Log::error("Lỗi khi tạo người dùng: " . $e->getMessage());
+            return response()->json(['message' => 'Có lỗi xảy ra trong quá trình đăng ký'], 500);
         }
-
-        // Tạo người dùng mới
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
-            'image' => $request->image,
-            'gender' => $request->gender,
-            'birth_date' => $request->birth_date,
-            'address' => $request->address,
-        ]);
-
-        // Trả về thông báo thành công
-        return response()->json(['message' => 'User registered successfully!', 'user' => $user], 201);
     }
+
     public function login(Request $request)
     {
-        // Xác thực đầu vào
-        $validator = Validator::make($request->all(), [
-            'login' => 'required|string',
-            'password' => 'required|string|min:6',
-        ]);
-
-        // Kiểm tra nếu có lỗi trong việc xác thực
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
         // Tìm người dùng bằng email hoặc số điện thoại
         $user = User::where('email', $request->login)
             ->orWhere('phone', $request->login)
             ->first();
 
-        // Kiểm tra người dùng tồn tại và mật khẩu có đúng không
+        // Kiểm tra người dùng tồn tại, mật khẩu đúng và status = 1
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
@@ -113,7 +85,6 @@ class AuthController
             'token' => $token,
         ], 200);
     }
-
 
     // Lấy thông tin người dùng
     public function profile(Request $request)
@@ -210,7 +181,6 @@ class AuthController
 
             // Cập nhật các thông tin khác
             $user->name = $request->input('name', $user->name);
-            $user->email = $request->input('email', $user->email);
             $user->phone = $request->input('phone', $user->phone);
             $user->gender = $request->input('gender', $user->gender);
             $user->birth_date = $request->input('birth_date', $user->birth_date);

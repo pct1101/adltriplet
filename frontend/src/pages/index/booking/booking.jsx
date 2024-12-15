@@ -46,8 +46,8 @@ function Booking() {
   };
   // note: loadding
   const [isLoading, setIsLoading] = useState(false);
-  const [openModal, setOpenModal] = useState(false); // Quản lý trạng thái hiển thị modal
-  const [modalMessage, setModalMessage] = useState(""); // Lưu trữ thông điệp modal
+  const [openModal, setOpenModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("");
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -122,8 +122,7 @@ function Booking() {
         console.log("lõi ne", Error);
       }
     } catch (error) {
-      console.error("Có lỗi khi đặt xe:", error);
-
+      console.error("Có lỗi khi đặt xe:", error.response?.data?.message);
       //note: Lấy thông báo lỗi từ error (có thể từ error.response hoặc error.message)
       setModalMessage(error.response?.data?.message);
       setModalType("error"); //note: Loại thông báo lỗi
@@ -228,9 +227,8 @@ function Booking() {
     //note: Cập nhật ngày kết thúc
     setEndDate(nextDay);
   };
-  // note: tính toán các thứ
-  //note:  all days user book
 
+  //note:  all days user book
   const calculateTotalDays = (startDate, endDate) => {
     const start = new Date(startDate);
     const end = new Date(endDate);

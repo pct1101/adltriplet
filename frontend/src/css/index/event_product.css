@@ -144,6 +144,24 @@
   z-index: 1;
 }
 
+.address .dropdown-time {
+  position: absolute;
+  width: 46%;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  left: 0;
+  top: 100%;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 16px;
+  gap: 16px;
+  max-height: 173px;
+  overflow: auto;
+  background-color: #fff;
+  z-index: 1;
+}
+
 .custom-radio {
   position: relative;
 }
@@ -339,4 +357,31 @@ input:disabled {
   margin: 0 0 0 auto;
   height: -webkit-min-content;
   height: min-content;
+}
+
+/* note: pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.pagination li {
+  margin: 10px;
+  cursor: pointer;
+
+}
+
+.pagination li.active {
+  font-weight: bold;
+  color: white;
+  background-color: #5fcf86;
+  padding: 5px 10px;
+  border-radius: 5px;
 }

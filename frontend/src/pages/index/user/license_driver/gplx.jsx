@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { addDriverLicense } from "../../../../lib/Axiosintance";
+import React, { useEffect, useState } from "react";
+import {
+  addDriverLicense,
+  getDriverLicense,
+} from "../../../../lib/Axiosintance";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
   const [license_holder, setLicenseName] = useState("");
+  const [gplx, setgplx] = useState([]);
+  
+  const [isAdded, setIsAdded] = useState(false);
   // const [licenseType, setLicenseType] = useState(""); // Thay đổi từ birthDate thành licenseType
   const [selectedImage, setSelectedImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,8 +75,7 @@ function Gplx() {
 
       const response = await addDriverLicense(formData);
       if (response) {
-        setSuccessMessage("Thêm thành công");
-        window.location.reload();
+        setSuccessMessage("Thêm thành công, vui lòng chờ xác nhận");
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
@@ -87,13 +92,97 @@ function Gplx() {
         err.response ? err.response.data : err.message
       );
     }
+    setIsAdded(true);
   };
+
+  const handleEdit = async () => {
+    if (isEditing) {
+      handleSubmit();
+    } else {
+      setIsEditing(true);
+      setError("");
+      setSuccessMessage("");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getDriverLicense();
+        console.log(response.driver_licenses);
+        setgplx(response.driver_licenses);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  console.log(gplx);
+
   return (
     <div>
       <div className="content-item driver-license">
         <div className="title">
           <div className="title-item">
             <h6>Giấy phép lái xe</h6>
+            {gplx[0]?.license_status === "inactive" ||
+            !gplx[0]?.license_status ? (
+              <div className="title-item__info error">
+                <div className="wrap-svg">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 1C3.245 1 1 3.245 1 6C1 8.755 3.245 11 6 11C8.755 11 11 8.755 11 6C11 3.245 8.755 1 6 1ZM7.21001 6.695C7.36001 6.845 7.35501 7.08 7.21001 7.225C7.13501 7.295 7.04001 7.335 6.94501 7.335C6.85001 7.335 6.74999 7.295 6.67999 7.22L6 6.535L5.325 7.22C5.25 7.295 5.15499 7.335 5.05499 7.335C4.95999 7.335 4.865 7.295 4.795 7.225C4.645 7.08 4.64499 6.845 4.78999 6.695L5.47501 6L4.78999 5.305C4.64499 5.155 4.645 4.92 4.795 4.775C4.94 4.63 5.18 4.63 5.325 4.78L6 5.465L6.67999 4.78C6.82499 4.63 7.06001 4.63 7.21001 4.775C7.35501 4.92 7.36001 5.155 7.21001 5.305L6.52499 6L7.21001 6.695Z"
+                      fill="#F04438"
+                    ></path>
+                  </svg>
+                </div>
+                Chưa xác thực
+              </div>
+            ) : gplx[0]?.license_status === "invalid" ? (
+              <div className="title-item__info invalid">
+                <div className="wrap-svg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="red"
+                    width="12"
+                    height="12"
+                  >
+                    <circle cx="12" cy="12" r="10" fill="#f44336" />
+                    <path
+                      fill="white"
+                      d="M15.5 8.5l-1-1L12 10.5 9.5 8 8.5 9l2.5 2.5L8.5 14l1 1L12 12.5l2.5 2.5 1-1-2.5-2.5L15.5 8.5z"
+                    />
+                  </svg>
+                </div>
+                Không chính xác
+              </div>
+            ) : (
+              <div div className="title-item__info success">
+                <div className="wrap-svg">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M6 1C3.245 1 1 3.245 1 6C1 8.755 3.245 11 6 11C8.755 11 11 8.755 11 6C11 3.245 8.755 1 6 1ZM7.795 5.295L6.035 7.055C5.96 7.13 5.865 7.165 5.77 7.165C5.675 7.165 5.575 7.13 5.505 7.055L4.625 6.175C4.475 6.03 4.475 5.79 4.625 5.645C4.77 5.5 5.01 5.5 5.155 5.645L5.77 6.26L7.265 4.765C7.41 4.62 7.645 4.62 7.795 4.765C7.94 4.91 7.94 5.15 7.795 5.295Z"
+                      fill="#12B76A"
+                    ></path>
+                  </svg>
+                </div>
+                Đã xác thực
+              </div>
+            )}
           </div>
           <a className="btn btn--s" onClick={toggleEdit}>
             {isEditing ? "Cập nhật" : "Chỉnh sửa"}
@@ -161,7 +250,9 @@ function Gplx() {
                   <input
                     type="text"
                     name="licenseNumber"
-                    placeholder="Nhập số GPLX đã cấp"
+                    placeholder={
+                      gplx[0]?.license_number || "Nhập số GPLX đã cấp"
+                    }
                     value={license_number}
                     onChange={handleLicenseNumberChange}
                     disabled={!isEditing}
@@ -180,7 +271,7 @@ function Gplx() {
                   <input
                     type="text"
                     name="licenseName"
-                    placeholder="Nhập đầy đủ họ tên"
+                    placeholder={gplx[0]?.license_holder || "Nhập họ và tên"}
                     value={license_holder}
                     onChange={handleLicenseNameChange}
                     disabled={!isEditing}
@@ -192,9 +283,15 @@ function Gplx() {
             {successMessage && (
               <div className="alert alert-success">{successMessage}</div>
             )}
-            <button className="btn btn-primary" onClick={handleSubmit}>
-              Thêm Giấy phép lái xe
-            </button>
+            {!isAdded ? (
+              <button className="btn btn-primary" onClick={handleSubmit}>
+                Thêm giấy phép lái xe
+              </button>
+            ) : (
+              <button className="btn btn-primary" onClick={handleEdit}>
+                Sửa giấy phép lái xe
+              </button>
+            )}
           </div>
         </div>
       </div>

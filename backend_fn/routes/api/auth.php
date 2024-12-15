@@ -22,6 +22,9 @@ Route::prefix('auth')->group(function () {
     // Đăng ký
     Route::post('/register', [AuthController::class, 'register']);
 
+    // Xác thực đăng ký
+    Route::get('/activate-account/{token}', [AuthController::class, 'activateAccount'])->name('activate.account');
+
     // Đăng nhập
     Route::post('/login', [AuthController::class, 'login']);
 

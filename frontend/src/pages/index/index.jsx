@@ -8,7 +8,6 @@ import Slider from "./Slide_Banner/slider";
 import Productlist from "./products/productslist";
 import CarDelivery from "./Slide_Banner/carDelivery";
 import Placecar from "./Slide_Banner/placecar";
-import Services from "./component/services";
 import Register from "./component/register";
 import Banner_top from "./Slide_Banner/banner_top";
 import Endow from "./component/endow";

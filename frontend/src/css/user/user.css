@@ -202,7 +202,7 @@
 }
 
 .title-item__info {
-  max-width: 140px;
+  max-width: 135px;
   display: flex;
   align-items: center;
   grid-gap: 4px;
@@ -216,6 +216,10 @@
 
 .title-item__info.error {
   background: #ffd0cd;
+}
+
+.title-item__info.invalid {
+  background-color: #f4f8a5;
 }
 
 .title-item__info {
@@ -608,6 +612,10 @@
   flex-direction: column;
   grid-gap: 4px;
   gap: 4px;
+}
+
+.content-account .title .title-edit p {
+  margin: 0px;
 }
 
 .content-account .title .title-edit p {

@@ -8,29 +8,20 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
-import { img_url } from "../../../lib/Axiosintance";
-
+import { API_URL_IMG } from "../../../lib/Axiosintance";
 function Placecar() {
-  const [swiperRef, setSwiperRef] = useState(null);
-
   const [cars, setCars] = useState([]);
-  console.log(cars);
 
   useEffect(() => {
     // Gọi API để lấy danh sách xe
     getAllCars()
       .then((response) => {
-        setCars(response.data); // Cập nhật state với dữ liệu nhận được
+        setCars(response.data.cars); // Cập nhật state với dữ liệu nhận được
       })
       .catch((error) => {
         console.error("Error fetching car list:", error);
       });
   }, []);
-
-  // Create array with 500 slides
-  const [slides, setSlides] = useState(
-    Array.from({ length: 10 }).map((_, index) => `Slide ${index + 1}`)
-  );
 
   return (
     <div style={{ position: "relative" }} className="container">
@@ -41,8 +32,28 @@ function Placecar() {
         <Swiper
           className="cartop"
           modules={[Virtual, Navigation, Pagination, Autoplay]}
-          onSwiper={setSwiperRef}
           slidesPerView={4}
+          breakpoints={{
+            1920: {
+              // Khi màn hình >= 1024px
+              slidesPerView: 4, // Hiển thị 3 slide
+            },
+            1024: {
+              // Khi màn hình >= 1024px
+              slidesPerView: 3, // Hiển thị 3 slide
+            },
+            768: {
+              // Khi màn hình >= 768px
+              slidesPerView: 2, // Hiển thị 3 slide
+            },
+            480: {
+              // Khi màn hình >= 480px
+              slidesPerView: 1, // Hiển thị 2 slide
+            },
+            0: {
+              slidesPerView: 1, // Hiển thị 1 slide
+            },
+          }}
           centeredSlides={false}
           spaceBetween={15}
           navigation={{
@@ -61,8 +72,7 @@ function Placecar() {
               <div className="cartop-item">
                 <Card.Img
                   variant="sales"
-                  src={`http://localhost:8000/imgs/${slideBanner.car_image}`}
-
+                  src={`${API_URL_IMG}${slideBanner.car_image}`}
                 />
                 <p>
                   {slideBanner.car_name} <span> {slideBanner.seats} chỗ </span>{" "}

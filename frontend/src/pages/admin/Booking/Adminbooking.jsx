@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAllBookings, deleteBookingById, updateBooking, cancelBookingByAdmin } from "../../../lib/Axiosintance";
+
+
+import {
+  getAllBookings,
+  deleteBookingById,
+  updateBooking,
+} from "../../../lib/Axiosintance";
+
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import "../../../css/admin/css/booking.css";
@@ -143,7 +150,8 @@ function AdminBooking() {
       case "5": 
         return { backgroundColor: "white", color: "red" };
       default:
-        // return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
+
+        return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
 
     }
   };
@@ -170,8 +178,7 @@ function AdminBooking() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>ID Đơn hàng</th>
-                  <th>ID người đặt</th>
+                  <th>ID Booking</th>
                   <th>Tên sản phẩm</th>
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
@@ -190,6 +197,16 @@ function AdminBooking() {
                       <td>{booking.car ? booking.car.car_name : "Không có tên xe"}</td>
                       <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
                       <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+
+                      <td>
+                        {booking.car ? booking.car.car_name : "Không có tên xe"}
+                      </td>
+                      <td>
+                        {new Date(booking.booking_date).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {new Date(booking.start_date).toLocaleDateString()}
+                      </td>
                       <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <select
@@ -203,6 +220,12 @@ function AdminBooking() {
                           <option value="3" >Đã thanh toán</option>
                           <option value="4" >Hủy bởi user</option>
                           <option value="5" >Hủy bởi admin</option>
+                          <option value="1">Booking thành công</option>
+                          <option value="2">Đã thanh toán</option>
+                          <option value="4">Chờ xác nhận </option>
+                          <option value="3">Xác nhận </option>
+                          <option value="5">Hủy bởi admin</option>
+
                         </select>
                       </td>
                       {/* Hiển thị lý do hủy chỉ khi trạng thái là 5 */}
@@ -228,13 +251,40 @@ function AdminBooking() {
                         >
                           <i className="fas fa-eye"></i>
                         </button>
+                        <div className="d-flex">
+                          {" "}
+                          <button
+                            className="btn btn-info me-2"
+                            onClick={() =>
+                              handleSpecialStatus(booking.booking_id, "3")
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Xác nhận
+                          </button>
+                          <button
+                            className="btn btn-danger me-2"
+                            onClick={() =>
+                              handleSpecialStatus(booking.booking_id, "5")
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Hủy booking
+                          </button>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleViewDetail(booking.booking_id)}
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan="9" className="text-center">
-                      Không có booking nào
+                      Không có booking
                     </td>
                   </tr>
                 )}

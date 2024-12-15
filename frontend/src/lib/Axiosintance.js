@@ -1,16 +1,36 @@
 import axios from "axios";
 
 // Định nghĩa baseURL của API
+const API_URL_web = "https://api.thuexetulai.online/api";
 const API_URL = "http://localhost:8000/api";
-const API_URL_IMG = "http://localhost:8000/imgs/";
-const API_URL_LOGO = "http://localhost:8000/brand_logo/";
-const API_URL_IMG_THUMBS = "http://localhost:8000/Thumbs/";
-const API_URL_IMG_LICENSE_DRIVER = "http://localhost:8000/";
+const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
+const API_URL_LOGO = "https://api.thuexetulai.online/brand_logo/";
+const API_URL_IMG_THUMBS = "https://api.thuexetulai.online/Thumbs/";
+const API_URL_IMG_LICENSE_DRIVER = "https://api.thuexetulai.online/";
 export {
   API_URL_IMG,
   API_URL_IMG_THUMBS,
   API_URL_IMG_LICENSE_DRIVER,
   API_URL_LOGO,
+};
+
+//  note: new
+export const getUserProfile = async () => {
+  const apiToken = localStorage.getItem("remember_token");
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error; // Ném lỗi để xử lý ở nơi gọi API
+  }
 };
 
 // Lấy tất cả sản phẩm (sp)
@@ -34,7 +54,6 @@ export const login = (email, password) => {
     .post(`${API_URL}/auth/login`, { login: email, password })
     .then((response) => {
       console.log("Login response from API:", response);
-
       // Kiểm tra sự tồn tại của token và thông tin người dùng trong response.data
       if (response.data && response.data.token) {
         // Lưu token vào localStorage
@@ -251,25 +270,6 @@ export const deleteFeedbackById = async (id) => {
     throw error;
   }
 };
-////////////////////////////// PROFILE NGƯỜI DÙNG //////////////////////////////
-// Lấy thông tin người dùng
-export const getUserProfile = async () => {
-  const apiToken = localStorage.getItem("remember_token"); // Lấy api_token từ localStorage
-  if (!apiToken) {
-    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
-  }
-  try {
-    const response = await axios.get(`${API_URL}/auth/profile/`, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Lỗi không hiển thị thông tin người dùng:", error);
-    throw error;
-  }
-};
 
 // Cập nhật thông tin người dùng
 export const updateUserProfile = async (updatedData) => {
@@ -413,18 +413,16 @@ export const addBookingUser = async (bookingData) => {
     return response.data;
   } catch (error) {
     // Kiểm tra lỗi từ API response
-    if (error.response) {
+    if (error) {
       // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
       console.error("API Error:", error.response.data);
       console.error("API Error Status:", error.response.status);
-
       // Nếu là lỗi 401, có thể là do token không hợp lệ
       if (error.response.status === 401) {
         console.error(
           "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
         );
       }
-
       // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
     } else if (error.request) {
       // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
@@ -1043,7 +1041,6 @@ export const getFeedbackByCarId = async (carId) => {
   }
 };
 
-
 ////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
 export const getBooking = async () => {
   // Lấy token từ localStorage
@@ -1142,7 +1139,8 @@ export const payment = async (booking_id) => {
 
 // --------------------------------------- GIẤY PHÉP LÁI XE -----------------------------------------
 // Lấy danh sách giấy phép lái xe
-export const getAllDriverLicenses = async () => {
+// Lấy danh sách giấy phép lái xe
+export const getAllDriverLicenses = async (licenseStatus = "") => {
   const apiToken = localStorage.getItem("authToken");
 
   if (!apiToken) {
@@ -1155,6 +1153,7 @@ export const getAllDriverLicenses = async () => {
       headers: {
         Authorization: `Bearer ${apiToken}`,
       },
+      params: { license_status: licenseStatus }, // Truyền tham số lọc
     });
     return response.data;
   } catch (error) {
@@ -1286,7 +1285,7 @@ export const getAllVouchers = async () => {
   }
 };
 
-// Hàm thêm 1 voucher 
+// Hàm thêm 1 voucher
 export const addVoucher = async (voucherData) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -1369,16 +1368,12 @@ export const addDriverLicense = async (licenseData) => {
   }
   try {
     // Gửi request tới API với token trong headers
-    const response = await axios.post(
-      `${API_URL}/driverlicense/`,
-      licenseData,
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
-          "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/driverlicense`, licenseData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+        "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
+      },
+    });
     if (response.data) {
       console.log("thêm thành công");
       return { message: "Thêm thành công", data: response.data };
@@ -1409,6 +1404,36 @@ export const getDriverLicense = async () => {
     return response.data;
   } catch (error) {
     error("lỗi nè", error);
+    throw error;
+  }
+};
+
+// NOTE: editGPLX user
+export const editDriverLicense = async () => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi request tới API với token trong headers và method PUT thông qua _method
+    const response = await axios.post(
+      `${API_URL}/driverlicense`,
+      {
+        _method: "PUT", // Dùng method override để thực hiện PUT request
+        // Các dữ liệu cần thiết khác để chỉnh sửa GPLX có thể được thêm vào đây
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi nè", error);
     throw error;
   }
 };
@@ -1448,14 +1473,7 @@ export const getAllCarBrands = async () => {
         Authorization: `Bearer ${apiToken}`,
       },
     });
-
-    // Kiểm tra dữ liệu trả về từ API
-    if (response.data && Array.isArray(response.data.data)) {
-      return response.data.data; // Trả về mảng dữ liệu từ data
-    } else {
-      console.error("Dữ liệu thương hiệu không phải mảng:", response.data);
-      return []; // Trả về mảng rỗng nếu không phải mảng hợp lệ
-    }
+    return response.data;
   } catch (error) {
     console.error("Error fetching car brands:", error);
     throw error;

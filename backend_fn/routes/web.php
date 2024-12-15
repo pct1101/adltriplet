@@ -42,7 +42,7 @@ Route::middleware([\App\Http\Middleware\CheckRole::class])->group(function () {
     //Đường dẫn đến trang admin quản lý xe
     Route::get('/admincar', [aadmin::class, 'admincar']);
 
-    //Phương thức Post để thêm xe mới 
+    //Phương thức Post để thêm xe mới
     Route::post('/adminpost', [aadmin::class, 'store']);
 
     //Phương thức xóa xe

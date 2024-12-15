@@ -15,15 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('image')->nullable(); // Chỉnh sửa: Cho phép null
+            $table->string('image')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
-            $table->date('birth_date')->nullable(); // Xóa giá trị 100, không cần thiết
-            $table->string('phone')->unique()->nullable(); // Trường này bắt buộc
+            $table->date('birth_date')->nullable();
+            $table->string('phone')->unique();
             $table->string('address')->nullable();
-            $table->enum('role', ['user', 'admin'])->default('user');
-            $table->boolean('status')->default(1);
+            $table->enum('role', ['user', 'admin'])->default('user')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('activation_token')->nullable();
+            $table->string('reset_password_token')->nullable();
+            $table->timestamp('reset_password_expires_at')->nullable();
             $table->string('api_token', 8)->unique()->nullable();
             $table->rememberToken();
             $table->timestamps();

@@ -94,7 +94,11 @@ function User() {
                   <div className="avatar avatar--xl has-edit">
                     <img
                       className="scale-img"
-                      src={`http://localhost:8000/imgs_user/${userData.image}`}
+                      src={
+                        userData && userData.image
+                          ? `/img/${userData.image}` // Sử dụng ảnh từ database nếu tồn tại
+                          : "../upload/avatar-4.png" // Ảnh mặc định
+                      }
                     />
                   </div>
                 </div>

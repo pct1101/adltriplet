@@ -69,7 +69,8 @@ function My_car() {
         <div className="group-user">
           <div className="right-user">
             <Side_bar></Side_bar>
-          </div>c
+          </div>
+          
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">
@@ -78,7 +79,10 @@ function My_car() {
                   <div className="filter-status">
                     <p>Trạng thái: </p>
                     <div className="custom-select">
-                      <select value={selectedStatus} onChange={handleStatusChange}>
+                      <select
+                        value={selectedStatus}
+                        onChange={handleStatusChange}
+                      >
                         <option value="0">Tất cả</option>
                         <option value="2">Đã thanh toán</option>
                         <option value="1">Chưa thanh toán</option>
@@ -122,7 +126,8 @@ function My_car() {
                                         ? "#dc3545" // Hủy bởi admin (đỏ)
                                         : "#198754", // Trạng thái khác (xanh lá)
                             color:
-                              booking.booking_status === 1 || booking.booking_status === 4
+                              booking.booking_status === 1 ||
+                              booking.booking_status === 4
                                 ? "black" // Chữ màu đen cho trạng thái vàng
                                 : "white", // Chữ màu trắng cho trạng thái khác
                                 fontSize: ".550rem"

@@ -37,8 +37,9 @@ import AddDriverLicense from "./pages/admin/LicenseController/AddDriverLicense.j
 import PaymentReturn from "./pages/index/booking/payment_return.jsx";
 import AdminVoucher from "./pages/admin/Voucher/AdminVoucher.jsx";
 import AdminAddVoucher from "./pages/admin/Voucher/AdminAddVoucher.jsx";
-import Gplx from "./pages/index/user/license_driver/layout_GPLX.jsx";
 import Layout_GPLX from "./pages/index/user/license_driver/layout_GPLX.jsx";
+import Find_car from "./pages/index/products/find_car.jsx";
+import Newstt from "./pages/index/component/newstt.jsx";
 
 function App() {
   return (
@@ -51,7 +52,9 @@ function App() {
               {/* Home */}
               <Route path="/" element={<Home />} />
               <Route path="/detai_product/:id" element={<Detail_product />} />
+              <Route path="/find_car/" element={<Find_car />} />
               <Route path="/about_us" element={<Blog />} />
+              <Route path="/news" element={<Newstt />} />
 
               {/* Login | Signup */}
               <Route path="/Login" element={<Login />} />

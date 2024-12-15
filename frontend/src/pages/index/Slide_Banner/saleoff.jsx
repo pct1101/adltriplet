@@ -42,6 +42,23 @@ function Saleoff() {
             modules={[Virtual, Navigation, Pagination, Autoplay]}
             onSwiper={setSwiperRef}
             slidesPerView={3}
+            breakpoints={{
+              1024: {
+                // Khi màn hình >= 1024px
+                slidesPerView: 3, // Hiển thị 3 slide
+              },
+              768: {
+                // Khi màn hình >= 768px
+                slidesPerView: 2, // Hiển thị 3 slide
+              },
+              480: {
+                // Khi màn hình >= 480px
+                slidesPerView: 1, // Hiển thị 2 slide
+              },
+              0: {
+                slidesPerView: 1, // Hiển thị 1 slide
+              },
+            }}
             centeredSlides={false}
             spaceBetween={30}
             navigation={{

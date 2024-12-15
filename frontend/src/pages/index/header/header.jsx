@@ -63,12 +63,12 @@ function Header() {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <a className="nav-link" href="/find_car">
                 Thuê Xe
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="">
+              <a className="nav-link" href="/news">
                 Tin tức{" "}
               </a>
             </li>
@@ -95,9 +95,11 @@ function Header() {
                       <div className="info">
                         <div className="image">
                           <img
-                            src={`/img/${
-                              userData ? userData.image : "đang load"
-                            }`}
+                            src={
+                              userData && userData.image
+                                ? `/img/${userData.image}` // Sử dụng ảnh từ database nếu tồn tại
+                                : "../upload/avatar-4.png" // Ảnh mặc định
+                            }
                             alt=""
                           />
                         </div>

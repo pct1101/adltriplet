@@ -26,7 +26,10 @@ class User extends Authenticatable
         'gender',        // Thêm trường gender
         'birth_date',    // Thêm trường birth_date
         'address',
+        'activation_token',
         'api_token',
+        'reset_password_token',
+        'reset_password_expires_at',
     ];
 
     /**

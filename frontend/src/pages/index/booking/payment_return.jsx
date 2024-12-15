@@ -15,6 +15,7 @@ export default function PaymentReturn() {
   const handleOpenModal = () => {
     setShowDatePicker(true);
   };
+  
   return (
     <div>
       <Header></Header>
@@ -26,10 +27,13 @@ export default function PaymentReturn() {
           <h1>THANH TOÁN THÀNH CÔNG</h1>{" "}
           <img src="../upload/sucsess.png" alt="Success Image" />{" "}
           <p>Cảm ơn vì đã sử dụng dịch vụ của chúng tôi</p>{" "}
-          <a href="/user_car">Xem xe ngay</a>{" "}
-          <a onClick={handleOpenModal} href="#">
-            Hướng dẫn nhận xe
-          </a>{" "}
+          <div className="url_succsess">
+            {" "}
+            <a href="/user_car">Xem xe ngay</a>{" "}
+            <a onClick={handleOpenModal} href="#">
+              Hướng dẫn nhận xe
+            </a>{" "}
+          </div>
         </div>
       </div>
       {showDatePicker && (

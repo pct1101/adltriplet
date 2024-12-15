@@ -12,7 +12,7 @@ class CarBrandController
         $brand = CarBrand::with('cars')->get();
         return response()->json($brand);
     }
-    
+
     public function show($id)
     {
         $brand = CarBrand::with('cars')->findOrFail($id);

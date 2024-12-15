@@ -392,3 +392,19 @@ input:disabled {
   padding: 5px 10px;
   border-radius: 5px;
 }
+
+/* note: dành cho bookingcheck */
+/* CSS style for booked days */
+.booked-day {
+  background-color: red !important;
+  /* Tô màu nền đỏ */
+  color: white !important;
+  /* Tô màu chữ trắng */
+  cursor: not-allowed !important;
+  /* Không cho phép chọn ngày */
+}
+
+.booked-day:hover {
+  background-color: red !important;
+  /* Đảm bảo màu nền đỏ khi hover */
+}

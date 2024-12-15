@@ -101,12 +101,13 @@ function Booking() {
       address: selectedDistrict ? selectedDistrict.label : null,
       total_cost: total_cost,
       total_cost_after_voucher: total_voucher,
-      voucher_id: selectedVoucher || null,
+      voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
     };
 
     if (!bookingData.voucher_id) {
       delete bookingData.voucher_id;
     }
+
     console.log(bookingData);
     console.log(total_cost);
 
@@ -117,10 +118,10 @@ function Booking() {
       localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
         console.log(response);
-        // setTimeout(() => {
-        //   setIsLoading(false);
-        //   navigate(`/payment_car/${booking.booking_id}`);
-        // }, 3000);
+        setTimeout(() => {
+          setIsLoading(false);
+          navigate(`/payment_car/${booking.booking_id}`);
+        }, 3000);
       } else {
         console.log("lõi ne", Error);
       }
@@ -307,8 +308,32 @@ function Booking() {
         console.error(error);
       }
     };
+
     fetchBookings();
+  }, []);
+
+  // Tính toán tất cả các ngày đã được đặt từ start_date đến end_date
+  const bookedDatesArray = [];
+
+  bookedDates.forEach((booking) => {
+    const start = dayjs(booking.start_date);
+    const end = dayjs(booking.end_date);
+
+    for (
+      let date = start;
+      date.isBefore(end) || date.isSame(end, "day");
+      date = date.add(1, "day")
+    ) {
+      bookedDatesArray.push(date.format("YYYY-MM-DD"));
+    }
   });
+
+  // Hàm kiểm tra ngày có bị đặt hay không
+  const isBookedDate = (date) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+
+    return bookedDatesArray.includes(formattedDate);
+  };
 
   return (
     <div>
@@ -504,6 +529,28 @@ function Booking() {
                       value={startDate}
                       minDate={dayjs()} // Đặt ngày nhỏ nhất cho ngày nhận xe là hôm nay
                       onChange={(newValue) => setStartDate(newValue)}
+                      shouldDisableDate={(date) => isBookedDate(date)} // Disable ngày đã được đặt
+                      renderDay={(day, _utils) => {
+                        if (isBookedDate(day)) {
+                          return (
+                            <div
+                              style={{
+                                backgroundColor: "red", // Màu nền ngày đã đặt
+                                color: "white", // Màu chữ
+                                cursor: "not-allowed", // Không cho phép chọn ngày
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                height: "100%",
+                                width: "100%",
+                              }}
+                            >
+                              {day.date()}
+                            </div>
+                          );
+                        }
+                        return <>{day.date()}</>; // Trả lại ngày bình thường nếu không bị đặt
+                      }}
                     />
                   </DemoItem>
                   <DemoItem>
@@ -511,6 +558,7 @@ function Booking() {
                       value={endDate}
                       minDate={startDate.add(1, "day")} // Đặt ngày trả xe không thể trước ngày nhận xe
                       onChange={(newValue) => setEndDate(newValue)}
+                      shouldDisableDate={(date) => isBookedDate(date)}
                     />
                   </DemoItem>
                 </DemoContainer>

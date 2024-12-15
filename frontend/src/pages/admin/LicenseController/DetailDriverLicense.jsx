@@ -187,6 +187,7 @@ function AdminDriverLicenseDetails() {
                   >
                     <option value="active">Hoạt động</option>
                     <option value="inactive">Không hoạt động</option>
+                    <option value="invalid">Không hợp lệ</option>
                   </select>
                   <label>Ngày cấp:</label>
                   <input

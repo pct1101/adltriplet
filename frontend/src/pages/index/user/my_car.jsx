@@ -11,6 +11,8 @@ function My_car() {
   const [endDateFormatted, setEndDateFormatted] = useState(null);
   const [filteredData, setFilteredData] = useState([]); // Dữ liệu sau khi lọc
   const [selectedStatus, setSelectedStatus] = useState("0"); // Giá trị mặc định là "Tất cả"
+  const [isUpdating, setIsUpdating] = useState(false); // Trạng thái đang cập nhật
+
 
   useEffect(() => {
     const fecthBookingData = async () => {
@@ -68,7 +70,7 @@ function My_car() {
           <div className="right-user">
             <Side_bar></Side_bar>
           </div>
-          c
+          
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">
@@ -84,8 +86,8 @@ function My_car() {
                         <option value="0">Tất cả</option>
                         <option value="2">Đã thanh toán</option>
                         <option value="1">Chưa thanh toán</option>
-                        <option value="3">Đã bị từ chối</option>
-                        <option value="5">Đang tạm ngưng</option>
+                        <option value="3">Đã thanh toán</option>
+                        <option value="4">Đã hủy</option>
                         <option value="6">Đang hoạt động</option>
                       </select>
                     </div>
@@ -115,34 +117,40 @@ function My_car() {
                               booking.booking_status === 1
                                 ? "#ffc107" // Chờ thanh toán (vàng)
                                 : booking.booking_status === 2
-                                ? "#0d6efd" // Đã thanh toán (xanh dương)
-                                : booking.booking_status === 3
-                                ? "#fd7e14" // Xác nhận thanh toán (cam)
-                                : booking.booking_status === 4
-                                ? "#ffc107" // Chờ xác nhận thanh toán (vàng)
-                                : booking.booking_status === 5
-                                ? "#dc3545" // Hủy bởi admin (đỏ)
-                                : "#198754", // Trạng thái khác (xanh lá)
+                                  ? "#0d6efd" // Chờ xác nhận thanh toán (xanh dương)
+                                  : booking.booking_status === 3
+                                    ? "green" // Đã thanh toán (cam)
+                                    : booking.booking_status === 4
+                                      ? "#dc3545" // Hủy bởi người dùng (vàng)
+                                      : booking.booking_status === 5
+                                        ? "#dc3545" // Hủy bởi admin (đỏ)
+                                        : "#198754", // Trạng thái khác (xanh lá)
                             color:
                               booking.booking_status === 1 ||
                               booking.booking_status === 4
                                 ? "black" // Chữ màu đen cho trạng thái vàng
                                 : "white", // Chữ màu trắng cho trạng thái khác
-                            fontSize: ".550rem",
+                                fontSize: ".550rem"
+                              
                           }}
+                          
                         >
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                            ? "Đã thanh toán"
-                            : booking.booking_status === 3
-                            ? "Xác nhận thanh toán"
-                            : booking.booking_status === 4
-                            ? "Chờ xác nhận thanh toán"
-                            : booking.booking_status === 5
-                            ? "Hủy bởi admin"
-                            : "Trạng thái không xác định"}
-                        </div>
+                              ? "Xác nhận thanh toán"
+                              : booking.booking_status === 3
+                                ? "Đã thanh toán"
+                                : booking.booking_status === 4
+                                  ? "Đã hủy"
+                                  : booking.booking_status === 5
+                                    ? "Hủy bởi admin"
+                                    : "Trạng thái không xác định"}
+                          {/* || {booking.cancel_reason} */}
+                        </div> 
+                        <div className="desc-name">
+                         Lý do : {booking.cancel_reason}
+                         </div> 
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>
                         </div>
@@ -205,6 +213,8 @@ function My_car() {
                           </div>
                           <span className="info">{booking.city} </span>
                         </div>
+
+
                         <div className="days">
                           <div className="desc-days">
                             <div className="form-item">

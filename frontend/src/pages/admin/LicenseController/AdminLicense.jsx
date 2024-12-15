@@ -6,17 +6,18 @@ import Header from "../component/header";
 
 function AdminDriverLicense() {
     const [driverLicenses, setDriverLicenses] = useState([]);
+    const [licenseStatus, setLicenseStatus] = useState(""); // Trạng thái lọc
     const [isAdmin, setIsAdmin] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchDriverLicenses();
         checkUserRole();
-    }, []);
+    }, [licenseStatus]); // Khi licenseStatus thay đổi, tải lại danh sách giấy phép
 
     const fetchDriverLicenses = async () => {
         try {
-            const response = await getAllDriverLicenses();
+            const response = await getAllDriverLicenses(licenseStatus); // Truyền licenseStatus vào đây
             if (Array.isArray(response.driver_licenses)) {
                 setDriverLicenses(response.driver_licenses);
             } else {
@@ -38,23 +39,23 @@ function AdminDriverLicense() {
         }
     };
 
-    const deleteDriverLicense = async (driverLicenseId) => {
-        const apiToken = localStorage.getItem("authToken");
-        if (window.confirm("Bạn có chắc chắn muốn xóa giấy phép lái xe này?")) {
-            try {
-                await deleteDriverLicenseById(driverLicenseId, apiToken);
-                setDriverLicenses(
-                    driverLicenses.filter(
-                        (license) => license.driver_license_id !== driverLicenseId
-                    )
-                );
-                alert("Giấy phép lái xe đã được xóa thành công!");
-            } catch (error) {
-                console.error("Lỗi khi xóa giấy phép lái xe:", error);
-                alert("Thất bại trong việc xóa giấy phép lái xe: " + error.message);
-            }
-        }
-    };
+    // const deleteDriverLicense = async (driverLicenseId) => {
+    //     const apiToken = localStorage.getItem("authToken");
+    //     if (window.confirm("Bạn có chắc chắn muốn xóa giấy phép lái xe này?")) {
+    //         try {
+    //             await deleteDriverLicenseById(driverLicenseId, apiToken);
+    //             setDriverLicenses(
+    //                 driverLicenses.filter(
+    //                     (license) => license.driver_license_id !== driverLicenseId
+    //                 )
+    //             );
+    //             alert("Giấy phép lái xe đã được xóa thành công!");
+    //         } catch (error) {
+    //             console.error("Lỗi khi xóa giấy phép lái xe:", error);
+    //             alert("Thất bại trong việc xóa giấy phép lái xe: " + error.message);
+    //         }
+    //     }
+    // };
 
     const editDriverLicense = (licenseId) => {
         navigate(`/admin/EditDriverLicense/${licenseId}`);
@@ -64,6 +65,13 @@ function AdminDriverLicense() {
         navigate(`/admin/DetailDriverLicense/${driverLicenseId}`);
     };
 
+    const handleFilterChange = (e) => {
+        const newStatus = e.target.value;
+        setLicenseStatus(newStatus); // Cập nhật trạng thái lọc
+    
+        // Cập nhật URL với giá trị mới của licenseStatus
+        navigate(`?status=${newStatus}`);
+    };
     return (
         <div>
             <Side_bar></Side_bar>
@@ -76,6 +84,19 @@ function AdminDriverLicense() {
                             Thêm giấy phép
                         </Link>
                     </button>
+                </div>
+                <div className="d-flex align-items-center mb-3">
+                    <label className="me-2">Trạng thái :</label>
+                    <select
+                        className="form-select w-auto"
+                        value={licenseStatus}
+                        onChange={handleFilterChange}
+                    >
+                        <option value="">Tất cả</option>
+                        <option value="active">Đã xác nhận</option>
+                        <option value="inactive">Chưa xác nhận</option>
+                        <option value="invalid">Không hợp lệ</option>
+                    </select>
                 </div>
                 <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
                     <div className="card-body p-0">
@@ -102,19 +123,24 @@ function AdminDriverLicense() {
                                             <td>{license.license_holder}</td>
                                             <td>
                                                 <span
-                                                    className={`badge ${license.license_status === "active"
-                                                        ? "bg-success"  // Màu xanh cho active
-                                                        : license.license_status === "inactive"
-                                                            ? "bg-warning"  // Màu vàng cho inactive
-                                                            : "bg-danger"   // Màu đỏ cho trạng thái không xác định (dự phòng)
-                                                        }`}
+                                                    className={`badge ${
+                                                        license.license_status === "active"
+                                                            ? "bg-success"  // Màu xanh cho active
+                                                            : license.license_status === "inactive"
+                                                                ? "bg-warning"  // Màu vàng cho inactive
+                                                                : license.license_status === "invalid"
+                                                                    ? "bg-danger" // Màu đỏ cho invalid
+                                                                    : "bg-secondary" // Màu xám dự phòng cho trạng thái không xác định
+                                                    }`}
                                                     value={license.license_status} // Thêm value trạng thái
                                                 >
                                                     {license.license_status === "active"
                                                         ? "Đã xác nhận"
                                                         : license.license_status === "inactive"
                                                             ? "Chưa xác nhận"
-                                                            : "Không xác định"} {/* Nội dung fallback cho trạng thái khác */}
+                                                            : license.license_status === "invalid"
+                                                                ? "Không hợp lệ"
+                                                                : "Không xác định"} {/* Nội dung fallback cho trạng thái khác */}
                                                 </span>
                                             </td>
 

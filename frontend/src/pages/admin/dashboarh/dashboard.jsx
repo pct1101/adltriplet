@@ -89,7 +89,7 @@ function Dashboarh() {
   const fetchCars = async () => {
     try {
       const response = await getAllCars();
-      setCars(response.data);
+      setCars(response.data.cars);
     } catch (error) {
       console.error("Failed to fetch cars", error);
     }

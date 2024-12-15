@@ -1283,34 +1283,6 @@ export const getDriverLicenseByUserId = async (id) => {
   }
 };
 
-// NOTE: add giấy phép lái xe user
-export const addDriverLicense = async (licenseData) => {
-  // Lấy remember_token từ localStorage
-  const apiToken = localStorage.getItem("remember_token");
-  // Kiểm tra xem token có tồn tại trong localStorage không
-  if (!apiToken) {
-    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
-  }
-  try {
-    // Gửi request tới API với token trong headers
-    const response = await axios.post(`${API_URL}/driverlicense`, licenseData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`, // Gửi token trong header
-        "Content-Type": "multipart/form-data", // Đảm bảo là multipart/form-data
-      },
-    });
-    if (response.data) {
-      console.log("thêm thành công");
-      return { message: "Thêm thành công", data: response.data };
-    }
-  } catch (error) {
-    console.error(
-      "Lỗi trong khi gửi yêu cầu:",
-      error.response ? error.response.data : error.message
-    );
-    throw error;
-  }
-};
 // NOTE: getgplx user
 export const getDriverLicense = async () => {
   // Lấy remember_token từ localStorage
@@ -1333,32 +1305,67 @@ export const getDriverLicense = async () => {
   }
 };
 
-// NOTE: editGPLX user
-export const editDriverLicense = async () => {
+// NOTE: add giấy phép lái xe user
+export const addDriverLicense = async (licenseData) => {
   // Lấy remember_token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
   // Kiểm tra xem token có tồn tại trong localStorage không
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
+  try {
+    // Gửi request tới API với token trong headers
+    const response = await axios.post(`${API_URL}/driverlicense`, licenseData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    if (response.data) {
+      console.log("thêm thành công");
+      return { message: "Thêm thành công", data: response.data };
+    }
+  } catch (error) {
+    console.error(
+      "Lỗi trong khi gửi yêu cầu:",
+      error.response ? error.response.data : error.message
+    );
+    throw error;
+  }
+};
+
+// NOTE: editGPLX user
+export const editDriverLicense = async (licenseId, data) => {
+  // Lấy remember_token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
 
   try {
-    // Gửi request tới API với token trong headers và method PUT thông qua _method
+    // Thêm _method: "PUT" vào data (FormData)
+    data.append("_method", "PUT");
+
+    // Gửi request với POST và giả lập PUT
     const response = await axios.post(
-      `${API_URL}/driverlicense`,
-      {
-        _method: "PUT", // Dùng method override để thực hiện PUT request
-        // Các dữ liệu cần thiết khác để chỉnh sửa GPLX có thể được thêm vào đây
-      },
+      `${API_URL}/driverlicense/${licenseId}`,
+      data,
       {
         headers: {
-          Authorization: `Bearer ${apiToken}`, // Gửi token trong header
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "multipart/form-data", // Bắt buộc khi gửi FormData
         },
       }
     );
+
+    // Xử lý phản hồi
+    console.log("Response:", response.data);
     return response.data;
   } catch (error) {
-    console.error("Lỗi nè", error);
+    // Log lỗi chi tiết
+    console.error("Lỗi nè", error.response?.data || error.message);
     throw error;
   }
 };

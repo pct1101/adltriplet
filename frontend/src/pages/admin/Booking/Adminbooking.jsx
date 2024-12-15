@@ -6,6 +6,7 @@ import {
   getAllBookings,
   deleteBookingById,
   updateBooking,
+  cancelBookingByAdmin
 } from "../../../lib/Axiosintance";
 
 import Side_bar from "../component/side_bar";

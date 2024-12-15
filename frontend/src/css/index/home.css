@@ -1491,6 +1491,10 @@ a.btn.btn-primary.btn--l {
   border: 1px solid #000;
 }
 
+.wrap-btn a.btn {
+  width: 100%;
+}
+
 /* scale img */
 .scale-img {
   overflow: hidden;

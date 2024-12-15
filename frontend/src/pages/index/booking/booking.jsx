@@ -8,7 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 // note: api car
-import { getCarDetails } from "../../../lib/Axiosintance";
+import { getBooking, getCarDetails } from "../../../lib/Axiosintance";
 import LocationDropdown from "./district_province";
 // note: api post booking
 import { addBookingUser } from "../../../lib/Axiosintance";
@@ -19,6 +19,8 @@ import { useBooking } from "../../Private/bookingContext";
 import { getvoucher } from "../../../lib/Axiosintance";
 
 function Booking() {
+  // note: get booking
+  const [bookedDates, setBookedDates] = useState([]);
   const {
     selectedProvince,
     setSelectedProvince,
@@ -38,7 +40,6 @@ function Booking() {
   const [voucher, setVoucher] = useState([]);
   // note:allow state user voucher
   const [selectedVoucher, setSelectedVoucher] = useState(null);
-
   // note: handle data place
   const handleLocationChange = (province, district) => {
     setSelectedProvince(province);
@@ -53,12 +54,10 @@ function Booking() {
     setOpenModal(false);
     setShowDatePicker(false);
   };
-
   //note: show date/time
   const [showDatePicker, setShowDatePicker] = useState(false);
   //note: show voucher
   const [showVoucher, setshowVoucher] = useState(false);
-
   // note:  set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -100,12 +99,16 @@ function Booking() {
       booking_date: new Date().toISOString(),
       city: selectedProvince ? selectedProvince.label : null,
       address: selectedDistrict ? selectedDistrict.label : null,
-      voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
       total_cost: total_cost,
       total_cost_after_voucher: total_voucher,
+      voucher_id: selectedVoucher || null,
     };
 
+    if (!bookingData.voucher_id) {
+      delete bookingData.voucher_id;
+    }
     console.log(bookingData);
+    console.log(total_cost);
 
     try {
       //note: Gọi hàm addBooking để thực hiện API call
@@ -114,10 +117,10 @@ function Booking() {
       localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
         console.log(response);
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate(`/payment_car/${booking.booking_id}`);
-        }, 3000);
+        // setTimeout(() => {
+        //   setIsLoading(false);
+        //   navigate(`/payment_car/${booking.booking_id}`);
+        // }, 3000);
       } else {
         console.log("lõi ne", Error);
       }
@@ -271,7 +274,6 @@ function Booking() {
     const fetchVoucher = async () => {
       try {
         const response = await getvoucher();
-        console.log(response);
         setVoucher(response);
       } catch (error) {
         console.error(error);
@@ -295,6 +297,18 @@ function Booking() {
   const total_voucher = useMemo(() => {
     return selectedVoucher ? total_cost - discountAmount : total_cost;
   }, [selectedVoucher, total_cost, discountAmount]);
+  // note: getbooking
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await getBooking();
+        setBookedDates(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchBookings();
+  });
 
   return (
     <div>

@@ -240,6 +240,13 @@ input:disabled {
   padding: 16px 24px !important;
 }
 
+.modal-input-body {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;
+  gap: 10px;
+}
+
 .info-time {
   display: flex;
   grid-gap: 8px;

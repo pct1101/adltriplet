@@ -162,21 +162,45 @@ const Login = () => {
       </div>
       <Footer />
       {showForgerPassword && (
-        <div
-          className="popup-overlay"
-          onClick={() => setShowForgerPassword(false)}
-        >
+        <div className="popup-overlay">
           <div className="popup-content">
             <div className="group-title d-flex">
               <h5>Quên mật khẩu</h5>
               <button
                 className="btn btn-close"
-                onClick={handleCloseModal}
+                onClick={() => setShowForgerPassword(false)}
               ></button>
             </div>
             <div className="line-page"> </div>
-            <div className="modal-calendar modal-body"> </div>
-            <div className="modal-footer"></div>
+            <div className="modal-body">
+              <div className="modal-input-body">
+                <div className="line-form">
+                  <div className="custom-input">
+                    <div className="wrap-info">
+                      <div className="title-status">
+                        <p>Nhập email của bạn</p>
+                      </div>
+                      <div className="desc "></div>
+                    </div>
+                    <div className="wrap-input ">
+                      <div className="wrap-text">
+                        <input
+                          type="text"
+                          placeholder=""
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="wrap-btn">
+                  <a disabled="" className="btn btn-primary btn--m">
+                    Tiếp tục
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -22,6 +22,7 @@ class Booking extends Model
         'total_cost',
         'total_cost_after_voucher',
         'booking_status',
+        'booking_note',
         'user_id',
         'car_id',
         'address',

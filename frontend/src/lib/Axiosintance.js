@@ -45,6 +45,7 @@ export const login = (email, password) => {
 
         return response;
       } else {
+
         throw new Error("Không có dữ liệu token hoặc user_id trong phản hồi.");
       }
     })
@@ -537,7 +538,7 @@ export const deleteBookingById = async (id) => {
   }
 };
 
-// Sửa 1 đơn hàng theo ID
+// Sửa trạng thái của 1 booking ID
 export const updateBooking = async (id, updatedBookingData) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -582,6 +583,53 @@ export const updateBooking = async (id, updatedBookingData) => {
     throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
   }
 };
+
+
+// Hủy 1 booking bởi Admin
+export const cancelBookingByAdmin = async (id, { cancel_reason, cancel_note }) => {
+  const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
+
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu PUT để hủy booking
+    const response = await axios.put(
+      `${API_URL}/admin/booking/${id}/cancel_by_admin`,
+      { cancel_reason, cancel_note }, // Gửi lý do và ghi chú hủy
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+        },
+      }
+    );
+
+    // Trả về dữ liệu phản hồi từ API
+    console.log("Booking đã bị hủy bởi Admin:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi hủy booking:", error);
+
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+    } else if (error.request) {
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    throw error; // Ném lỗi ra ngoài để xử lý nơi khác
+  }
+};
+
 
 // API lấy danh sách user
 export const getAllUsers = async () => {
@@ -1048,6 +1096,31 @@ export const getBookingId = async () => {
     throw error;
   }
 };
+
+export const cancelUserBooking = async (bookingId, cancelReason) => {
+  const apiToken = localStorage.getItem("remember_token");
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.put(
+      `${API_URL}/booking/${bookingId}/cancel_by_user`,
+      { cancel_reason: cancelReason },
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi hủy booking:", error);
+    throw error;
+  }
+};
+
 // NOTE: HOÀN THÀNH THANH TOÁN
 export const payment = async (booking_id) => {
   const apiToken = localStorage.getItem("authToken");

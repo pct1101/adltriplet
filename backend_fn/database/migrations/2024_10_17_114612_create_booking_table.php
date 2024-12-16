@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('booking', function (Blueprint $table) {
             $table->id('booking_id');
             $table->date('booking_date');
-            $table->datetime('start_date');
-            $table->datetime('end_date');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->integer('total_cost');
             $table->integer('total_cost_after_voucher')->nullable();
             $table->boolean('booking_status')->default(1);

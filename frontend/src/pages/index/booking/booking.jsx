@@ -35,7 +35,8 @@ function Booking() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
-
+  // note: tb lỗi
+  const [error, setError] = useState("");
   // note: set value voucher
   const [voucher, setVoucher] = useState([]);
   // note:allow state user voucher
@@ -225,11 +226,29 @@ function Booking() {
       console.error("Invalid start date");
       return;
     }
+
+    // Kiểm tra nếu ngày bắt đầu bị trùng với các ngày đã được đặt
+    if (isBookedDate(newStartDate)) {
+      setError(
+        "* Xe bận trong khoảng thời gian trên. Vui lòng đặt xe khác hoặc thay đổi lịch trình thích hợp."
+      );
+      return;
+    }
+
     setStartDate(newStartDate);
+    setError(""); // Xóa lỗi nếu ngày hợp lệ
+
     const nextDay = newStartDate.add(1, "day");
+    if (isBookedDate(nextDay)) {
+      setError(
+        "* Ngày trả xe bị trùng với lịch đặt trước. Vui lòng chọn ngày khác."
+      );
+      return;
+    }
 
     //note: Cập nhật ngày kết thúc
     setEndDate(nextDay);
+    setError(""); // Xóa lỗi nếu ngày hợp lệ
   };
 
   //note:  all days user book
@@ -530,27 +549,6 @@ function Booking() {
                       minDate={dayjs()} // Đặt ngày nhỏ nhất cho ngày nhận xe là hôm nay
                       onChange={(newValue) => setStartDate(newValue)}
                       shouldDisableDate={(date) => isBookedDate(date)} // Disable ngày đã được đặt
-                      renderDay={(day, _utils) => {
-                        if (isBookedDate(day)) {
-                          return (
-                            <div
-                              style={{
-                                backgroundColor: "red", // Màu nền ngày đã đặt
-                                color: "white", // Màu chữ
-                                cursor: "not-allowed", // Không cho phép chọn ngày
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                height: "100%",
-                                width: "100%",
-                              }}
-                            >
-                              {day.date()}
-                            </div>
-                          );
-                        }
-                        return <>{day.date()}</>; // Trả lại ngày bình thường nếu không bị đặt
-                      }}
                     />
                   </DemoItem>
                   <DemoItem>

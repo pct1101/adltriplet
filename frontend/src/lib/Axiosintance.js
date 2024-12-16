@@ -328,7 +328,7 @@ export const logout = async () => {
 
 //////////////////////////////    BOOKING ADMIN              //////////////////////////////
 
-// Thêm booking admin
+// Thêm booking bởi admin
 export const addBooking = async (bookingData) => {
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("authToken");
@@ -385,58 +385,8 @@ export const addBooking = async (bookingData) => {
     throw error;
   }
 };
-// Thêm booking user
-export const addBookingUser = async (bookingData) => {
-  // Lấy token từ localStorage
-  const apiToken = localStorage.getItem("remember_token");
-  console.log(apiToken);
-  // Kiểm tra nếu không có token
-  if (!apiToken) {
-    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
-    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
-  }
-  // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
-  if (!API_URL) {
-    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
-    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
-  }
 
-  try {
-    // Gửi yêu cầu POST đến API để thêm booking
-    const response = await axios.post(`${API_URL}/booking`, bookingData, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
-      },
-    });
-
-    // Nếu thành công, trả về dữ liệu phản hồi từ API
-    return response.data;
-  } catch (error) {
-    // Kiểm tra lỗi từ API response
-    if (error) {
-      // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
-      console.error("API Error:", error.response.data);
-      console.error("API Error Status:", error.response.status);
-      // Nếu là lỗi 401, có thể là do token không hợp lệ
-      if (error.response.status === 401) {
-        console.error(
-          "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
-        );
-      }
-      // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
-    } else if (error.request) {
-      // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
-      console.error("Không có phản hồi từ server:", error.request);
-    } else {
-      // Lỗi khác (ví dụ: cấu hình request sai)
-      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
-    }
-
-    // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
-    throw error;
-  }
-};
-// Lấy toàn bộ danh sách booking
+// Lấy toàn bộ danh sách booking bởi admin
 export const getAllBookings = async () => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -463,7 +413,7 @@ export const getAllBookings = async () => {
   }
 };
 
-// Lấy chi tiết booking theo ID
+// Lấy chi tiết booking theo ID bởi admin
 export const getBookingById = async (id) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -494,7 +444,7 @@ export const getBookingById = async (id) => {
   }
 };
 
-// Xóa 1 đơn đặt hàng
+// Xóa 1 đơn đặt hàng bởi admin
 export const deleteBookingById = async (id) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -536,7 +486,7 @@ export const deleteBookingById = async (id) => {
   }
 };
 
-// Sửa trạng thái của 1 booking ID
+// Sửa trạng thái của 1 booking ID Admin
 export const updateBooking = async (id, updatedBookingData) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
@@ -756,7 +706,7 @@ export const updateUser = async (id, updatedUserData) => {
   }
 
   try {
-    // Gửi yêu cầu PUT để cập nhật booking theo ID
+    // Gửi yêu cầu PUT để cập nhật người dùng theo ID
     const response = await axios.put(
       `${API_URL}/admin/user/${id}`,
       updatedUserData,
@@ -768,7 +718,7 @@ export const updateUser = async (id, updatedUserData) => {
     );
 
     // Nếu thành công, trả về dữ liệu phản hồi từ API
-    console.log("Booking đã được cập nhật thành công:", response.data);
+    console.log("Người dùng đã được cập nhật thành công:", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi cập nhật user:", error);
@@ -1042,6 +992,8 @@ export const getFeedbackByCarId = async (carId) => {
 };
 
 ////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
+
+//Lấy toàn bộ booking bởi người dùng
 export const getBooking = async () => {
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
@@ -1066,6 +1018,8 @@ export const getBooking = async () => {
     throw error;
   }
 };
+
+// Lấy 1 booking theo id bởi người dùng
 export const getBookingId = async () => {
   const storedBookingId = localStorage.getItem("booking_id");
   if (!storedBookingId) {
@@ -1094,12 +1048,95 @@ export const getBookingId = async () => {
   }
 };
 
+// Thêm booking bởi user
+export const addBookingUser = async (bookingData) => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  console.log(apiToken);
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  // Kiểm tra URL API (để chắc chắn rằng API_URL được cấu hình đúng)
+  if (!API_URL) {
+    console.error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+    throw new Error("Không tìm thấy API_URL. Vui lòng kiểm tra lại cấu hình.");
+  }
+
+  try {
+    // Gửi yêu cầu POST đến API để thêm booking
+    const response = await axios.post(`${API_URL}/booking`, bookingData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    // Kiểm tra lỗi từ API response
+    if (error) {
+      // Khi có phản hồi từ server (ví dụ: lỗi 401, 403)
+      console.error("API Error:", error.response.data);
+      console.error("API Error Status:", error.response.status);
+      // Nếu là lỗi 401, có thể là do token không hợp lệ
+      if (error.response.status === 401) {
+        console.error(
+          "Lỗi 401: Unauthorized - Token không hợp lệ hoặc hết hạn."
+        );
+      }
+      // Có thể thêm các xử lý khác cho các lỗi khác (400, 404, v.v.)
+    } else if (error.request) {
+      // Khi không có phản hồi nào từ server (ví dụ: vấn đề với kết nối mạng)
+      console.error("Không có phản hồi từ server:", error.request);
+    } else {
+      // Lỗi khác (ví dụ: cấu hình request sai)
+      console.error("Lỗi khi thiết lập yêu cầu:", error.message);
+    }
+
+    // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
+    throw error;
+  }
+};
+
+
+// Sửa 1 booking bởi user
+export const updateBookingByUser = async (id, updatedData) => {
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Gửi yêu cầu PUT đến API để cập nhật booking theo ID
+    const response = await axios.put(`${API_URL}/booking/${id}`, updatedData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+
+    // Nếu thành công, trả về dữ liệu phản hồi từ API
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+
 export const cancelUserBooking = async (bookingId, cancelReason) => {
   const apiToken = localStorage.getItem("remember_token");
   if (!apiToken) {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
+
+  console.log("Id của booking:", bookingId); // Kiểm tra giá trị của id
 
   try {
     const response = await axios.put(
@@ -1208,7 +1245,7 @@ export const getDriverLicenseById = async (id) => {
 };
 
 // Cập nhật giấy phép lái xe theo ID
-export const updateDriverLicense = async (id, data) => {
+export const updateDriverLicense = async (id, payload) => {
   const apiToken = localStorage.getItem("authToken");
 
   if (!apiToken) {
@@ -1217,19 +1254,15 @@ export const updateDriverLicense = async (id, data) => {
   }
 
   try {
-    const response = await axios.put(
-      `${API_URL}/admin/driverlicense/${id}`,
-      data,
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`,
-        },
-      }
-    );
-    console.log("Phản hồi API:", response.data);
+    const response = await axios.put(`${API_URL}/admin/driverlicense/${id}`, payload, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json", // Đảm bảo định dạng JSON
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error("Lỗi khi cập nhật giấy phép lái xe:", error);
+    console.error("Error in API call:", error);
     throw error;
   }
 };

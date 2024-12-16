@@ -14,7 +14,6 @@ function AdminDriverLicenseDetails() {
     license_holder: "",
     license_type: "",
     license_status: "",
-    issue_date: "",
     expiry_date: "",
     issued_by: "",
     license_image: "",
@@ -38,7 +37,6 @@ function AdminDriverLicenseDetails() {
         license_holder: response?.driver_license?.license_holder || "",
         license_type: response?.driver_license?.license_type || "",
         license_status: response?.driver_license?.license_status || "",
-        issue_date: response?.driver_license?.issue_date || "",
         expiry_date: response?.driver_license?.expiry_date || "",
         issued_by: response?.driver_license?.issued_by || "",
         license_image: response?.driver_license?.license_image || "",
@@ -74,7 +72,6 @@ function AdminDriverLicenseDetails() {
     data.append("license_holder", formData.license_holder);
     data.append("license_type", formData.license_type);
     data.append("license_status", formData.license_status);
-    data.append("issue_date", formData.issue_date);
     data.append("expiry_date", formData.expiry_date);
     data.append("issued_by", formData.issued_by);
     data.append("license_image", formData.license_image); // Ảnh tải lên dưới dạng tệp
@@ -189,20 +186,6 @@ function AdminDriverLicenseDetails() {
                     <option value="inactive">Không hoạt động</option>
                     <option value="invalid">Không hợp lệ</option>
                   </select>
-                  <label>Ngày cấp:</label>
-                  <input
-                    type="date"
-                    name="issue_date"
-                    value={formData.issue_date}
-                    onChange={handleInputChange}
-                    disabled={!isEditing}
-                    style={{
-                      width: "100%",
-                      padding: "10px",
-                      marginBottom: "10px",
-                      borderRadius: "5px",
-                    }}
-                  />
                   <label>Ngày hết hạn:</label>
                   <input
                     type="date"

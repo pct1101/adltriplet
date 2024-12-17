@@ -1541,3 +1541,35 @@ export const getBrandCar = async () => {
     throw error;
   }
 };
+
+// note: tìm kiếm
+export const searchCars = async (
+  startDate,
+  endDate,
+  seats,
+  transmission_type
+) => {
+  try {
+    const params = {
+      start_date: startDate.format("YYYY-MM-DD"),
+      end_date: endDate.format("YYYY-MM-DD"),
+    };
+    if (seats) {
+      params.seats = seats;
+    }
+    if (transmission_type) {
+      params.transmission_type = transmission_type;
+    }
+
+    const response = await axios.get(`${API_URL}/cars`, {
+      params,
+      headers: { "Content-Type": "application/json" },
+    });
+    console.log(response.data);
+
+    return response.data; // Trả về dữ liệu kết quả từ API
+  } catch (error) {
+    console.error("Error while searching for cars:", error);
+    throw error; // Ném lỗi ra để xử lý phía ngoài
+  }
+};

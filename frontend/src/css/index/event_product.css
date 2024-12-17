@@ -79,6 +79,69 @@
 
 }
 
+.modal-confirm .modal-confirm-body {
+  display: flex;
+  grid-gap: 16px;
+  gap: 16px;
+  flex-direction: column;
+}
+
+.modal-confirm-body {
+  width: 635px;
+}
+
+.none-label {
+  width: 100%;
+}
+
+.carfinding-options-body .vehicle-types {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 12px;
+  gap: 12px;
+}
+
+.carfinding-options-body .vehicle-types .custom-checkbox-selected {
+  width: calc(25% - 9px);
+  height: 145px;
+}
+
+.carfinding-options-body .vehicle-types .custom-checkbox-selected label {
+  padding: 0;
+  height: 100%;
+}
+
+.carfinding-options-body .vehicle-types__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #e0e0e0;
+}
+
+.carfinding-options-body .vehicle-types__item--img img {
+  width: 65px;
+}
+
+
+
+label.none-label::after {
+  background: none !important;
+  /* Loại bỏ background của pseudo-element */
+}
+
+.carfinding-options-body .vehicle-types__item p.name {
+  font-size: .875rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+}
+
 .time-choose {
   display: flex;
   grid-gap: 8px;
@@ -224,6 +287,13 @@ input:disabled {
   height: 16px;
 }
 
+.custom-checkbox-indeterminate input[type=radio]:checked+label:after,
+.custom-checkbox-selected input[type=radio]:checked+label:after,
+.custom-radio input[type=radio]:checked+label:after {
+  background-position: -16px 0;
+}
+
+
 .custom-checkbox-indeterminate label:after,
 .custom-checkbox-selected label:after,
 .custom-radio label:after :hover {
@@ -231,6 +301,7 @@ input:disabled {
 }
 
 .modal-footer {
+  display: block !important;
   border-top: 1px solid #e0e0e0;
   padding: 16px 24px;
   background: #fff;

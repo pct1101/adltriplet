@@ -35,8 +35,6 @@ const Productlist = () => {
     (currentPage + 1) * carsPerPage
   );
 
-  console.log(displayedCars);
-
   // note: Xử lý khi người dùng chuyển trang
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);

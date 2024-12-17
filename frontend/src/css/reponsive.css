@@ -246,6 +246,32 @@
         top: 35%;
         width: 100%;
     }
+
+    .find-car .search-option.search-option-fixed {
+        transform: translateY(500px);
+        width: 90%;
+        right: 24px;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+    }
+
+    .choose .time-date {
+        width: 100%;
+    }
+
+    .item-dropdown__wrap {
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        grid-gap: 4px;
+        gap: 4px;
+        border-radius: 10px;
+        border: 1px solid #aaa;
+        padding: 2px 4px;
+    }
+
 }
 
 /* Tablet dọc (481px - 768px) */
@@ -278,6 +304,11 @@
         display: flex;
         flex-direction: column;
     }
+
+    .find-car .search-option.search-option-fixed {
+        right: 1px;
+
+    }
 }
 
 /* Laptop lớn (1025px - 1440px) */
@@ -290,6 +321,12 @@
     .container {
         max-width: 1000px;
     }
+
+    .find-car .search-option.search-option-fixed {
+        right: 1px;
+
+    }
+
 }
 
 /* Desktop lớn (≥ 1441px) */
@@ -300,5 +337,10 @@
 
     .container {
         max-width: 1200px;
+    }
+
+    .find-car .search-option.search-option-fixed {
+        right: 230px;
+
     }
 }

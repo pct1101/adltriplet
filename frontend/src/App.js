@@ -40,6 +40,7 @@ import AdminAddVoucher from "./pages/admin/Voucher/AdminAddVoucher.jsx";
 import Layout_GPLX from "./pages/index/user/license_driver/layout_GPLX.jsx";
 import Find_car from "./pages/index/products/find_car.jsx";
 import Newstt from "./pages/index/component/newstt.jsx";
+import Forget_password from "./pages/index/SignUp/forget_password.jsx";
 
 function App() {
   return (
@@ -300,6 +301,7 @@ function App() {
                 path="/user_repassword"
                 element={<User_change_password />}
               />
+              <Route path="/forget_password" element={<Forget_password />} />
               <Route path="/user_car" element={<My_car />} />
               <Route path="/gplx" element={<Layout_GPLX />} />
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('voucher_id');
             $table->string('voucher_code')->nullable();
             $table->integer('discount_percentage')->nullable();
-            $table->dateTime('expiration_date');
+            $table->date('expiration_date');
             $table->integer('usage_limit')->nullable();
             $table->timestamps();
         });

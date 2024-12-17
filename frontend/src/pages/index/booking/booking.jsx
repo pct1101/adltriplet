@@ -8,7 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 // note: api car
-import { getCarDetails } from "../../../lib/Axiosintance";
+import { getBooking, getCarDetails } from "../../../lib/Axiosintance";
 import LocationDropdown from "./district_province";
 // note: api post booking
 import { addBookingUser } from "../../../lib/Axiosintance";
@@ -19,6 +19,8 @@ import { useBooking } from "../../Private/bookingContext";
 import { getvoucher } from "../../../lib/Axiosintance";
 
 function Booking() {
+  // note: get booking
+  const [bookedDates, setBookedDates] = useState([]);
   const {
     selectedProvince,
     setSelectedProvince,
@@ -33,12 +35,12 @@ function Booking() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
-
+  // note: tb lỗi
+  const [error, setError] = useState("");
   // note: set value voucher
   const [voucher, setVoucher] = useState([]);
   // note:allow state user voucher
   const [selectedVoucher, setSelectedVoucher] = useState(null);
-
   // note: handle data place
   const handleLocationChange = (province, district) => {
     setSelectedProvince(province);
@@ -53,12 +55,10 @@ function Booking() {
     setOpenModal(false);
     setShowDatePicker(false);
   };
-
   //note: show date/time
   const [showDatePicker, setShowDatePicker] = useState(false);
   //note: show voucher
   const [showVoucher, setshowVoucher] = useState(false);
-
   // note:  set value for dropdown and time
   const [openDropdown, setOpenDropdown] = useState(null);
 
@@ -100,12 +100,17 @@ function Booking() {
       booking_date: new Date().toISOString(),
       city: selectedProvince ? selectedProvince.label : null,
       address: selectedDistrict ? selectedDistrict.label : null,
-      voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
       total_cost: total_cost,
       total_cost_after_voucher: total_voucher,
+      voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
     };
 
+    if (!bookingData.voucher_id) {
+      delete bookingData.voucher_id;
+    }
+
     console.log(bookingData);
+    console.log(total_cost);
 
     try {
       //note: Gọi hàm addBooking để thực hiện API call
@@ -221,11 +226,29 @@ function Booking() {
       console.error("Invalid start date");
       return;
     }
+
+    // Kiểm tra nếu ngày bắt đầu bị trùng với các ngày đã được đặt
+    if (isBookedDate(newStartDate)) {
+      setError(
+        "* Xe bận trong khoảng thời gian trên. Vui lòng đặt xe khác hoặc thay đổi lịch trình thích hợp."
+      );
+      return;
+    }
+
     setStartDate(newStartDate);
+    setError(""); // Xóa lỗi nếu ngày hợp lệ
+
     const nextDay = newStartDate.add(1, "day");
+    if (isBookedDate(nextDay)) {
+      setError(
+        "* Ngày trả xe bị trùng với lịch đặt trước. Vui lòng chọn ngày khác."
+      );
+      return;
+    }
 
     //note: Cập nhật ngày kết thúc
     setEndDate(nextDay);
+    setError(""); // Xóa lỗi nếu ngày hợp lệ
   };
 
   //note:  all days user book
@@ -271,7 +294,6 @@ function Booking() {
     const fetchVoucher = async () => {
       try {
         const response = await getvoucher();
-        console.log(response);
         setVoucher(response);
       } catch (error) {
         console.error(error);
@@ -295,6 +317,42 @@ function Booking() {
   const total_voucher = useMemo(() => {
     return selectedVoucher ? total_cost - discountAmount : total_cost;
   }, [selectedVoucher, total_cost, discountAmount]);
+  // note: getbooking
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const response = await getBooking();
+        setBookedDates(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  // Tính toán tất cả các ngày đã được đặt từ start_date đến end_date
+  const bookedDatesArray = [];
+
+  bookedDates.forEach((booking) => {
+    const start = dayjs(booking.start_date);
+    const end = dayjs(booking.end_date);
+
+    for (
+      let date = start;
+      date.isBefore(end) || date.isSame(end, "day");
+      date = date.add(1, "day")
+    ) {
+      bookedDatesArray.push(date.format("YYYY-MM-DD"));
+    }
+  });
+
+  // Hàm kiểm tra ngày có bị đặt hay không
+  const isBookedDate = (date) => {
+    const formattedDate = date.format("YYYY-MM-DD");
+
+    return bookedDatesArray.includes(formattedDate);
+  };
 
   return (
     <div>
@@ -490,6 +548,7 @@ function Booking() {
                       value={startDate}
                       minDate={dayjs()} // Đặt ngày nhỏ nhất cho ngày nhận xe là hôm nay
                       onChange={(newValue) => setStartDate(newValue)}
+                      shouldDisableDate={(date) => isBookedDate(date)} // Disable ngày đã được đặt
                     />
                   </DemoItem>
                   <DemoItem>
@@ -497,6 +556,7 @@ function Booking() {
                       value={endDate}
                       minDate={startDate.add(1, "day")} // Đặt ngày trả xe không thể trước ngày nhận xe
                       onChange={(newValue) => setEndDate(newValue)}
+                      shouldDisableDate={(date) => isBookedDate(date)}
                     />
                   </DemoItem>
                 </DemoContainer>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-
 import {
   getAllBookings,
   deleteBookingById,
@@ -104,34 +103,6 @@ function AdminBooking() {
     setShowCancelModal(true);
   };
 
-  const submitCancelBooking = async () => {
-    if (!cancelReason) {
-      // alert("Vui lòng nhập lý do và ghi chú hủy!");
-      return;
-    }
-    try {
-      await cancelBookingByAdmin(selectedBookingId, {
-        booking_status: "5", // Trạng thái Hủy bởi admin
-        cancel_reason: `${cancelReason} `, // Cập nhật lý do hủy
-      });
-      setBookings((prevBookings) =>
-        prevBookings.map((booking) =>
-          booking.booking_id === selectedBookingId
-            ? { ...booking, booking_status: "5", cancel_reason: `${cancelReason}` }
-            : booking
-        )
-      );
-      alert("Booking đã bị hủy thành công!");
-    } catch (error) {
-      console.error("Lỗi khi hủy booking:", error);
-      alert("Lỗi khi hủy booking.");
-    } finally {
-      setShowCancelModal(false);
-      setCancelReason("");
-      // setCancelNote("");
-    }
-  };
-
   // Áp dụng màu sắc dựa trên trạng thái
   const getStatusStyle = (status) => {
     if (!status) {
@@ -151,9 +122,7 @@ function AdminBooking() {
       case "5":
         return { backgroundColor: "white", color: "red" };
       default:
-
         return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
-
     }
   };
 
@@ -194,9 +163,16 @@ function AdminBooking() {
                   bookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td>{booking.booking_id}</td>
-                      <td>{booking.car ? booking.car.car_name : "Không có tên xe"}</td>
-                      <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
-                      <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                      <td>{booking.user_id}</td>
+                      <td>
+                        {booking.car ? booking.car.car_name : "Không có tên xe"}
+                      </td>
+                      <td>
+                        {new Date(booking.booking_date).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {new Date(booking.start_date).toLocaleDateString()}
+                      </td>
 
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
@@ -211,22 +187,57 @@ function AdminBooking() {
                       <td>
                         <select
                           value={booking.booking_status}
-                          onChange={(e) => handleStatusChange(booking.booking_id, e.target.value)}
+                          onChange={(e) =>
+                            handleStatusChange(
+                              booking.booking_id,
+                              e.target.value
+                            )
+                          }
                           style={getStatusStyle(booking.booking_status)}
                           className="form-select text-center"
                         >
-                          <option value="1" >Booking thành công</option>
+                          <option value="1">Booking thành công</option>
                           {/* <option value="2" >Xác nhận thanh toán</option> */}
-                          <option value="3" >Đã thanh toán</option>
-                          <option value="4" >Hủy bởi user</option>
-                          <option value="5" >Hủy bởi admin</option>
 
+                          <option value="3">Đã thanh toán</option>
+                          <option value="4">Hủy bởi user</option>
+                          <option value="5">Hủy bởi admin</option>
                         </select>
                       </td>
                       {/* Hiển thị lý do hủy chỉ khi trạng thái là 5 */}
-                      <td>{booking.booking_status === '5' ? booking.cancel_reason : '-'}</td>
+                      <td>
+                        {booking.booking_status === "5"
+                          ? booking.cancel_reason
+                          : "-"}
+                      </td>
                       <td>
                         <div className="d-flex justify-content-center">
+                        <button
+                          className="btn btn-info me-2"
+                          onClick={() =>
+                            handleSpecialStatus(booking.booking_id, "3")
+                          }
+                          disabled={!isAdmin}
+                        >
+                          Xác nhận thanh toán
+                        </button>
+                        <button
+                          className="btn btn-danger me-2"
+                          onClick={() =>
+                            handleCancelBooking(booking.booking_id)
+                          }
+                          disabled={!isAdmin}
+                        >
+                          Hủy booking
+                        </button>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleViewDetail(booking.booking_id)}
+                        >
+                          <i className="fas fa-eye"></i>
+                        </button>
+                        <div className="d-flex">
+                          {" "}
                           <button
                             className="btn btn-info me-2"
                             onClick={() => handleSpecialStatus(booking.booking_id, "3")}
@@ -247,6 +258,7 @@ function AdminBooking() {
                           >
                             <i className="fas fa-eye"></i>
                           </button>
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -299,9 +311,7 @@ function AdminBooking() {
           <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
             Đóng
           </Button>
-          <Button variant="danger" onClick={submitCancelBooking}>
-            Xác nhận hủy
-          </Button>
+          <Button variant="danger">Xác nhận hủy</Button>
         </Modal.Footer>
       </Modal>
     </div>

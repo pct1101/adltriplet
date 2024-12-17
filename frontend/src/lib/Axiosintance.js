@@ -64,7 +64,6 @@ export const login = (email, password) => {
 
         return response;
       } else {
-
         throw new Error("Không có dữ liệu token hoặc user_id trong phản hồi.");
       }
     })
@@ -532,9 +531,11 @@ export const updateBooking = async (id, updatedBookingData) => {
   }
 };
 
-
 // Hủy 1 booking bởi Admin
-export const cancelBookingByAdmin = async (id, { cancel_reason, cancel_note }) => {
+export const cancelBookingByAdmin = async (
+  id,
+  { cancel_reason, cancel_note }
+) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy token từ localStorage
 
   if (!apiToken) {
@@ -577,7 +578,6 @@ export const cancelBookingByAdmin = async (id, { cancel_reason, cancel_note }) =
     throw error; // Ném lỗi ra ngoài để xử lý nơi khác
   }
 };
-
 
 // API lấy danh sách user
 export const getAllUsers = async () => {

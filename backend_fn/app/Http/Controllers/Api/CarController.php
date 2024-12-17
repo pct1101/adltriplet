@@ -49,7 +49,9 @@ class CarController
                 ->when($request->has('fuel_type'), fn($query) => $query->where('fuel_type', $filters['fuel_type']))
                 ->when($request->has('model'), fn($query) => $query->whereYear('model', $filters['model']))
                 ->when($request->has('car_status'), fn($query) => $query->where('car_status', $filters['car_status']))
-                ->when($request->has('brandid'), fn($query) => $query->where('brandid', $filters['brandid']))
+                ->when($request->has('brand_name'), fn($query)=> $query->whereHas('brand', function ($q) use ($filters){
+                    $q->where('brand_name', 'like', '%' . $filters['brand_name'] . '%');
+                }))
                 ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
                     $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
                         $q->where('booking_status', 1)
@@ -63,6 +65,7 @@ class CarController
                             });
                     });
                 })
+                ->with('brand')
                 ->get();
 
             // Trả về kết quả nếu có dữ liệu

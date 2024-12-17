@@ -18,7 +18,4 @@ Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'index']);
     Route::get('/{id}', [CarController::class, 'show']);
     Route::get('/brand/{id}', [CarController::class, 'getCarsByBrandId']);
-    Route::get('/seat/{id}', [CarController::class, 'getCarsBySeat']);
-    Route::get('/transmission', [CarController::class, 'getCarsByTransmissionType']);
-    Route::get('/filter', [CarController::class, 'filterCars']);
 });

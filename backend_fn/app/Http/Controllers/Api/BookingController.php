@@ -67,7 +67,7 @@ class BookingController
 
         // Kiểm tra xung đột
         if ($conflictUserBooking) {
-            return response()->json(['message' => 'Bạn không thể đặt xe vì bạn đang có đơn'], 400);
+            return response()->json(['message' => 'Xe bận trong khoảng thời gian trên. Vui lòng đặt xe khác hoặc thay đổi lịch trình thích hợp'], 400);
         }
 
         if ($conflictCarBooking) {
@@ -88,7 +88,7 @@ class BookingController
         // Nếu có voucher, áp dụng chiết khấu
         if ($request->has('voucher_id')) {
             $voucher = Voucher::find($request->voucher_id);
-            if ($voucher && $voucher->expiration_date > $request->end_date) {
+            if ($voucher && $voucher->expiration_date >= $request->end_date) {
                 $discount = $totalCost * ($voucher->discount_percentage / 100);
                 $totalCost_after_voucher -= $discount; // Trừ phần chiết khấu vào tổng chi phí
             } else {

@@ -163,7 +163,6 @@ function AdminBooking() {
                   bookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td>{booking.booking_id}</td>
-                      <td>{booking.user_id}</td>
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
                       </td>
@@ -236,29 +235,6 @@ function AdminBooking() {
                         >
                           <i className="fas fa-eye"></i>
                         </button>
-                        <div className="d-flex">
-                          {" "}
-                          <button
-                            className="btn btn-info me-2"
-                            onClick={() => handleSpecialStatus(booking.booking_id, "3")}
-                            disabled={!isAdmin}
-                          >
-                            Xác nhận thanh toán
-                          </button>
-                          <button
-                            className="btn btn-danger me-2"
-                            onClick={() => handleCancelBooking(booking.booking_id)}
-                            disabled={!isAdmin}
-                          >
-                            Hủy booking
-                          </button>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => handleViewDetail(booking.booking_id)}
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
-                          </div>
                         </div>
                       </td>
                     </tr>

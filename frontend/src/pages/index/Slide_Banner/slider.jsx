@@ -1,7 +1,7 @@
 import Carousel from "react-bootstrap/Carousel";
 import "../../../css/index/slider.css";
 import { useEffect, useState } from "react";
-import { getAllCars } from "../../../lib/Axiosintance";
+import { getAllCars, searchCars } from "../../../lib/Axiosintance";
 // note:import data cho form booking
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -10,6 +10,7 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { useBooking } from "../../Private/bookingContext";
 import dayjs from "dayjs";
 import "dayjs/locale/vi";
+import { useNavigate } from "react-router-dom";
 
 dayjs.locale("vi");
 function Slider() {
@@ -37,6 +38,9 @@ function Slider() {
     selectedTimes,
     setSelectedTimes,
   } = useBooking();
+
+  const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState("");
 
   // note:Toggle none/block dropdown
   const handleToggleDropdown = (dropdownName) => {
@@ -116,7 +120,6 @@ function Slider() {
     const fetchCars = async () => {
       try {
         const response = await getAllCars();
-        console.log("cars", response.data);
         setcars(response.data);
       } catch (error) {
         console.log("ko thể lấy đuộcxe", error);
@@ -161,6 +164,38 @@ function Slider() {
   };
 
   const toggleDropdown = () => setOpenDropdown(!openDropdown);
+  const navigate = useNavigate();
+
+  const handleSearch = async () => {
+    try {
+      if (!startDate || !endDate) {
+        setError("Vui lòng nhập đầy đủ ngày bắt đầu và ngày kết thúc!");
+        return;
+      }
+      const formatDate = (date) => new Date(date).toISOString().split("T")[0];
+      const formattedStartDate = formatDate(startDate);
+      const formattedEndDate = formatDate(endDate);
+
+      // Gọi hàm tìm kiếm
+      const results = await searchCars(startDate, endDate);
+      if (results?.cars?.length > 0) {
+        const params = new URLSearchParams({
+          start_date: formattedStartDate,
+          end_date: formattedEndDate,
+        });
+        navigate(`/find_car?${params.toString()}`, {
+          state: { results: results.cars },
+        });
+      } else {
+        console.log("Không tìm thấy xe phù hợp.");
+      }
+      setSearchResults(results.data); // Lưu kết quả vào state
+      setError(""); // Xóa lỗi
+    } catch (error) {
+      setError("Không thể tìm kiếm xe. Vui lòng thử lại sau.");
+    }
+  };
+
   return (
     <div className="banner-section" style={{ marginBottom: "-115px" }}>
       <div className="container-slider">
@@ -294,7 +329,7 @@ function Slider() {
                 </span>
               </div>
             </div>
-            <a className="btn btn-primary" target="">
+            <a className="btn btn-primary" target="" onClick={handleSearch}>
               Tìm Xe
             </a>
           </div>

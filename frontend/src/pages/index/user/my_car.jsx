@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Footer from "../footer/footer";
 import Side_bar from "./side_bar";
 import Header from "../header/header";
-import { getBooking } from "../../../lib/Axiosintance";
+import { getBooking, updateBookingByUser, cancelUserBooking } from "../../../lib/Axiosintance";
 import dayjs from "dayjs";
 
 function My_car() {
@@ -279,7 +279,7 @@ function My_car() {
         </div>
       </div>
       <Footer></Footer>
-    </div>
+    </div>  
   );
 }
 

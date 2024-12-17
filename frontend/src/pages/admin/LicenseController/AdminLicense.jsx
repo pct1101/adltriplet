@@ -108,7 +108,6 @@ function AdminDriverLicense() {
                                     <th>Số giấy phép</th>
                                     <th>Tên chủ giấy phép</th>
                                     <th>Trạng thái</th>
-                                    <th>Ngày cấp</th>
                                     <th>Ngày hết hạn</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -142,12 +141,6 @@ function AdminDriverLicense() {
                                                                 ? "Không hợp lệ"
                                                                 : "Không xác định"} {/* Nội dung fallback cho trạng thái khác */}
                                                 </span>
-                                            </td>
-
-                                            <td>
-                                                {license.issue_date
-                                                    ? new Date(license.issue_date).toLocaleDateString()
-                                                    : "N/A"}
                                             </td>
                                             <td>
                                                 {license.expiry_date

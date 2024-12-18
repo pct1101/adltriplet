@@ -37,7 +37,7 @@ class ForgotPasswordController extends Controller
     ]);
 
     // Tạo URL reset password
-    $resetUrl = url("/reset-password?token={$token}&email={$user->email}");
+    $resetUrl = url("http://localhost:3000/reset-password?token={$token}&email={$user->email}");
 
     // Gửi email với đường dẫn reset password
     Mail::raw("Nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn: \n\n{$resetUrl}", function ($message) use ($user) {

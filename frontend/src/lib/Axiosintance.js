@@ -3,6 +3,7 @@ import axios from "axios";
 // Định nghĩa baseURL của API
 const API_URL = "https://api.thuexetulai.online/api";
 // const API_URL = "http://localhost:8000/api";
+
 const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
 const API_URL_LOGO = "https://api.thuexetulai.online/brand_logo/";
 const API_URL_IMG_THUMBS = "https://api.thuexetulai.online/Thumbs/";
@@ -994,7 +995,7 @@ export const getFeedbackByCarId = async (carId) => {
 ////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
 
 //Lấy toàn bộ booking bởi người dùng
-export const getBooking = async () => { 
+export const getBooking = async () => {
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
   // Kiểm tra nếu không có token
@@ -1100,12 +1101,11 @@ export const addBookingUser = async (bookingData) => {
   }
 };
 
-
 // Sửa 1 booking bởi user
 export const updateBookingByUser = async (id, updatedData) => {
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
-  
+
   // Kiểm tra nếu không có token
   if (!apiToken) {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
@@ -1127,7 +1127,6 @@ export const updateBookingByUser = async (id, updatedData) => {
     throw error;
   }
 };
-
 
 export const cancelUserBooking = async (id, cancelReason = "") => {
   const apiToken = localStorage.getItem("remember_token");
@@ -1263,12 +1262,16 @@ export const updateDriverLicense = async (id, payload) => {
   }
 
   try {
-    const response = await axios.put(`${API_URL}/admin/driverlicense/${id}`, payload, {
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json", // Đảm bảo định dạng JSON
-      },
-    });
+    const response = await axios.put(
+      `${API_URL}/admin/driverlicense/${id}`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json", // Đảm bảo định dạng JSON
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Error in API call:", error);
@@ -1586,21 +1589,44 @@ export const searchCars = async (
 // note: postmail forgetpasswprd
 export const resetPassword = async (email) => {
   const apiToken = localStorage.getItem("remember_token");
-
   // Kiểm tra xem token có tồn tại trong localStorage không
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
-
   try {
-    // Xây dựng dữ liệu gửi trong phần body của POST request
     const data = {
       token: apiToken,
       email: email,
     };
-
-    // Gửi yêu cầu API POST
     const response = await axios.post(`${API_URL}/forgot-password`, data, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Password reset successful:", response.data);
+    return response.data; // Trả về kết quả từ API
+  } catch (error) {
+    console.error("Error while resetting password:", error);
+    throw error; // Ném lỗi ra để xử lý phía ngoài
+  }
+};
+// note: postmail forgetpasswprd
+export const resetPassword2 = async (email, newPassword, confirmPassword) => {
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    const data = {
+      token: apiToken,
+      email: email,
+      password: newPassword,
+      password_confirmation: confirmPassword,
+    };
+    const response = await axios.post(`${API_URL}/reset-password`, data, {
       headers: {
         Authorization: `Bearer ${apiToken}`,
         "Content-Type": "application/json",
@@ -1618,9 +1644,10 @@ export const resetPassword = async (email) => {
 // --------------------------- GỬI MAIL LIÊN LẠC NGƯỜI DÙNG ----------------------
 
 export const sendContactMail = (data) => {
-    return axios.post(`${API_URL}/mail/contact`, data)
-        .then(response => response.data)
-        .catch(error => {
-            throw error.response ? error.response.data : error.message;
-        });
+  return axios
+    .post(`${API_URL}/mail/contact`, data)
+    .then((response) => response.data)
+    .catch((error) => {
+      throw error.response ? error.response.data : error.message;
+    });
 };

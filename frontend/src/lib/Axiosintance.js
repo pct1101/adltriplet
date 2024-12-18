@@ -994,7 +994,7 @@ export const getFeedbackByCarId = async (carId) => {
 ////////////////////////////// BOOKING NGƯỜI DÙNG //////////////////////////
 
 //Lấy toàn bộ booking bởi người dùng
-export const getBooking = async () => {
+export const getBooking = async () => { 
   // Lấy token từ localStorage
   const apiToken = localStorage.getItem("remember_token");
   // Kiểm tra nếu không có token
@@ -1129,28 +1129,37 @@ export const updateBookingByUser = async (id, updatedData) => {
 };
 
 
-export const cancelUserBooking = async (bookingId, cancelReason) => {
+export const cancelUserBooking = async (id, cancelReason = "") => {
   const apiToken = localStorage.getItem("remember_token");
   if (!apiToken) {
     console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
 
-  console.log("Id của booking:", bookingId); // Kiểm tra giá trị của id
+  if (!id) {
+    console.error("ID của booking không hợp lệ:", id);
+    throw new Error("ID của booking không hợp lệ.");
+  }
+
+  console.log("ID của booking:", id); // Kiểm tra ID trước khi gọi API
 
   try {
     const response = await axios.put(
-      `${API_URL}/booking/${bookingId}/cancel_by_user`,
-      { cancel_reason: cancelReason },
+      `${API_URL}/booking/${id}/cancel_by_user`,
+      { cancel_reason: cancelReason }, // Gửi lý do hủy nếu có
       {
         headers: {
           Authorization: `Bearer ${apiToken}`,
         },
       }
     );
+    console.log("Booking đã được hủy thành công:", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi hủy booking:", error);
+    if (error.response) {
+      console.error("API Error:", error.response.data);
+    }
     throw error;
   }
 };
@@ -1572,4 +1581,46 @@ export const searchCars = async (
     console.error("Error while searching for cars:", error);
     throw error; // Ném lỗi ra để xử lý phía ngoài
   }
+};
+
+// note: postmail forgetpasswprd
+export const resetPassword = async (email) => {
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Xây dựng dữ liệu gửi trong phần body của POST request
+    const data = {
+      token: apiToken,
+      email: email,
+    };
+
+    // Gửi yêu cầu API POST
+    const response = await axios.post(`${API_URL}/forgot-password`, data, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Password reset successful:", response.data);
+    return response.data; // Trả về kết quả từ API
+  } catch (error) {
+    console.error("Error while resetting password:", error);
+    throw error; // Ném lỗi ra để xử lý phía ngoài
+  }
+};
+
+// --------------------------- GỬI MAIL LIÊN LẠC NGƯỜI DÙNG ----------------------
+
+export const sendContactMail = (data) => {
+    return axios.post(`${API_URL}/mail/contact`, data)
+        .then(response => response.data)
+        .catch(error => {
+            throw error.response ? error.response.data : error.message;
+        });
 };

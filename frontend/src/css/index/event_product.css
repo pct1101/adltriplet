@@ -312,6 +312,7 @@ input:disabled {
 }
 
 .modal-input-body {
+  width: 600px;
   display: flex;
   flex-direction: column;
   grid-gap: 10px;
@@ -478,4 +479,83 @@ input:disabled {
 .booked-day:hover {
   background-color: red !important;
   /* Đảm bảo màu nền đỏ khi hover */
+}
+
+/*note: change_price */
+.range-value.two-item {
+  align-items: center;
+  grid-gap: 16px;
+  gap: 16px;
+}
+
+.range-value {
+  display: flex;
+}
+
+.range-value__item {
+  width: 50%;
+}
+
+.range-value__item {
+  padding: 8px 10px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+}
+
+.range-value__item p {
+  margin: 0;
+}
+
+/* note: brand */
+.vehicle-makes {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 12px;
+  gap: 12px;
+}
+
+.carfinding-options-body .vehicle-makes .custom-radio label {
+  display: flex;
+  align-items: center;
+  grid-gap: 8px;
+  gap: 8px;
+  line-height: 24px;
+}
+
+.carfinding-options-body .vehicle-makes .custom-radio label p {
+  margin: 0;
+}
+
+.carfinding-options-body .vehicle-makes .custom-radio label img {
+  width: 24px;
+  height: 24px;
+}
+
+.carfinding-options-body .vehicle-makes .custom-radio {
+  width: calc(50% - 6px);
+}
+
+.carfinding-options-body .vehicle-types .custom-checkbox-selected input:checked+label .vehicle-types__item {
+  border: 1px solid #5fcf86;
+  background: #effaf3;
+}
+
+
+.custom-radio input[type=radio]:checked+label:after {
+  background-position: -16px 0;
+}
+
+.custom-checkbox-indeterminate input[type=radio]:checked+label:after,
+.custom-checkbox-selected input[type=radio]:checked+label:after,
+.custom-radio input[type=radio]:checked+label:after {
+  background-position: -16px 0;
+}
+
+
+input[type=checkbox],
+input[type=radio] {
+  position: absolute;
+  visibility: hidden;
+  width: auto;
+  box-shadow: none;
 }

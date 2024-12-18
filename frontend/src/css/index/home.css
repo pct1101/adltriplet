@@ -1551,9 +1551,9 @@ a.btn.btn-primary.btn--l {
   display: flex;
   gap: 5px;
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
+  border-radius: 100px;
+  border: 1px solid #aaa;
+  justify-content: center;
 }
 
 .item-dropdown__wrap {
@@ -1563,11 +1563,37 @@ a.btn.btn-primary.btn--l {
   align-items: center;
   grid-gap: 4px;
   gap: 4px;
-  border-radius: 100px;
-  border: 1px solid #aaa;
   padding: 4px 8px;
 }
 
 .item-dropdown__wrap p {
   margin: 0px;
 }
+
+.filter-dropdown .swiper {
+  display: flex;
+  gap: 5px;
+}
+
+.filter-dropdown .cartop {
+  height: 30px;
+}
+
+.slide-drop {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+}
+
+.slide-drop .swiper {
+  height: 35px;
+}
+
+.slide-drop .swiper .swiper-wrapper {
+  gap: 4px;
+}
+
+.slide-drop .swiper .swiper-wrapper .swiper-slide {
+  width: 140px !important;
+}
+

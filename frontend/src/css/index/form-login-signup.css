@@ -5,6 +5,30 @@
     margin-bottom: 20px;
 }
 
+.custom-checkbox-selected label {
+    display: block;
+    font-size: .875rem;
+}
+
+.custom-checkbox-selected input[type=checkbox]:checked+label:after {
+    background-position: -32px 0;
+}
+
+.custom-checkbox-indeterminate label:after,
+.custom-checkbox-selected label:after {
+    background: url("https://www.mioto.vn/static/media/checkbox.1365d61a.svg") 0 0 no-repeat;
+    left: 80px;
+}
+
+a.text-primary {
+    color: #5fcf86 !important;
+    text-decoration: none;
+}
+
+a.fontWeight-5 {
+    font-weight: 500 !important;
+}
+
 .background-login-signup {
     position: absolute;
     top: 0;

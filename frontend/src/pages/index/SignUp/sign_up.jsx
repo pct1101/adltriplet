@@ -260,10 +260,14 @@ const Dangky = () => {
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="group-box">
+                    <div
+                      className="custom-checkbox-selected"
+                      style={{ position: "relative" }}
+                    >
                       <input
                         className="checkbox"
                         type="checkbox"
+                        id="agree"
                         name="agree"
                         value="yes"
                         checked={formData.agree}
@@ -274,12 +278,26 @@ const Dangky = () => {
                           })
                         }
                       />
-                      Tôi đã đọc và đồng ý với
-                      <a href="/login" className="acess">
-                        chính sách & quy định
-                      </a>
-                      của ADL TRIPBEL T
-                    </p>
+                      <label htmlFor="agree">
+                        Tôi đã đọc và đồng ý với{" "}
+                        <a
+                          className="text-primary fontWeight-5"
+                          target="_blank"
+                          href="/privacy"
+                        >
+                          Chính sách &amp; quy định
+                        </a>{" "}
+                        và{" "}
+                        <a
+                          className="text-primary fontWeight-5"
+                          target="_blank"
+                          href="/personalinfo"
+                        >
+                          Chính sách bảo vệ dữ liệu cá nhân
+                        </a>{" "}
+                        của Mioto.
+                      </label>
+                    </div>
                   </div>
                   {error && <div className="alert alert-danger">{error}</div>}
                   {success && (

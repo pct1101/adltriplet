@@ -3,7 +3,7 @@ import Header from "../header/header";
 import Footer from "../footer/footer";
 import { useNavigate } from "react-router-dom";
 import "../../../css/index/form-login-signup.css";
-import { login } from "../../../lib/Axiosintance";
+import { login, resetPassword } from "../../../lib/Axiosintance";
 import { useAuth } from "../../Private/Auth";
 
 const Login = () => {
@@ -14,6 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
   // note: set value validate form
   const [emailError, setEmailError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
   // note: showForget password
   const [showForgerPassword, setShowForgerPassword] = useState(false);
@@ -70,8 +71,21 @@ const Login = () => {
   };
 
   //  note: forget password
-  const handleForgetPassword = () => {
+  const handleForgetPassword = async (e, token) => {
     setShowForgerPassword(!showForgerPassword);
+    e.preventDefault();
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set("token", token);
+      urlParams.set("email", email);
+      const response = await resetPassword(email);
+      console.log("Password reset response:", response);
+      const successMessage = response.message;
+      setSuccessMessage(successMessage);
+    } catch (error) {
+      setError("Failed to reset password. Please try again.");
+    }
   };
 
   const handleCloseModal = () => {
@@ -126,6 +140,9 @@ const Login = () => {
                     )}
                   </div>
                   {error && <div className="alert alert-danger">{error}</div>}
+                  {successMessage && (
+                    <div className="alert alert-success">{successMessage}</div>
+                  )}
                   <div
                     className="forgot-password"
                     onClick={handleForgetPassword}
@@ -147,6 +164,7 @@ const Login = () => {
                   </div>
                 </form>
               </div>
+
               <div className="text-center">
                 <p>
                   Đăng ký ngay để
@@ -185,8 +203,7 @@ const Login = () => {
                     <div className="wrap-input ">
                       <div className="wrap-text">
                         <input
-                          type="text"
-                          placeholder=""
+                          type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
@@ -195,7 +212,10 @@ const Login = () => {
                   </div>
                 </div>
                 <div className="wrap-btn">
-                  <a disabled="" className="btn btn-primary btn--m">
+                  <a
+                    className="btn btn-primary btn--m"
+                    onClick={handleForgetPassword}
+                  >
                     Tiếp tục
                   </a>
                 </div>

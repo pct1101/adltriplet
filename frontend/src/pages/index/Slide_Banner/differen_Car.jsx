@@ -2,22 +2,16 @@ import React, { useEffect, useState } from "react";
 import "../../../css/index/home.css";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
 import { Autoplay } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
 
 function Differen_Car() {
   const [swiperRef, setSwiperRef] = useState(null);
-
-  // Create array with 500 slides
-  const [slides, setSlides] = useState(
-    Array.from({ length: 10 }).map((_, index) => `cars ${index + 1}`)
-  );
 
   const [cars, setCars] = useState([]);
 

@@ -12,6 +12,9 @@ function My_car() {
   const [filteredData, setFilteredData] = useState([]); // Dữ liệu sau khi lọc
   const [selectedStatus, setSelectedStatus] = useState("0"); // Giá trị mặc định là "Tất cả"
   const [isUpdating, setIsUpdating] = useState(false); // Trạng thái đang cập nhật
+  const [isCanceling, setIsCanceling] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
 
 
   useEffect(() => {
@@ -43,6 +46,51 @@ function My_car() {
     setSelectedStatus(e.target.value);
   };
 
+  const cancelReasons = [
+    "Tôi muốn đặt xe khác",
+    "Tôi muốn đổi lại khung thời gian đặt xe",
+    "Tôi không còn nhu cầu thuê xe",
+    "Lý do khác",
+  ];
+
+  const handleCancelBooking = async () => {
+    const bookingId = selectedBookingId; // Lấy ID từ selectedBookingId (ID của booking được chọn)
+
+    if (!cancelReason) {
+      alert("Vui lòng chọn lý do hủy.");
+      return;
+    }
+    if (!bookingId) {
+      console.error("Booking ID không hợp lệ:", bookingId);
+      return;
+    }
+
+    try {
+      setIsCanceling(true);
+      await cancelUserBooking(bookingId, cancelReason); // Gọi API hủy booking với ID và lý do hủy
+      alert("Hủy booking thành công!");
+
+      // Cập nhật lại trạng thái booking sau khi hủy
+      setFilteredData((prev) =>
+        prev.map((booking) =>
+          booking.id === bookingId
+            ? { ...booking, booking_status: 5, cancel_reason: cancelReason } // Cập nhật trạng thái và lý do hủy
+            : booking
+        )
+      );
+
+      // Reset lại các giá trị sau khi hủy
+      setSelectedBookingId(null);
+      setCancelReason("");
+    } catch (error) {
+      console.error("Lỗi khi hủy booking:", error);
+      alert("Có lỗi xảy ra khi hủy booking.");
+    } finally {
+      setIsCanceling(false);
+    }
+  };
+
+
   useEffect(() => {
     if (bookingData && bookingData[0]?.start_date) {
       const startDate = bookingData[0].start_date;
@@ -70,7 +118,7 @@ function My_car() {
           <div className="right-user">
             <Side_bar></Side_bar>
           </div>
-          
+
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">
@@ -127,13 +175,13 @@ function My_car() {
                                         : "#198754", // Trạng thái khác (xanh lá)
                             color:
                               booking.booking_status === 1 ||
-                              booking.booking_status === 4
+                                booking.booking_status === 4
                                 ? "black" // Chữ màu đen cho trạng thái vàng
                                 : "white", // Chữ màu trắng cho trạng thái khác
-                                fontSize: ".550rem"
-                              
+                            fontSize: ".550rem"
+
                           }}
-                          
+
                         >
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
@@ -147,10 +195,13 @@ function My_car() {
                                     ? "Hủy bởi admin"
                                     : "Trạng thái không xác định"}
                           {/* || {booking.cancel_reason} */}
-                        </div> 
-                        <div className="desc-name">
-                         Lý do : {booking.cancel_reason}
-                         </div> 
+                        </div>
+                        {/* <div className="desc-name">
+                          Lý do : {booking.cancel_reason}
+                        </div> */}
+                        {booking.booking_status === 5 && (
+                          <div className="desc-name">Lý do hủy: {booking.cancel_reason}</div>
+                        )}
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>
                         </div>
@@ -266,7 +317,16 @@ function My_car() {
                         <button className="btn btn-primary">
                           Xem chi tiết
                         </button>
-                        <button className="btn btn-danger">Hủy chuyến</button>
+                        {booking.booking_status !== 4 && booking.booking_status !== 5 && (
+                          <button className="btn btn-danger"
+                            onClick={() => {
+                              setSelectedBookingId(booking.booking_id);
+                              setIsCanceling(true);
+                            }}
+                          >
+                            Hủy chuyến
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -274,12 +334,33 @@ function My_car() {
               ) : (
                 <p>Vui lòng chờ</p>
               )}
+              {/* Modal chọn lý do hủy */}
+              {isCanceling && (
+                <div className="cancel-modal">
+                  <h5>Chọn lý do hủy chuyến</h5>
+                  <select
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                  >
+                    <option value="">-- Chọn lý do --</option>
+                    {cancelReasons.map((reason, index) => (
+                      <option key={index} value={reason}>
+                        {reason}
+                      </option>
+                    ))}
+                  </select>
+                  <div>
+                    <button onClick={handleCancelBooking}>Xác nhận hủy</button>
+                    <button onClick={() => setIsCanceling(false)}>Hủy bỏ</button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
       <Footer></Footer>
-    </div>  
+    </div>
   );
 }
 

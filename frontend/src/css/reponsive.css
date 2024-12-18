@@ -267,9 +267,12 @@
         align-items: center;
         grid-gap: 4px;
         gap: 4px;
-        border-radius: 10px;
-        border: 1px solid #aaa;
+
         padding: 2px 4px;
+    }
+
+    .slide-drop .swiper .swiper-wrapper {
+        width: 310px;
     }
 
 }
@@ -343,4 +346,5 @@
         right: 230px;
 
     }
+
 }

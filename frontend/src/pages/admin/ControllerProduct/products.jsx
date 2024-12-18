@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllCars, deleteCarById } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
+import ReactPaginate from "react-paginate";
 
 const AdminProducts = () => {
   const [cars, setCars] = useState([]);
-  const [filteredCars, setFilteredCars] = useState([]); // State lưu danh sách xe đã lọc
-  const [filterBrand, setFilterBrand] = useState("All"); // State cho thương hiệu cần lọc
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [filteredCars, setFilteredCars] = useState([]);
+  const [filterBrand, setFilterBrand] = useState("All");
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5;
   const navigate = useNavigate();
 
   // Style objects for CSS-in-JS
@@ -51,9 +53,18 @@ const AdminProducts = () => {
     },
   };
 
+  const displayedCars = filteredCars.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+  
   useEffect(() => {
     fetchCars();
-    checkUserRole();
+    // checkUserRole();
   }, []);
 
   useEffect(() => {
@@ -70,10 +81,10 @@ const AdminProducts = () => {
     }
   };
 
-  const checkUserRole = () => {
-    const role = localStorage.getItem("userRole");
-    setIsAdmin(role === "admin");
-  };
+  // const checkUserRole = () => {
+  //   const role = localStorage.getItem("userRole");
+  //   setIsAdmin(role === "admin");
+  // };
 
   const applyBrandFilter = () => {
     if (filterBrand === "All") {
@@ -187,7 +198,7 @@ const getBrandName = (brandid) => {
                 </tr>
               </thead>
               <tbody>
-                {filteredCars.map((car) => (
+              {displayedCars.map((car) =>(
                   <tr key={car.car_id}>
                     <td className="short-info-column">
                       <div className="row">
@@ -222,7 +233,7 @@ const getBrandName = (brandid) => {
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteCar(car.car_id)}
-                        disabled={!isAdmin}
+                        // disabled={!isAdmin}
                       >
                         <i className="fas fa-trash"></i> 
                       </button>
@@ -231,6 +242,19 @@ const getBrandName = (brandid) => {
                 ))}
               </tbody>
             </table>
+            
+            {/* Phân trang */}
+            <ReactPaginate
+              previousLabel={"Trước"}
+              nextLabel={"Sau"}
+              breakLabel={"..."}
+              pageCount={Math.ceil(filteredCars.length / itemsPerPage)}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
           </div>
         </div>
       </section>

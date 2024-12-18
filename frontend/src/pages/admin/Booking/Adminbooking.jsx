@@ -5,6 +5,7 @@ import {
   getAllBookings,
   deleteBookingById,
   updateBooking,
+  cancelBookingByAdmin
 } from "../../../lib/Axiosintance";
 
 import Side_bar from "../component/side_bar";
@@ -162,7 +163,6 @@ function AdminBooking() {
                   bookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td>{booking.booking_id}</td>
-                      <td>{booking.user_id}</td>
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
                       </td>
@@ -176,13 +176,13 @@ function AdminBooking() {
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
                       </td>
-                      <td>
+                      {/* <td>
                         {new Date(booking.booking_date).toLocaleDateString()}
                       </td>
                       <td>
                         {new Date(booking.start_date).toLocaleDateString()}
                       </td>
-                      <td>{new Date(booking.end_date).toLocaleDateString()}</td>
+                      <td>{new Date(booking.end_date).toLocaleDateString()}</td> */}
                       <td>
                         <select
                           value={booking.booking_status}
@@ -197,13 +197,9 @@ function AdminBooking() {
                         >
                           <option value="1">Booking thành công</option>
                           {/* <option value="2" >Xác nhận thanh toán</option> */}
+
                           <option value="3">Đã thanh toán</option>
                           <option value="4">Hủy bởi user</option>
-                          <option value="5">Hủy bởi admin</option>
-                          <option value="1">Booking thành công</option>
-                          <option value="2">Đã thanh toán</option>
-                          <option value="4">Chờ xác nhận </option>
-                          <option value="3">Xác nhận </option>
                           <option value="5">Hủy bởi admin</option>
                         </select>
                       </td>
@@ -214,6 +210,7 @@ function AdminBooking() {
                           : "-"}
                       </td>
                       <td>
+                        <div className="d-flex justify-content-center">
                         <button
                           className="btn btn-info me-2"
                           onClick={() =>
@@ -238,32 +235,6 @@ function AdminBooking() {
                         >
                           <i className="fas fa-eye"></i>
                         </button>
-                        <div className="d-flex">
-                          {" "}
-                          <button
-                            className="btn btn-info me-2"
-                            onClick={() =>
-                              handleSpecialStatus(booking.booking_id, "3")
-                            }
-                            disabled={!isAdmin}
-                          >
-                            Xác nhận
-                          </button>
-                          <button
-                            className="btn btn-danger me-2"
-                            onClick={() =>
-                              handleSpecialStatus(booking.booking_id, "5")
-                            }
-                            disabled={!isAdmin}
-                          >
-                            Hủy booking
-                          </button>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => handleViewDetail(booking.booking_id)}
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
                         </div>
                       </td>
                     </tr>

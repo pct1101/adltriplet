@@ -23,7 +23,7 @@ function Register() {
     try {
       const response = await sendContactMail(formData);
       alert(response.message); // Hiển thị thông báo thành công
-    } catch (error) { 
+    } catch (error) {
       alert("Gửi yêu cầu thất bại. Vui lòng thử lại!");
       console.error(error);
     }

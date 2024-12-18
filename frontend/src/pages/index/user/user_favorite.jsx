@@ -6,6 +6,7 @@ import Footer from "../footer/footer";
 import "../../../css/user/user.css";
 import { getFavoriteUser, deleteFavorite } from "../../../lib/Axiosintance";
 import Loading from "../event/loading";
+import { API_URL_IMG } from "../../../lib/Axiosintance";
 
 function User_favorite() {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +87,7 @@ function User_favorite() {
                               className="scale-img"
                               src={
                                 car.car && car.car.car_image
-                                  ? `/img/${car.car.car_image}`
+                                  ? `${API_URL_IMG}/${car.car.car_image}`
                                   : "/img/default-image.jpg"
                               }
                               alt="Car"

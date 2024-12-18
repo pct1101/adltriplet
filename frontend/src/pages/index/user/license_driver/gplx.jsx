@@ -202,7 +202,8 @@ function Gplx() {
         <div className="note-license">
           <p>
             <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
-            <u>người đặt xe</u> trên Mioto (đã xác thực GPLX) <b>ĐỒNG THỜI </b>
+            <u>người đặt xe</u> trên ADL TRIPLE T (đã xác thực GPLX){" "}
+            <b>ĐỒNG THỜI </b>
             phải là <u>người nhận xe.</u>
           </p>
         </div>

@@ -301,7 +301,7 @@ function App() {
                 path="/user_repassword"
                 element={<User_change_password />}
               />
-              <Route path="/forget_password" element={<Forget_password />} />
+              <Route path="/reset-password" element={<Forget_password />} />
               <Route path="/user_car" element={<My_car />} />
               <Route path="/gplx" element={<Layout_GPLX />} />
 

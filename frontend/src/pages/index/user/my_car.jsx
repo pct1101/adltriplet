@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import Footer from "../footer/footer";
 import Side_bar from "./side_bar";
 import Header from "../header/header";
-import { getBooking, updateBookingByUser, cancelUserBooking } from "../../../lib/Axiosintance";
+import {
+  getBooking,
+  updateBookingByUser,
+  cancelUserBooking,
+} from "../../../lib/Axiosintance";
 import dayjs from "dayjs";
 
 function My_car() {
@@ -15,7 +19,6 @@ function My_car() {
   const [isCanceling, setIsCanceling] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [selectedBookingId, setSelectedBookingId] = useState(null);
-
 
   useEffect(() => {
     const fecthBookingData = async () => {
@@ -89,7 +92,6 @@ function My_car() {
       setIsCanceling(false);
     }
   };
-
 
   useEffect(() => {
     if (bookingData && bookingData[0]?.start_date) {
@@ -165,42 +167,42 @@ function My_car() {
                               booking.booking_status === 1
                                 ? "#ffc107" // Chờ thanh toán (vàng)
                                 : booking.booking_status === 2
-                                  ? "#0d6efd" // Chờ xác nhận thanh toán (xanh dương)
-                                  : booking.booking_status === 3
-                                    ? "green" // Đã thanh toán (cam)
-                                    : booking.booking_status === 4
-                                      ? "#dc3545" // Hủy bởi người dùng (vàng)
-                                      : booking.booking_status === 5
-                                        ? "#dc3545" // Hủy bởi admin (đỏ)
-                                        : "#198754", // Trạng thái khác (xanh lá)
+                                ? "#0d6efd" // Chờ xác nhận thanh toán (xanh dương)
+                                : booking.booking_status === 3
+                                ? "green" // Đã thanh toán (cam)
+                                : booking.booking_status === 4
+                                ? "#dc3545" // Hủy bởi người dùng (vàng)
+                                : booking.booking_status === 5
+                                ? "#dc3545" // Hủy bởi admin (đỏ)
+                                : "#198754", // Trạng thái khác (xanh lá)
                             color:
                               booking.booking_status === 1 ||
-                                booking.booking_status === 4
+                              booking.booking_status === 4
                                 ? "black" // Chữ màu đen cho trạng thái vàng
                                 : "white", // Chữ màu trắng cho trạng thái khác
-                            fontSize: ".550rem"
-
+                            fontSize: ".550rem",
                           }}
-
                         >
                           {booking.booking_status === 1
                             ? "Chưa thanh toán"
                             : booking.booking_status === 2
-                              ? "Xác nhận thanh toán"
-                              : booking.booking_status === 3
-                                ? "Đã thanh toán"
-                                : booking.booking_status === 4
-                                  ? "Đã hủy"
-                                  : booking.booking_status === 5
-                                    ? "Hủy bởi admin"
-                                    : "Trạng thái không xác định"}
+                            ? "Xác nhận thanh toán"
+                            : booking.booking_status === 3
+                            ? "Đã thanh toán"
+                            : booking.booking_status === 4
+                            ? "Đã hủy"
+                            : booking.booking_status === 5
+                            ? "Hủy bởi admin"
+                            : "Trạng thái không xác định"}
                           {/* || {booking.cancel_reason} */}
                         </div>
                         {/* <div className="desc-name">
                           Lý do : {booking.cancel_reason}
                         </div> */}
                         {booking.booking_status === 5 && (
-                          <div className="desc-name">Lý do hủy: {booking.cancel_reason}</div>
+                          <div className="desc-name">
+                            Lý do hủy: {booking.cancel_reason}
+                          </div>
                         )}
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>
@@ -265,7 +267,6 @@ function My_car() {
                           <span className="info">{booking.city} </span>
                         </div>
 
-
                         <div className="days">
                           <div className="desc-days">
                             <div className="form-item">
@@ -317,16 +318,18 @@ function My_car() {
                         <button className="btn btn-primary">
                           Xem chi tiết
                         </button>
-                        {booking.booking_status !== 4 && booking.booking_status !== 5 && (
-                          <button className="btn btn-danger"
-                            onClick={() => {
-                              setSelectedBookingId(booking.booking_id);
-                              setIsCanceling(true);
-                            }}
-                          >
-                            Hủy chuyến
-                          </button>
-                        )}
+                        {booking.booking_status !== 4 &&
+                          booking.booking_status !== 5 && (
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => {
+                                setSelectedBookingId(booking.booking_id);
+                                setIsCanceling(true);
+                              }}
+                            >
+                              Hủy chuyến
+                            </button>
+                          )}
                       </div>
                     </div>
                   </div>
@@ -351,7 +354,9 @@ function My_car() {
                   </select>
                   <div>
                     <button onClick={handleCancelBooking}>Xác nhận hủy</button>
-                    <button onClick={() => setIsCanceling(false)}>Hủy bỏ</button>
+                    <button onClick={() => setIsCanceling(false)}>
+                      Hủy bỏ
+                    </button>
                   </div>
                 </div>
               )}

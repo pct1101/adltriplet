@@ -4,7 +4,7 @@ import {
   editDriverLicense,
   getDriverLicense,
 } from "../../../../lib/Axiosintance";
-const BASE_URL = "http://localhost:8000/";
+const BASE_URL = "https://api.thuexetulai.online/";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");

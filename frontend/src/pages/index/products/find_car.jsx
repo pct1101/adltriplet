@@ -306,9 +306,7 @@ function Find_car() {
 
   //note: Hàm nhóm xe theo loại xe(xe sàn, xe tự động)
   const groupCarsByTranmission_Type = () => {
-    const groupCarsByTranmission = {
-      "Tất cả": [], // Thêm nhóm "Tất cả"
-    };
+    const groupCarsByTranmission = {};
 
     cars.forEach((car) => {
       const transmission_type = car.transmission_type; // Lấy số chỗ ngồi từ mỗi xe
@@ -316,7 +314,6 @@ function Find_car() {
         groupCarsByTranmission[transmission_type] = [];
       }
       groupCarsByTranmission[transmission_type].push(car);
-      groupCarsByTranmission["Tất cả"].push(car);
     });
     return groupCarsByTranmission;
   };
@@ -333,14 +330,13 @@ function Find_car() {
 
   //note: Hàm nhóm xe theo brand
   const groupCarsByBrand_name = () => {
-    const groupCarsByBrand = { "Tất cả": [] };
+    const groupCarsByBrand = {};
     cars.forEach((car) => {
       const brand_name = car.brand.brand_name; // Lấy số chỗ ngồi từ mỗi xe
       if (!groupCarsByBrand[brand_name]) {
         groupCarsByBrand[brand_name] = [];
       }
       groupCarsByBrand[brand_name].push(car);
-      groupCarsByBrand["Tất cả"].push(car);
     });
     return groupCarsByBrand;
   };
@@ -388,7 +384,7 @@ function Find_car() {
     }
     handleCloseModal();
   };
-  // note: lọc chỗ ngồi với ngày
+  // note: lọc
   useEffect(() => {
     const filterCarsBySeats = () => {
       const seatsNumber = Number(selectedSeats) || 0;

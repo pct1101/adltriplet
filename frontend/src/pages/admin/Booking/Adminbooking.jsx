@@ -71,6 +71,32 @@ function AdminBooking() {
     }
   };
 
+  // xác nhận hủy bởi admin
+  const submitCancelBooking = async () => {
+    if (!selectedBookingId || !cancelReason) {
+      alert("Vui lòng chọn lý do hủy!");
+      return;
+    }
+
+    try {
+      await cancelBookingByAdmin(selectedBookingId, {
+        cancel_reason: cancelReason,
+        cancel_note: "Hủy bởi admin",
+      });
+
+      // Cập nhật lại danh sách booking sau khi hủy thành công
+      fetchBookings();
+      alert("Booking đã được hủy thành công!");
+    } catch (error) {
+      console.error("Lỗi khi hủy booking:", error);
+      alert("Hủy booking thất bại: " + error.message);
+    } finally {
+      setShowCancelModal(false);
+      setSelectedBookingId(null);
+      setCancelReason("");
+    }
+  };
+
   // Cập nhật trạng thái
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
@@ -122,7 +148,7 @@ function AdminBooking() {
       case "5":
         return { backgroundColor: "white", color: "red" };
       default:
-        return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
+      // return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
     }
   };
 
@@ -211,30 +237,30 @@ function AdminBooking() {
                       </td>
                       <td>
                         <div className="d-flex justify-content-center">
-                        <button
-                          className="btn btn-info me-2"
-                          onClick={() =>
-                            handleSpecialStatus(booking.booking_id, "3")
-                          }
-                          disabled={!isAdmin}
-                        >
-                          Xác nhận thanh toán
-                        </button>
-                        <button
-                          className="btn btn-danger me-2"
-                          onClick={() =>
-                            handleCancelBooking(booking.booking_id)
-                          }
-                          disabled={!isAdmin}
-                        >
-                          Hủy booking
-                        </button>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => handleViewDetail(booking.booking_id)}
-                        >
-                          <i className="fas fa-eye"></i>
-                        </button>
+                          <button
+                            className="btn btn-info me-2"
+                            onClick={() =>
+                              handleSpecialStatus(booking.booking_id, "3")
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Xác nhận thanh toán
+                          </button>
+                          <button
+                            className="btn btn-danger me-2"
+                            onClick={() =>
+                              handleCancelBooking(booking.booking_id)
+                            }
+                            disabled={!isAdmin}
+                          >
+                            Hủy booking
+                          </button>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleViewDetail(booking.booking_id)}
+                          >
+                            <i className="fas fa-eye"></i>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -287,7 +313,9 @@ function AdminBooking() {
           <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
             Đóng
           </Button>
-          <Button variant="danger">Xác nhận hủy</Button>
+          <Button variant="danger" onClick={submitCancelBooking}>
+            Xác nhận hủy
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

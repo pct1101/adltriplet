@@ -1540,3 +1540,35 @@ export const searchCars = async (
     throw error; // Ném lỗi ra để xử lý phía ngoài
   }
 };
+
+// note: postmail forgetpasswprd
+export const resetPassword = async (email) => {
+  const apiToken = localStorage.getItem("remember_token");
+
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    // Xây dựng dữ liệu gửi trong phần body của POST request
+    const data = {
+      token: apiToken,
+      email: email,
+    };
+
+    // Gửi yêu cầu API POST
+    const response = await axios.post(`${API_URL}/forgot-password`, data, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("Password reset successful:", response.data);
+    return response.data; // Trả về kết quả từ API
+  } catch (error) {
+    console.error("Error while resetting password:", error);
+    throw error; // Ném lỗi ra để xử lý phía ngoài
+  }
+};

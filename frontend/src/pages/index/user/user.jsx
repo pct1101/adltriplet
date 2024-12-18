@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { getUserProfile } from "../../../lib/Axiosintance";
 import Side_bar from "./side_bar";
 import Loading from "../event/loading";
+import Gplx from "./license_driver/gplx";
 
 function User() {
   const [isLoading, setIsLoading] = useState(false);
@@ -276,6 +277,7 @@ function User() {
                 </div>
               </div>
             </div>
+            <Gplx></Gplx>
           </div>
         </div>
       </div>

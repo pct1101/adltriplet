@@ -63,11 +63,6 @@ function Header() {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/find_car">
-                Thuê Xe
-              </a>
-            </li>
-            <li className="nav-item">
               <a className="nav-link" href="/news">
                 Tin tức{" "}
               </a>

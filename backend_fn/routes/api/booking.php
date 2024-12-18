@@ -33,5 +33,5 @@ Route::middleware('auth:sanctum')->prefix('booking')->group(function () {
     Route::delete('{id}', [BookingController::class, 'destroy']);
 
     //Hủy booking do user
-    Route::put('/booking/{id}/cancel_by_user', [BookingController::class, 'cancelByUser']);
+    Route::put('/{id}/cancel_by_user', [BookingController::class, 'cancelByUser']);
 });

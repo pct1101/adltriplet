@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // Định nghĩa baseURL của API
-// const API_URL_web = "https://api.thuexetulai.online/api";
-const API_URL = "http://localhost:8000/api";
+const API_URL = "https://api.thuexetulai.online/api";
+// const API_URL = "http://localhost:8000/api";
 const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
 const API_URL_LOGO = "https://api.thuexetulai.online/brand_logo/";
 const API_URL_IMG_THUMBS = "https://api.thuexetulai.online/Thumbs/";

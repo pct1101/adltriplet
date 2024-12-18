@@ -4,7 +4,7 @@ import { updateCar, getCarById, getAllCarBrands } from "../../../lib/Axiosintanc
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import Footer from "../component/footer";
-// const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
+const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
 
 
 const EditCar = () => {
@@ -244,7 +244,7 @@ const EditCar = () => {
                     />
                   ) : carImage ? (
                     <img
-                    src={`http://localhost:8000/imgs/${carImage}`} // Hiển thị ảnh từ API
+                    src={`${API_URL_IMG}/${carImage}`} // Hiển thị ảnh từ API
                       // alt="Current Car"
                       style={{ width: "100px", height: "auto" }}
                     />

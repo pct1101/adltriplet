@@ -84,8 +84,9 @@ function AdminBooking() {
         cancel_note: "Hủy bởi admin",
       });
 
-      // Cập nhật lại danh sách booking sau khi hủy thành công
-      fetchBookings();
+      // Cập nhật trạng thái về 4
+      await handleStatusChange(selectedBookingId, "4");
+
       alert("Booking đã được hủy thành công!");
     } catch (error) {
       console.error("Lỗi khi hủy booking:", error);
@@ -100,14 +101,26 @@ function AdminBooking() {
   // Cập nhật trạng thái
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
-      const updatedBookingData = { booking_status: newStatus };
+      let updatedStatus = newStatus;
+      // Nếu trạng thái là 7 (Xác nhận hủy bởi người dùng), chuyển về trạng thái 4
+      if (newStatus === "7") {
+        updatedStatus = "4";
+      }
+
+      const updatedBookingData = { booking_status: updatedStatus };
       await updateBooking(bookingId, updatedBookingData);
+
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking.booking_id === bookingId
-            ? { ...booking, booking_status: newStatus }
+            ? { ...booking, booking_status: updatedStatus }
             : booking
         )
+      );
+      alert(
+        updatedStatus === "4"
+          ? "Trạng thái đã chuyển về 'Hủy bởi user'!"
+          : "Trạng thái đã được cập nhật!"
       );
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái booking:", error);
@@ -130,25 +143,48 @@ function AdminBooking() {
   };
 
   // Áp dụng màu sắc dựa trên trạng thái
+  // const getStatusStyle = (status) => {
+  //   if (!status) {
+  //     console.warn("Trạng thái không hợp lệ:", status); // Cảnh báo khi trạng thái không hợp lệ
+  //     // return { backgroundColor: "#6c757d", color: "white" }; // Màu mặc định (xám)
+  //   }
+
+  //   switch (status) {
+  //     case "1":
+  //       return { backgroundColor: "white", color: "green" };
+  //     case "2":
+  //       return { backgroundColor: "white", color: "green" };
+  //     case "3":
+  //       return { backgroundColor: "white", color: "green" };
+  //     case "4":
+  //       return { backgroundColor: "white", color: "red" };
+  //     case "5":
+  //       return { backgroundColor: "white", color: "red" };
+  //     default:
+  //     // return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
+  //   }
+  // };
+
   const getStatusStyle = (status) => {
     if (!status) {
       console.warn("Trạng thái không hợp lệ:", status); // Cảnh báo khi trạng thái không hợp lệ
       // return { backgroundColor: "#6c757d", color: "white" }; // Màu mặc định (xám)
     }
-
     switch (status) {
       case "1":
-        return { backgroundColor: "white", color: "green" };
-      case "2":
-        return { backgroundColor: "white", color: "green" };
+        return { backgroundColor: "white", color: "green" }; // Thành công
       case "3":
-        return { backgroundColor: "white", color: "green" };
+        return { backgroundColor: "white", color: "blue" }; // Đã thanh toán
       case "4":
-        return { backgroundColor: "white", color: "red" };
+        return { backgroundColor: "white", color: "orange" }; // Hủy bởi user
       case "5":
-        return { backgroundColor: "white", color: "red" };
+        return { backgroundColor: "white", color: "red" }; // Hủy bởi admin
+      case "6":
+        return { backgroundColor: "white", color: "green" }; // Hoàn thành
+      case "7":
+        return { backgroundColor: "white", color: "darkred" }; // Xác nhận hủy
       default:
-      // return { backgroundColor: "#198754", color: "white" }; // Default màu xanh
+        // return { backgroundColor: "#ccc", color: "black" }; // Mặc định
     }
   };
 
@@ -227,6 +263,8 @@ function AdminBooking() {
                           <option value="3">Đã thanh toán</option>
                           <option value="4">Hủy bởi user</option>
                           <option value="5">Hủy bởi admin</option>
+                          <option value="6">Đã hoàn thành</option>
+                          <option value="7">Xác nhận hủy bởi người dùng</option>
                         </select>
                       </td>
                       {/* Hiển thị lý do hủy chỉ khi trạng thái là 5 */}
@@ -254,6 +292,12 @@ function AdminBooking() {
                             disabled={!isAdmin}
                           >
                             Hủy booking
+                          </button>
+                          <button
+                            className="btn btn-warning me-2"
+                            onClick={() => handleStatusChange(booking.booking_id, "7")}
+                          >
+                            Xác nhận hủy bởi người dùng
                           </button>
                           <button
                             className="btn btn-secondary"

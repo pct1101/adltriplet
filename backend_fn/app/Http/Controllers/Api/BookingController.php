@@ -170,7 +170,7 @@ class BookingController
         // Lấy booking dựa trên ID và người dùng hiện tại
         $booking = Booking::where('booking_id', $id)
             ->where('user_id', Auth::id()) // Chỉ cho phép hủy booking của chính họ
-            ->where('booking_status', 1) // Chỉ có thể hủy booking đang hoạt động
+            ->whereIn('booking_status', [1, 2, 3]) // Chỉ có thể hủy booking đang hoạt động
             ->first();
 
         if (!$booking) {
@@ -178,7 +178,7 @@ class BookingController
         }
 
         // Cập nhật trạng thái booking thành hủy
-        $booking->booking_status = 4; // 0 = Hủy do người dùng
+        $booking->booking_status = 7; // 0 = Hủy do người dùng
         $booking->cancel_reason = $request->cancel_reason; // Lưu lý do hủy
         $booking->save();
 

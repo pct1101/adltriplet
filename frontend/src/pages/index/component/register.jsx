@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
 import "../../../css/index/home.css";
 import { sendContactMail } from "../../../lib/Axiosintance";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -9,6 +11,9 @@ function Register() {
     em: "",
     nd: "",
   });
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,9 +27,12 @@ function Register() {
     e.preventDefault();
     try {
       const response = await sendContactMail(formData);
-      alert(response.message); // Hiển thị thông báo thành công
+
+      setModalMessage(response.message); // Đặt thông báo thành công
+      setShowModal(true); // Hiển thị modal
     } catch (error) {
-      alert("Gửi yêu cầu thất bại. Vui lòng thử lại!");
+      setModalMessage("Gửi yêu cầu thất bại. Vui lòng thử lại!"); // Đặt thông báo lỗi
+      setShowModal(true); // Hiển thị modal
       console.error(error);
     }
   };
@@ -105,6 +113,19 @@ function Register() {
           </div>
         </form>
       </div>
+
+      {/* Modal hiển thị thông báo */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông báo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

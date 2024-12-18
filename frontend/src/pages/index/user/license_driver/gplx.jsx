@@ -4,7 +4,11 @@ import {
   editDriverLicense,
   getDriverLicense,
 } from "../../../../lib/Axiosintance";
-const BASE_URL = "https://api.thuexetulai.online/";
+
+// const BASE_URL = "http://localhost:8000/";
+
+import { API_URL_IMG_LICENSE_DRIVER } from "../../../../lib/Axiosintance";
+
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
@@ -232,7 +236,7 @@ function Gplx() {
                     className="img-license"
                     src={
                       gplx[0]?.license_image
-                        ? `${BASE_URL}${gplx[0].license_image}`
+                        ? `${API_URL_IMG_LICENSE_DRIVER}${gplx[0].license_image}`
                         : "/upload/upload.png"
                     }
                     alt="upload"

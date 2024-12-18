@@ -79,19 +79,22 @@ class DriverLicenseController extends Controller
 
             // Xử lý file ảnh
             try {
+                // Sử dụng hệ thống lưu trữ (Storage) của laravel với disk public
                 $storage = Storage::disk('public');
 
                 // Lưu ảnh vào thư mục license_images trong storage/app/public
+                // Tạo tên file ảnh : license_images/ + user_id + thời gian hiện tại + đuôi file mở rộng
                 $licenseImageName = 'license_images/' . 'us_id_' . $user_id . '_lc_img_' . now('Asia/Ho_Chi_Minh')->format('Y-m-d_H-i-s') . '.' . $request->file('license_image')->getClientOriginalExtension();
+                // (put: Lưu 1 file vào hệ thống lưu trữ laravel ) (1: Tên file, 2: Chuyển hình thành chuỗi nhị phân xử lý)
                 $storage->put($licenseImageName, file_get_contents($request->file('license_image')));
 
+                // Di chuyển ảnh từ hệ thống lưu trữ (storage/app/public) ra thư mục công khai để sử dụng (public/license_images)
                 // Đường dẫn file nguồn (storage/app/public)
                 $sourcePath = storage_path('app/public/' . $licenseImageName);
-
                 // Đường dẫn file đích (public/license_images)
                 $destinationPath = public_path('license_images/' . basename($licenseImageName));
 
-                // Tạo thư mục public/license_images nếu chưa tồn tại
+                // Tạo thư mục public/license_images nếu chưa tồn tại (0775 Thư mục có quyền đọc, ghi và thực thi)
                 if (!File::exists(public_path('license_images'))) {
                     File::makeDirectory(public_path('license_images'), 0755, true);
                 }
@@ -146,6 +149,7 @@ class DriverLicenseController extends Controller
 
             // Xử lý ảnh nếu được tải lên
             if ($request->hasFile('license_image')) {
+                // Sử dụng hệ thống lưu trữ Storage 
                 $storage = Storage::disk('public');
 
                 // Tạo tên file mới

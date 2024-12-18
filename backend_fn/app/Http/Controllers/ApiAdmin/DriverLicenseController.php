@@ -25,7 +25,7 @@ class DriverLicenseController extends Controller
 
         // Nếu có license_status, Lọc theo trạng thái nếu không lấy ra tất cả
         $query = DriverLicenses::with('user');
-        if($license_status){
+        if ($license_status) {
             $query->where('license_status', $license_status);
         }
 
@@ -33,7 +33,7 @@ class DriverLicenseController extends Controller
 
         // Kiểm tra xem có giấy phép lái xe nào không
         if ($driver_licenses->isEmpty()) {
-            return response(['error' => 'Không tìm thấy giấy phép lái xe với trạng thái:'. $license_status], 404);
+            return response(['error' => 'Không tìm thấy giấy phép lái xe với trạng thái:' . $license_status], 404);
         }
         // Trả về danh sách các giấy phép lái xe
         return response()->json(['driver_licenses' => $driver_licenses], 200);
@@ -48,7 +48,7 @@ class DriverLicenseController extends Controller
 
         // Kiểm tra nếu không tìm thấy giấy phép lái xe
         if (!$driver_license) {
-            return response()->json(['error' => 'Không tìm thấy giấy phép lái xe với id:'. $id], 404);
+            return response()->json(['error' => 'Không tìm thấy giấy phép lái xe với id:' . $id], 404);
         }
 
         // Trả về thông tin giấy phép lái xe
@@ -61,8 +61,8 @@ class DriverLicenseController extends Controller
         try {
             // Tìm giấy phép lái xe
             $driverLicense = DriverLicenses::find($id);
-            if(!$driverLicense){
-                return response()->json(['message', 'không tìm thấy giấy phép lái xe với id:'. $id], 404);
+            if (!$driverLicense) {
+                return response()->json(['message', 'không tìm thấy giấy phép lái xe với id:' . $id], 404);
             }
 
             // Kiểm tra nếu trạng thái chuyển thành 'invalid' thì lý do hủy là bắt buộc

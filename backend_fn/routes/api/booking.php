@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Route;
 /**
  * # API Documentation
  *
- *  **URL**                                        |**Phương thức**| **Mô tả**
- * ------------------------------------------------|---------------|-----------------------------------
- *  http://localhost:8000/api/booking              | GET           | Lây danh sách đơn hàng
- *  http://localhost:8000/api/booking              | POST          | Booking một xe
- *  http://localhost:8000/api/booking/{id}         | GET           | Chi tiết booking
- *  http://localhost:8000/api/booking/{id}         | PUT           | Hủy booking
- *  http://localhost:8000/api/booking/{id}         | DELETE        | Hủy booking
+ *  **URL**                                                       |**Phương thức**| **Mô tả**
+ * ---------------------------------------------------------------|---------------|-----------------------------------
+ *  http://localhost:8000/api/booking                             | GET           | Lây danh sách đơn hàng
+ *  http://localhost:8000/api/booking                             | POST          | Booking một xe
+ *  http://localhost:8000/api/booking/{id}                        | GET           | Chi tiết booking
+ *  http://localhost:8000/api/booking/{id}/cancel_by_user         | PUT           | Hủy booking
+ *  http://localhost:8000/api/booking/{id}                        | DELETE        | Hủy booking
  *
  */
 

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Feedback;
-use App\Models\User;
+use App\Models\Booking;
 use Illuminate\Support\Facades\Validator;
 
 class FeedbackController extends Controller
@@ -27,8 +27,22 @@ class FeedbackController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+    // Phản hồi người dùng cho xe đã đặt
     public function store(Request $request, $id)
     {
+        $userId = Auth::id(); // Lấy ID của người dùng đang đăng nhập
+
+        // Kiểm tra xem người dùng có đơn nào đã hoàn thành chưa mới được bình luận
+        $userBooking = Booking::where('user_id', $userId)
+        ->where('car_id', $id)
+        ->where('booking_status', 6)->first();
+
+        // Nếu không tìm thấy booking phù hợp trả về lỗi
+        if(!$userBooking){
+            return response()->json(['message' => 'Chỉ khách hàng đã hoàn thành đặt xe này mới có thể gửi bình luận'], 403);
+        }
+
         // Xác thực dữ liệu đầu vào
         $validator = Validator::make($request->all(), [
             'content' => 'required|string',
@@ -39,8 +53,6 @@ class FeedbackController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
         }
-
-        $userId = Auth::id(); // Lấy ID của người dùng đang đăng nhập
 
         // Tạo feedback mới
         try {

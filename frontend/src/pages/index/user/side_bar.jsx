@@ -93,50 +93,7 @@ function Side_bar() {
             Xe Yêu thích
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/orders"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active1" : "link-dark"}`
-            }
-            onClick={() => handleMenuClick("orders")}
-          >
-            <div className="wrap-svg">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9.31055 14.6992L10.8105 16.1992L14.8105 12.1992"
-                  stroke="black"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-                <path
-                  d="M10 6H14C16 6 16 5 16 4C16 2 15 2 14 2H10C9 2 8 2 8 4C8 6 9 6 10 6Z"
-                  stroke="black"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-                <path
-                  d="M16 4.01953C19.33 4.19953 21 5.42953 21 9.99953V15.9995C21 19.9995 20 21.9995 15 21.9995H9C4 21.9995 3 19.9995 3 15.9995V9.99953C3 5.43953 4.67 4.19953 8 4.01953"
-                  stroke="black"
-                  stroke-width="1.5"
-                  stroke-miterlimit="10"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </svg>
-            </div>
-            Đơn hàng của tôi
-          </NavLink>
-        </li>
+
         <li>
           <NavLink
             to="/user_repassword"
@@ -228,21 +185,7 @@ function Side_bar() {
             Xe của tôi
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            to="/gplx"
-            className={({ isActive }) =>
-              `nav-link ${isActive ? "active1" : "link-dark"}`
-            }
-            onClick={() => handleMenuClick("gplx")}
-          >
-            <i
-              style={{ display: "flex", alignItems: "center" }}
-              className="fa-solid fa-id-card"
-            ></i>
-            GPLX
-          </NavLink>
-        </li>
+        <li></li>
         <li>
           <a className="nav-link link-dark logout" onClick={handleLogout}>
             <div className="wrap-svg">

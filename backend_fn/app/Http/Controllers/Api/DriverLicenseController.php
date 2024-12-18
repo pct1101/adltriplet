@@ -23,7 +23,10 @@ class DriverLicenseController extends Controller
     // Lấy ra danh sách giấy phép lái xe của người dùng
     public function index()
     {
+        // Lấy ra người dùng đang đăng nhập
         $user_id = Auth::id();
+
+        // Lấy ra dánh sách giấy phép lái xe của người dùng
         $driverLicenses = DriverLicenses::where('user_id', $user_id)->get();
 
         // Kiểm tra xem người dùng có giấy phép lái xe nào không
@@ -38,8 +41,13 @@ class DriverLicenseController extends Controller
     // Lấy ra chi tiết một giấy phép lái xe của người dùng đang đăng nhập
     public function show($id)
     {
+        // Lấy ra người dùng đang đăng nhập
+        $user_id = Auth::id();
+
         // Lấy ra tất cả giấy phép lái xe của người dùng theo user_id
-        $driverLicense = DriverLicenses::where('driver_license_id', $id)->first();
+        $driverLicense = DriverLicenses::where('driver_license_id', $id)
+        ->where('user_id', $user_id)
+        ->first();
 
         // Kiểm tra nếu không tìm thấy
         if (!$driverLicense) {
@@ -62,7 +70,7 @@ class DriverLicenseController extends Controller
             if ($existingLicense) {
                 return response()->json([
                     'error' => 'Bạn đã có giấy phép lái xe, không thể thêm mới.'
-                ], 409); 
+                ], 409);
             }
 
             // Lấy thông tin từ request

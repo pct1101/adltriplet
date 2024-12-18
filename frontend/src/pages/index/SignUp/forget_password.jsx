@@ -31,7 +31,7 @@ function Forget_password() {
             <div className="content-account">
               <div className="title">
                 <div className="title-edit">
-                  <h5>Quên mật khẩu</h5>
+                  <h5>Thay đổi mật khẩu mới</h5>
                   <p>Vui lòng nhập mật khẩu mới để thay đổi mật khẩu</p>
                 </div>
               </div>

@@ -13,32 +13,35 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { Link } from "react-router-dom";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Box } from "@mui/system";
+import { Slider } from "@mui/material";
+// note: slide
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Virtual, Navigation, Pagination } from "swiper/modules";
 
 function Find_car() {
   // note:findcar
   const location = useLocation();
-  const [searchParams] = useSearchParams();
 
   const [searchResultss, setSearchResults] = useState([]);
 
   const searchResults = location.state?.results || [];
-
-  //note: Lấy tham số start_date và end_date từ URL
-  const getstartDate = searchParams.get("start_date");
-  const getendDate = searchParams.get("end_date");
+  const [reset, setReset] = useState("");
 
   // note: set state seats
   const [selectedSeats, setSelectedSeats] = useState([]);
-  // note: set state seats
+  // note: set state số sàn/số tự động
   const [SelectedTranmission, setSelectedTranmission] = useState([]);
 
-  console.log(SelectedTranmission);
-
+  // note: set state brand
+  const [SelectedBrand, setSelectedBrand] = useState([]);
   // note: tìm kiếm theo chỗ ngồi
   const [filteredCars, setFilteredCars] = useState(searchResults);
-  console.log(filteredCars);
 
   // note: car
   const [cars, setcars] = useState([]);
@@ -52,8 +55,25 @@ function Find_car() {
   const [showtransmission_type, setshowtransmission_type] = useState(false);
   //note: show change_price
   const [show_price, setshow_price] = useState(false);
+  //note: show brand
+  const [showBrand, setshowBrand] = useState(false);
+  //note: show brand
+  const [showModelCar, setshowModelCar] = useState(false);
+
   // note: open modal
   const [openModal, setOpenModal] = useState(false);
+  // note: handlechange
+  const [minPrice, setMinPrice] = useState(300000);
+  const [maxPrice, setMaxPrice] = useState(3000000);
+
+  const [minYear, setMinYear] = useState(2000);
+  const [maxYear, setMaxYear] = useState(2024);
+  // note: swiper
+  const [swiperRef, setSwiperRef] = useState(null);
+  const [slides, setSlides] = useState(
+    Array.from({ length: 500 }).map((_, index) => `Slide ${index + 1}`)
+  );
+
   // note:close
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -61,6 +81,8 @@ function Find_car() {
     setShowSeats(false);
     setshowtransmission_type(false);
     setshow_price(false);
+    setshowBrand(false);
+    setshowModelCar(false);
   };
   //   note: scroll
   const [isFixed, setIsFixed] = useState(false); // Trạng thái để điều khiển lớp CSS
@@ -110,6 +132,12 @@ function Find_car() {
   };
   const handleTogglePrice = () => {
     setshow_price(!show_price);
+  };
+  const handleToggleBrand = () => {
+    setshowBrand(!showBrand);
+  };
+  const handleToggleModelCar = () => {
+    setshowModelCar(!showModelCar);
   };
 
   const generateTimeOptions = (startHour, startMinute) => {
@@ -203,9 +231,16 @@ function Find_car() {
     }
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
-
-  const toggleDropdown = () => setOpenDropdown(!openDropdown);
-
+  // note: handleChangePrice
+  const handleChangePrice = (event, newValue) => {
+    setMinPrice(newValue[0]);
+    setMaxPrice(newValue[1]);
+  };
+  // note: handleChange
+  const handleChangeYears = (event, newValue) => {
+    setMinYear(newValue[0]);
+    setMaxYear(newValue[1]);
+  };
   //   note: scroll
   // Hàm để xử lý sự kiện cuộn
   const handleScroll = () => {
@@ -231,6 +266,18 @@ function Find_car() {
     };
   }, []);
 
+  const resetItem = () => {
+    setReset("");
+    setFilteredCars(location.state?.results || []);
+    handleSelectSeats();
+    handleSelectBrand();
+    handleSelectTranmission();
+    setMinPrice(300000); // Đặt về giá trị mặc định (nếu giá trị nhỏ nhất là 0)
+    setMaxPrice(3000000);
+    setMinYear(2000);
+    setMaxYear(2024);
+  };
+
   //note: Hàm nhóm xe theo số chỗ ngồi
   const groupCarsBySeats = () => {
     const groupedCars = {};
@@ -245,32 +292,64 @@ function Find_car() {
   };
 
   const groupedCars = groupCarsBySeats();
-  console.log(groupedCars);
 
   //note: Hàm hiển thị các xe theo số chỗ ngồi đã chọn
   const handleSelectSeats = (seats) => {
-    setSelectedSeats(seats);
+    if (selectedSeats === seats) {
+      // Nếu loại xe đã được chọn, thì bỏ chọn
+      setSelectedSeats(null);
+    } else {
+      // Nếu loại xe chưa được chọn, thì chọn loại xe đó và bỏ loại xe cũ
+      setSelectedSeats(seats);
+    }
   };
 
-  //note: Hàm nhóm xe theo số chỗ ngồi
+  //note: Hàm nhóm xe theo loại xe(xe sàn, xe tự động)
   const groupCarsByTranmission_Type = () => {
-    const groupCarsByTranmission = {};
+    const groupCarsByTranmission = {
+      "Tất cả": [], // Thêm nhóm "Tất cả"
+    };
+
     cars.forEach((car) => {
       const transmission_type = car.transmission_type; // Lấy số chỗ ngồi từ mỗi xe
       if (!groupCarsByTranmission[transmission_type]) {
         groupCarsByTranmission[transmission_type] = [];
       }
       groupCarsByTranmission[transmission_type].push(car);
+      groupCarsByTranmission["Tất cả"].push(car);
     });
     return groupCarsByTranmission;
   };
-
   const groupCarsByTranmission = groupCarsByTranmission_Type();
   console.log(groupCarsByTranmission);
-
-  //note: Hàm hiển thị các xe theo số chỗ ngồi đã chọn
+  //note: Hàm hiển thị các xe theo  loại xe(xe sàn, xe tự động)
   const handleSelectTranmission = (transmission_type) => {
-    setSelectedTranmission(transmission_type);
+    if (SelectedTranmission === transmission_type) {
+      setSelectedTranmission(null);
+    } else {
+      setSelectedTranmission(transmission_type);
+    }
+  };
+
+  //note: Hàm nhóm xe theo brand
+  const groupCarsByBrand_name = () => {
+    const groupCarsByBrand = { "Tất cả": [] };
+    cars.forEach((car) => {
+      const brand_name = car.brand.brand_name; // Lấy số chỗ ngồi từ mỗi xe
+      if (!groupCarsByBrand[brand_name]) {
+        groupCarsByBrand[brand_name] = [];
+      }
+      groupCarsByBrand[brand_name].push(car);
+      groupCarsByBrand["Tất cả"].push(car);
+    });
+    return groupCarsByBrand;
+  };
+
+  const groupCarsByBrand = groupCarsByBrand_name();
+
+  //note: Hàm hiển thị các xe theo brand
+  const handleSelectBrand = (brand_name) => {
+    setSelectedBrand(brand_name);
   };
 
   // note: navigate
@@ -289,6 +368,8 @@ function Find_car() {
 
       // Gọi hàm tìm kiếm
       const results = await searchCars(startDate, endDate);
+      console.log(results);
+
       if (results?.cars?.length > 0) {
         const params = new URLSearchParams({
           start_date: formattedStartDate,
@@ -310,31 +391,55 @@ function Find_car() {
   // note: lọc chỗ ngồi với ngày
   useEffect(() => {
     const filterCarsBySeats = () => {
-      console.log("Selected tranmission:", SelectedTranmission);
-      console.log("Selected Seats:", selectedSeats);
-      console.log("Search Results:", searchResults);
-
       const seatsNumber = Number(selectedSeats) || 0;
-
       // Bắt đầu với kết quả gốc
       let filtered = searchResults;
-
-      // Lọc theo seats nếu có
+      //note: Lọc theo seats
       if (seatsNumber) {
         filtered = filtered.filter((car) => car.seats === seatsNumber);
       }
 
-      // Tiếp tục lọc theo transmission_type nếu có
+      //note:Tiếp tục lọc theo transmission_type
       if (SelectedTranmission?.target?.value) {
         filtered = filtered.filter(
           (car) => car.transmission_type === SelectedTranmission.target.value
         );
       }
+
+      //note: Tiếp tục lọc theo Brand
+      if (SelectedBrand?.target?.value) {
+        filtered = filtered.filter(
+          (car) => car.brand?.brand_name === SelectedBrand.target.value
+        );
+      }
+
+      // note: lọc theo giá min/max
+      if (minPrice !== undefined && maxPrice !== undefined) {
+        filtered = filtered.filter(
+          (car) => car.rental_price >= minPrice && car.rental_price <= maxPrice
+        );
+      }
+
+      // note: lọc theo năm
+      filtered = filtered.filter((car) => {
+        console.log("Model as Number:", Number(car.model));
+        return Number(car.model) >= minYear && Number(car.model) <= maxYear;
+      });
+
       setFilteredCars(filtered);
     };
 
     filterCarsBySeats();
-  }, [searchResults, selectedSeats, SelectedTranmission]);
+  }, [
+    searchResults,
+    selectedSeats,
+    SelectedTranmission,
+    minPrice,
+    maxPrice,
+    SelectedBrand,
+    minYear,
+    maxYear,
+  ]);
 
   return (
     <div>
@@ -441,85 +546,9 @@ function Find_car() {
                 </div>
                 <div className="filter-container">
                   <div className="filter-dropdown">
-                    <div className="item-dropdown " onClick={handleToggleSeats}>
-                      <div className="item-dropdown__wrap">
-                        <div className="wrap-svg">
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M19.15 15.7199H19.6C20.51 15.7199 21.24 14.8599 21.24 13.8399V12.4499C21.24 11.7199 20.86 11.0399 20.27 10.7399L18.79 9.96995L17.47 7.59994C17.09 6.90994 16.42 6.49994 15.71 6.50994H10.12C9.47 6.50994 8.86 6.84995 8.47 7.42995L6.77 9.93994L3.96 10.7999C3.24 11.0199 2.75 11.7599 2.75 12.5999V13.8299C2.75 14.8499 3.48 15.7099 4.39 15.7099H4.63"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M8.87 15.7197H14.77"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M6.69 17.4598C7.83322 17.4598 8.76 16.5331 8.76 15.3898C8.76 14.2466 7.83322 13.3198 6.69 13.3198C5.54677 13.3198 4.62 14.2466 4.62 15.3898C4.62 16.5331 5.54677 17.4598 6.69 17.4598Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M17.08 17.4598C18.2232 17.4598 19.15 16.5331 19.15 15.3898C19.15 14.2466 18.2232 13.3198 17.08 13.3198C15.9368 13.3198 15.01 14.2466 15.01 15.3898C15.01 16.5331 15.9368 17.4598 17.08 17.4598Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </div>
-                        <p>Loại xe </p>
-                      </div>
-                    </div>
-                    <div className="item-dropdown__wrap">
-                      <div className="wrap-svg">
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M21.25 11.9998C21.25 14.3198 20.39 16.4598 18.97 18.0698C17.55 19.6998 15.57 20.8298 13.33 21.1398C12.9 21.2098 12.46 21.2398 12 21.2398C11.54 21.2398 11.11 21.2098 10.67 21.1398C8.43 20.8298 6.45 19.6998 5.03 18.0698C3.61 16.4598 2.75 14.3198 2.75 11.9998C2.75 9.67977 3.61 7.53977 5.03 5.92977C6.45 4.29977 8.43 3.16977 10.67 2.85977C11.1 2.78977 11.54 2.75977 12 2.75977C12.46 2.75977 12.89 2.78977 13.33 2.85977C15.57 3.16977 17.55 4.29977 18.97 5.92977C20.39 7.53977 21.25 9.67977 21.25 11.9998Z"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></path>
-                          <path
-                            d="M11.67 21.1496C11.03 20.4796 8 17.1696 8 11.9996C8 6.82961 11.03 3.51961 11.67 2.84961"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></path>
-                          <path
-                            d="M12.33 21.1496C12.97 20.4796 16 17.1696 16 11.9996C16 6.82961 12.97 3.51961 12.33 2.84961"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></path>
-                          <path
-                            d="M2.75 12H21.25"
-                            stroke="black"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          ></path>
-                        </svg>
-                      </div>
-                      <p>Hãng xe</p>
-                    </div>
                     <div
-                      className="item-dropdown "
-                      onClick={handleToggleTransmission_type}
+                      className="item-dropdown reset-item "
+                      onClick={resetItem}
                     >
                       <div className="item-dropdown__wrap">
                         <div className="wrap-svg">
@@ -530,119 +559,304 @@ function Find_car() {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <circle
-                              cx="18"
-                              cy="6"
-                              r="1.5"
-                              stroke="black"
-                            ></circle>
-                            <circle
-                              cx="18"
-                              cy="18"
-                              r="1.5"
-                              stroke="black"
-                            ></circle>
-                            <circle
-                              cx="12"
-                              cy="6"
-                              r="1.5"
-                              stroke="black"
-                            ></circle>
-                            <circle
-                              cx="12"
-                              cy="18"
-                              r="1.5"
-                              stroke="black"
-                            ></circle>
-                            <circle
-                              cx="6"
-                              cy="6"
-                              r="1.5"
-                              stroke="black"
-                            ></circle>
                             <path
-                              d="M7.57715 20V16H5.99902C5.69694 16 5.43913 16.054 5.22559 16.1621C5.01074 16.2689 4.84733 16.4206 4.73535 16.6172C4.62207 16.8125 4.56543 17.0423 4.56543 17.3066C4.56543 17.5723 4.62272 17.8008 4.7373 17.9922C4.85189 18.1823 5.0179 18.3281 5.23535 18.4297C5.4515 18.5312 5.71322 18.582 6.02051 18.582H7.07715V17.9023H6.15723C5.99577 17.9023 5.86165 17.8802 5.75488 17.8359C5.64811 17.7917 5.56868 17.7253 5.5166 17.6367C5.46322 17.5482 5.43652 17.4382 5.43652 17.3066C5.43652 17.1738 5.46322 17.0618 5.5166 16.9707C5.56868 16.8796 5.64876 16.8105 5.75684 16.7637C5.86361 16.7155 5.99837 16.6914 6.16113 16.6914H6.73145V20H7.57715ZM5.41699 18.1797L4.42285 20H5.35645L6.3291 18.1797H5.41699Z"
-                              fill="black"
-                            ></path>
-                            <path
-                              d="M18 8V12M18 16V12M12 8V16M6 8V11.5C6 11.7761 6.22386 12 6.5 12H18"
+                              d="M5.39014 14.64L8.03014 12"
                               stroke="black"
                               stroke-linecap="round"
+                              stroke-linejoin="round"
+                            ></path>
+                            <path
+                              d="M5.39 14.64L2.75 12"
+                              stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            ></path>
+                            <path
+                              d="M18.6102 9.78027L15.9702 12.4203"
+                              stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            ></path>
+                            <path
+                              d="M18.6104 9.78027L21.2504 12.4203"
+                              stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            ></path>
+                            <path
+                              d="M18.6102 10.2803V15.7703C18.6102 17.3303 17.3402 18.6003 15.7802 18.6003H8.22021"
+                              stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            ></path>
+                            <path
+                              d="M5.39014 14.3101V8.22012C5.39014 6.66012 6.66014 5.39014 8.22014 5.39014H15.7701"
+                              stroke="black"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
                             ></path>
                           </svg>
                         </div>
-                        <p>Truyền động</p>
                       </div>
                     </div>
-
-                    <div className="item-dropdown " onClick={handleTogglePrice}>
-                      <div className="item-dropdown__wrap">
-                        <div className="wrap-svg">
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                    <div className="slide-drop">
+                      <Swiper
+                        modules={[Virtual, Navigation, Pagination]}
+                        onSwiper={setSwiperRef}
+                        slidesPerView={3}
+                        centeredSlides={false}
+                        virtual
+                      >
+                        <SwiperSlide>
+                          <div
+                            className="item-dropdown "
+                            onClick={handleToggleSeats}
                           >
-                            <path
-                              d="M12.7932 3.23242H14.1665"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M1.83325 3.23242H10.0532"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M11.4266 4.59305C12.185 4.59305 12.7999 3.98415 12.7999 3.23305C12.7999 2.48194 12.185 1.87305 11.4266 1.87305C10.6681 1.87305 10.0532 2.48194 10.0532 3.23305C10.0532 3.98415 10.6681 4.59305 11.4266 4.59305Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M12.7932 12.7656H14.1665"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M1.83325 12.7656H10.0532"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M11.4266 14.1263C12.185 14.1263 12.7999 13.5174 12.7999 12.7663C12.7999 12.0151 12.185 11.4062 11.4266 11.4062C10.6681 11.4062 10.0532 12.0151 10.0532 12.7663C10.0532 13.5174 10.6681 14.1263 11.4266 14.1263Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M5.94653 8H14.1665"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M1.83325 8H3.20658"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                            <path
-                              d="M4.57328 9.36063C5.33175 9.36063 5.94664 8.75173 5.94664 8.00063C5.94664 7.24952 5.33175 6.64062 4.57328 6.64062C3.81481 6.64062 3.19995 7.24952 3.19995 8.00063C3.19995 8.75173 3.81481 9.36063 4.57328 9.36063Z"
-                              stroke="black"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            ></path>
-                          </svg>
-                        </div>
-                        <p>Mức giá</p>
-                      </div>
+                            <div className="item-dropdown__wrap">
+                              <div className="wrap-svg">
+                                <svg
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.15 15.7199H19.6C20.51 15.7199 21.24 14.8599 21.24 13.8399V12.4499C21.24 11.7199 20.86 11.0399 20.27 10.7399L18.79 9.96995L17.47 7.59994C17.09 6.90994 16.42 6.49994 15.71 6.50994H10.12C9.47 6.50994 8.86 6.84995 8.47 7.42995L6.77 9.93994L3.96 10.7999C3.24 11.0199 2.75 11.7599 2.75 12.5999V13.8299C2.75 14.8499 3.48 15.7099 4.39 15.7099H4.63"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M8.87 15.7197H14.77"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M6.69 17.4598C7.83322 17.4598 8.76 16.5331 8.76 15.3898C8.76 14.2466 7.83322 13.3198 6.69 13.3198C5.54677 13.3198 4.62 14.2466 4.62 15.3898C4.62 16.5331 5.54677 17.4598 6.69 17.4598Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M17.08 17.4598C18.2232 17.4598 19.15 16.5331 19.15 15.3898C19.15 14.2466 18.2232 13.3198 17.08 13.3198C15.9368 13.3198 15.01 14.2466 15.01 15.3898C15.01 16.5331 15.9368 17.4598 17.08 17.4598Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <p>Loại xe </p>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+
+                        <SwiperSlide>
+                          <div
+                            className="item-dropdown "
+                            onClick={handleToggleBrand}
+                          >
+                            {" "}
+                            <div className="item-dropdown__wrap">
+                              <div className="wrap-svg">
+                                <svg
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M21.25 11.9998C21.25 14.3198 20.39 16.4598 18.97 18.0698C17.55 19.6998 15.57 20.8298 13.33 21.1398C12.9 21.2098 12.46 21.2398 12 21.2398C11.54 21.2398 11.11 21.2098 10.67 21.1398C8.43 20.8298 6.45 19.6998 5.03 18.0698C3.61 16.4598 2.75 14.3198 2.75 11.9998C2.75 9.67977 3.61 7.53977 5.03 5.92977C6.45 4.29977 8.43 3.16977 10.67 2.85977C11.1 2.78977 11.54 2.75977 12 2.75977C12.46 2.75977 12.89 2.78977 13.33 2.85977C15.57 3.16977 17.55 4.29977 18.97 5.92977C20.39 7.53977 21.25 9.67977 21.25 11.9998Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M11.67 21.1496C11.03 20.4796 8 17.1696 8 11.9996C8 6.82961 11.03 3.51961 11.67 2.84961"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M12.33 21.1496C12.97 20.4796 16 17.1696 16 11.9996C16 6.82961 12.97 3.51961 12.33 2.84961"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M2.75 12H21.25"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <p>Hãng xe</p>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+
+                        <SwiperSlide>
+                          <div
+                            className="item-dropdown "
+                            onClick={handleToggleTransmission_type}
+                          >
+                            <div className="item-dropdown__wrap">
+                              <div className="wrap-svg">
+                                <svg
+                                  width="24"
+                                  height="24"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="18"
+                                    cy="6"
+                                    r="1.5"
+                                    stroke="black"
+                                  ></circle>
+                                  <circle
+                                    cx="18"
+                                    cy="18"
+                                    r="1.5"
+                                    stroke="black"
+                                  ></circle>
+                                  <circle
+                                    cx="12"
+                                    cy="6"
+                                    r="1.5"
+                                    stroke="black"
+                                  ></circle>
+                                  <circle
+                                    cx="12"
+                                    cy="18"
+                                    r="1.5"
+                                    stroke="black"
+                                  ></circle>
+                                  <circle
+                                    cx="6"
+                                    cy="6"
+                                    r="1.5"
+                                    stroke="black"
+                                  ></circle>
+                                  <path
+                                    d="M7.57715 20V16H5.99902C5.69694 16 5.43913 16.054 5.22559 16.1621C5.01074 16.2689 4.84733 16.4206 4.73535 16.6172C4.62207 16.8125 4.56543 17.0423 4.56543 17.3066C4.56543 17.5723 4.62272 17.8008 4.7373 17.9922C4.85189 18.1823 5.0179 18.3281 5.23535 18.4297C5.4515 18.5312 5.71322 18.582 6.02051 18.582H7.07715V17.9023H6.15723C5.99577 17.9023 5.86165 17.8802 5.75488 17.8359C5.64811 17.7917 5.56868 17.7253 5.5166 17.6367C5.46322 17.5482 5.43652 17.4382 5.43652 17.3066C5.43652 17.1738 5.46322 17.0618 5.5166 16.9707C5.56868 16.8796 5.64876 16.8105 5.75684 16.7637C5.86361 16.7155 5.99837 16.6914 6.16113 16.6914H6.73145V20H7.57715ZM5.41699 18.1797L4.42285 20H5.35645L6.3291 18.1797H5.41699Z"
+                                    fill="black"
+                                  ></path>
+                                  <path
+                                    d="M18 8V12M18 16V12M12 8V16M6 8V11.5C6 11.7761 6.22386 12 6.5 12H18"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <p>Truyền động</p>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+
+                        <SwiperSlide>
+                          <div
+                            className="item-dropdown "
+                            onClick={handleTogglePrice}
+                          >
+                            <div className="item-dropdown__wrap">
+                              <div className="wrap-svg">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M12.7932 3.23242H14.1665"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M1.83325 3.23242H10.0532"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M11.4266 4.59305C12.185 4.59305 12.7999 3.98415 12.7999 3.23305C12.7999 2.48194 12.185 1.87305 11.4266 1.87305C10.6681 1.87305 10.0532 2.48194 10.0532 3.23305C10.0532 3.98415 10.6681 4.59305 11.4266 4.59305Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M12.7932 12.7656H14.1665"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M1.83325 12.7656H10.0532"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M11.4266 14.1263C12.185 14.1263 12.7999 13.5174 12.7999 12.7663C12.7999 12.0151 12.185 11.4062 11.4266 11.4062C10.6681 11.4062 10.0532 12.0151 10.0532 12.7663C10.0532 13.5174 10.6681 14.1263 11.4266 14.1263Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M5.94653 8H14.1665"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M1.83325 8H3.20658"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                  <path
+                                    d="M4.57328 9.36063C5.33175 9.36063 5.94664 8.75173 5.94664 8.00063C5.94664 7.24952 5.33175 6.64062 4.57328 6.64062C3.81481 6.64062 3.19995 7.24952 3.19995 8.00063C3.19995 8.75173 3.81481 9.36063 4.57328 9.36063Z"
+                                    stroke="black"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <p>Mức giá</p>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+
+                        <SwiperSlide>
+                          <div
+                            className="item-dropdown "
+                            onClick={handleToggleModelCar}
+                          >
+                            <div className="item-dropdown__wrap">
+                              <div className="wrap-svg">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="20"
+                                  height="20"
+                                  fill="currentColor"
+                                  viewBox="0 0 16 16"
+                                  style={{ marginRight: "8px" }}
+                                >
+                                  <path d="M4 9.5a.5.5 0 0 1 .5.5h7a.5.5 0 0 1 .5.5v.5H4v-.5a.5.5 0 0 1 .5-.5ZM4 8V7h8v1H4Z" />
+                                  <path d="M2 5.5A1.5 1.5 0 0 1 3.5 4h9A1.5 1.5 0 0 1 14 5.5v4a.5.5 0 0 1-.5.5h-1v.5a1 1 0 0 1-1 1h-.5v.5a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5v-.5H4a1 1 0 0 1-1-1v-.5H2.5a.5.5 0 0 1-.5-.5v-4Zm11 0a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v3h10v-3ZM4 10h8v.5H4V10Z" />
+                                </svg>
+                              </div>
+                              <p>Đời xe</p>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+                      </Swiper>
                     </div>
                   </div>
                 </div>
@@ -847,10 +1061,18 @@ function Find_car() {
                   <div className="vehicle-types">
                     {Object.keys(groupedCars).map((seats) => (
                       <div
-                        className="custom-checkbox-selected"
+                        className={`custom-checkbox-selected ${
+                          selectedSeats === seats ? "selected" : ""
+                        }`}
                         key={seats}
                         onClick={() => handleSelectSeats(seats)}
                       >
+                        <input
+                          type="checkbox"
+                          id={`${seats}`}
+                          value={seats}
+                          checked={selectedSeats === seats}
+                        />
                         <label className="none-label">
                           <div className="vehicle-types__item">
                             <div className="vehicle-types__item--img">
@@ -871,7 +1093,12 @@ function Find_car() {
               </div>
               <div className="modal-footer">
                 <div className="wrap-btn">
-                  <a className="btn btn-primary btn--m">Áp dụng</a>
+                  <a
+                    className="btn btn-primary btn--m"
+                    onClick={handleCloseModal}
+                  >
+                    Áp dụng
+                  </a>
                 </div>
               </div>
             </div>
@@ -907,7 +1134,6 @@ function Find_car() {
                             value={transmission_type}
                           />
                           <label htmlFor={`${transmission_type}`}>
-                            {" "}
                             {transmission_type}{" "}
                           </label>
                         </div>
@@ -918,7 +1144,12 @@ function Find_car() {
               </div>
               <div className="modal-footer">
                 <div className="wrap-btn">
-                  <a className="btn btn-primary btn--m">Áp dụng</a>
+                  <a
+                    className="btn btn-primary btn--m"
+                    onClick={handleCloseModal}
+                  >
+                    Áp dụng
+                  </a>
                 </div>
               </div>
             </div>
@@ -936,44 +1167,140 @@ function Find_car() {
               </div>
               <div className="line-page"> </div>
               <div className="modal-body">
-                <div class="advanced-filter__item">
-                  <p class="title">Mức giá</p>
-                  <div class="range-slider space">
-                    <div class="rc-slider">
-                      <div class="rc-slider-rail"></div>
-                      <div class="rc-slider-track rc-slider-track-1"></div>
-                      <div class="rc-slider-step"></div>
-                      <div
-                        tabindex="0"
-                        class="rc-slider-handle rc-slider-handle-1"
-                        role="slider"
-                        aria-valuemin="300"
-                        aria-valuemax="3000"
-                        aria-valuenow="300"
-                        aria-disabled="false"
-                      ></div>
-                      <div
-                        tabindex="0"
-                        class="rc-slider-handle rc-slider-handle-2"
-                        role="slider"
-                        aria-valuemin="300"
-                        aria-valuemax="3000"
-                        aria-valuenow="3000"
-                        aria-disabled="false"
-                      ></div>
-                      <div class="rc-slider-mark"></div>
+                <div className="advanced-filter__item">
+                  <p className="title">Mức giá</p>
+                  <div className="range-slider space">
+                    {" "}
+                    <Box sx={{ width: 600 }}>
+                      {/* controlled: */}
+                      <Slider
+                        value={[minPrice, maxPrice]}
+                        onChange={handleChangePrice}
+                        min={300000}
+                        max={3000000}
+                        valueLabelFormat={(value) =>
+                          `${value.toLocaleString()}`
+                        }
+                      />
+                    </Box>
+                  </div>
+                  <div className="range-value two-item">
+                    <div className="range-value__item">
+                      <span>Giá thấp nhất</span>
+                      <p> {minPrice.toLocaleString()} </p>
+                    </div>
+                    <div className="line"></div>
+                    <div className="range-value__item">
+                      <span>Giá cao nhất</span>
+                      <p> {maxPrice.toLocaleString()} </p>
                     </div>
                   </div>
-                  <div class="range-value two-item">
-                    <div class="range-value__item">
-                      <span>Giá thấp nhất</span>
-                      <p>300K </p>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <div className="wrap-btn">
+                  <a
+                    className="btn btn-primary btn--m"
+                    onClick={handleCloseModal}
+                  >
+                    Áp dụng
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {showBrand && (
+          <div className="popup-overlay" onClick={() => setshowBrand(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+              <div className="group-title d-flex">
+                <h5>Hãng xe</h5>
+                <button
+                  className="btn btn-close"
+                  onClick={handleCloseModal}
+                ></button>
+              </div>
+              <div className="line-page"> </div>
+              <div className="modal-body">
+                <div className="modal-confirm-body carfinding-options-body">
+                  {" "}
+                  <div className="vehicle-makes">
+                    {Object.keys(groupCarsByBrand).map((brand) => (
+                      <div className="custom-radio" onClick={handleSelectBrand}>
+                        <input
+                          type="radio"
+                          id={`${brand}`}
+                          name="r_vMakepc"
+                          value={brand}
+                        />
+                        <label htmlFor={`${brand}`}>
+                          <img
+                            loading="lazy"
+                            src={`http://localhost:8000/brand_logo/${brand.toLowerCase()}.png`}
+                            alt=" "
+                          />
+                          <p>
+                            {brand}{" "}
+                            <span className="note">
+                              {" "}
+                              ({groupCarsByBrand[brand].length} xe)
+                            </span>
+                          </p>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <div className="wrap-btn">
+                  <a
+                    className="btn btn-primary btn--m"
+                    onClick={handleCloseModal}
+                  >
+                    Áp dụng
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {showModelCar && (
+          <div className="popup-overlay" onClick={() => setshowModelCar(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+              <div className="group-title d-flex">
+                <h5>Đời xe</h5>
+                <button
+                  className="btn btn-close"
+                  onClick={handleCloseModal}
+                ></button>
+              </div>
+              <div className="line-page"> </div>
+              <div className="modal-body">
+                <div className="advanced-filter__item">
+                  <p className="title">Theo năm</p>
+                  <div className="range-slider space">
+                    {" "}
+                    <Box sx={{ width: 600 }}>
+                      {/* controlled: */}
+                      <Slider
+                        value={[minYear, maxYear]}
+                        onChange={handleChangeYears}
+                        min={2000}
+                        max={2024}
+                        valueLabelFormat={(value) => `${value}`}
+                      />
+                    </Box>
+                  </div>
+                  <div className="range-value two-item">
+                    <div className="range-value__item">
+                      <span>Tối thiểu</span>
+                      <p> {minYear} </p>
                     </div>
-                    <div class="line"></div>
-                    <div class="range-value__item">
-                      {" "}
-                      <span>Giá cao nhất</span>
-                      <p>3000K</p>
+                    <div className="line"></div>
+                    <div className="range-value__item">
+                      <span>tối đa</span>
+                      <p> {maxYear} </p>
                     </div>
                   </div>
                 </div>
@@ -1008,7 +1335,6 @@ function Find_car() {
                       </Link>
                     </div>
                   </div>
-                  <span className="discount">Giảm 16%</span>
                   <div className="decs-car">
                     <div className="desc-tag">
                       <span className="tag-item transmission">Số tự động</span>

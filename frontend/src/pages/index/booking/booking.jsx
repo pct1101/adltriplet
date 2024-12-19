@@ -105,6 +105,15 @@ function Booking() {
       total_cost_after_voucher: total_voucher,
       voucher_id: selectedVoucher ? selectedVoucher.voucher_id : null,
     };
+    // Kiểm tra giá trị city và address
+    if (!bookingData.city || !bookingData.address) {
+      console.error("Thiếu thông tin địa chỉ: thành phố hoặc quận huyện.");
+      setModalMessage("Vui lòng chọn thành phố và quận huyện.");
+      setModalType("error"); // Loại thông báo lỗi
+      setOpenModal(true); // Mở modal khi có lỗi
+      setIsLoading(false);
+      return;
+    }
 
     if (!bookingData.voucher_id) {
       delete bookingData.voucher_id;
@@ -118,7 +127,7 @@ function Booking() {
       console.log("response", response);
 
       const { booking } = response;
-      localStorage.setItem("booking_id", booking.booking_id);
+      // localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
         const totalCost = bookingData?.total_cost;
         const totalCostAfterVoucher =

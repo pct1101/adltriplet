@@ -167,7 +167,6 @@ function My_car() {
     if (bookingItem) {
       console.log("Trạng thái booking: ", bookingItem.booking_status);
       console.log("booking id", bookingItem.booking_id);
-
       if (bookingItem.booking_status === 1) {
         navigate(`/payment_car/${booking_id}`);
       } else {
@@ -186,7 +185,6 @@ function My_car() {
         setMessage("Bạn đã hủy xe thành công!");
         setOpen(true);
       }
-
       if (bookingItem.booking_status === 6) {
         setMessage("Xe đã hoàn thành, xin cảm ơn!");
         setOpen(true);

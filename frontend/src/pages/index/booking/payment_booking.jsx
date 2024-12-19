@@ -7,7 +7,11 @@ import { useBooking } from "../../Private/bookingContext";
 import dayjs from "dayjs";
 import { useAuth } from "../../Private/Auth";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBookingId, getUserProfile } from "../../../lib/Axiosintance.js";
+import {
+  getBookingId,
+  getBookingIdUser,
+  getUserProfile,
+} from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
 import { API_URL_IMG } from "../../../lib/Axiosintance.js";
 
@@ -22,8 +26,7 @@ export default function Payment_booking() {
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
-        const response = await getBookingId(booking_id);
-        // Gửi request để lấy thông tin chi tiết booking
+        const response = await getBookingIdUser(booking_id);
         console.log(response);
         setBookingData(response);
       } catch (error) {

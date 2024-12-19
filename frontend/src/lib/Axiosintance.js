@@ -1063,6 +1063,34 @@ export const getBookingId = async () => {
   }
 };
 
+// Lấy 1 booking theo id bởi người dùng
+export const getBookingIdUser = async (booking_id) => {
+  if (!booking_id) {
+    console.error("Không có booking_id hợp lệ");
+    return;
+  }
+  // Lấy token từ localStorage
+  const apiToken = localStorage.getItem("remember_token");
+  // Kiểm tra nếu không có token
+  if (!apiToken) {
+    console.error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+  try {
+    // Gửi yêu cầu POST đến API để thêm booking
+    const response = await axios.get(`${API_URL}/booking/${booking_id}`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
+    throw error;
+  }
+};
+
 // Thêm booking bởi user
 export const addBookingUser = async (bookingData) => {
   // Lấy token từ localStorage

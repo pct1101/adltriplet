@@ -80,7 +80,6 @@ function Differen_Car() {
                             </Link>
                           </div>
                         </div>
-                        <span className="discount">Giảm 16%</span>
                         <div className="decs-car">
                           <div className="desc-tag">
                             <span className="tag-item transmission">

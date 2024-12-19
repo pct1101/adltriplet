@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { Modal, Button } from "react-bootstrap";
 import "../../../css/index/home.css";
 import { sendContactMail } from "../../../lib/Axiosintance";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -9,6 +11,9 @@ function Register() {
     em: "",
     nd: "",
   });
+
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,15 +27,18 @@ function Register() {
     e.preventDefault();
     try {
       const response = await sendContactMail(formData);
-      alert(response.message); // Hiển thị thông báo thành công
-    } catch (error) { 
-      alert("Gửi yêu cầu thất bại. Vui lòng thử lại!");
+
+      setModalMessage(response.message); // Đặt thông báo thành công
+      setShowModal(true); // Hiển thị modal
+    } catch (error) {
+      setModalMessage("Gửi yêu cầu thất bại. Vui lòng thử lại!"); // Đặt thông báo lỗi
+      setShowModal(true); // Hiển thị modal
       console.error(error);
     }
   };
 
   return (
-    <div>
+    <div id="contact">
       <div className="section-intro"></div>
       <div className="container d-flex" style={{ borderRadius: "15px" }}>
         <div className="banner-register">
@@ -82,19 +90,6 @@ function Register() {
             </div>
             <div className="row">
               <div className="col">
-                <label className="form-control-wrap file-4 custom-file-upload">
-                  <input
-                    style={{ margin: "0px", height: "37px" }}
-                    type="file"
-                    name="file-4"
-                    size="40"
-                    className="form-control file"
-                    accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.ppt,.pptx,.odt,.avi,.ogg,.m4a,.mov,.mp3,.mp4,.mpg,.wav,.wmv"
-                    aria-invalid="false"
-                  />
-                </label>
-              </div>
-              <div className="col">
                 <input
                   type="submit"
                   value="Gửi yêu cầu"
@@ -105,6 +100,19 @@ function Register() {
           </div>
         </form>
       </div>
+
+      {/* Modal hiển thị thông báo */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông báo</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -14,14 +14,12 @@ function Footer() {
             <div className="col-md-6 order-last order-md-first">
               <div className="copyright text-center text-md-start">
                 <p className="text-sm">
-                  Admin
+                  CREATE BY ADL TRIPLE T
                   <a
                     href="https://plainadmin.com"
                     rel="nofollow"
                     target="_blank"
-                  >
-                    Digbox
-                  </a>
+                  ></a>
                 </p>
               </div>
             </div>

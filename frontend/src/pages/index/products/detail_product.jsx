@@ -14,10 +14,13 @@ import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
 import Booking from "../booking/booking";
 import Loading from "../event/loading";
-import axios from "axios";
 import { API_URL_IMG, API_URL_IMG_THUMBS } from "../../../lib/Axiosintance";
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 const Detail_product = () => {
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const [car, setCar] = useState(null);
@@ -30,6 +33,9 @@ const Detail_product = () => {
   const navigate = useNavigate(); // Dùng để điều hướng sau khi lưu yêu thích
 
   // Gọi API để lấy thông tin chi tiết xe và kiểm tra yêu thích
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
@@ -69,16 +75,16 @@ const Detail_product = () => {
   const handleAddToFavorites = async () => {
     try {
       if (isFavorite) {
-        const confirm = window.confirm("Bạn có muốn bỏ yêu thích không?");
-        if (confirm) {
-          await deleteFavorite(car.car_id); // Gọi API xóa yêu thích
-          alert("Đã bỏ yêu thích thành công!");
-          localStorage.setItem(`favorite_${car.car_id}`, "false"); // Lưu vào localStorage
-          setIsFavorite(false); // Cập nhật trạng thái
-        }
+        await deleteFavorite(car.car_id); // Gọi API xóa yêu thích
+        setMessage("Đã bỏ yêu thích thành công!");
+        setOpen(true);
+        localStorage.setItem(`favorite_${car.car_id}`, "false"); // Lưu vào localStorage
+        setIsFavorite(false); // Cập nhật trạng thái
       } else {
         await addToFavorites(car.car_id); // Gọi API thêm yêu thích
-        alert("Đã thêm yêu thích thành công!");
+
+        setMessage("Đã thêm yêu thích thành công!");
+        setOpen(true);
         localStorage.setItem(`favorite_${car.car_id}`, "true"); // Lưu vào localStorage
         setIsFavorite(true); // Cập nhật trạng thái
       }
@@ -894,6 +900,18 @@ const Detail_product = () => {
       </div>
       <Differen_Car></Differen_Car>
       <Footer />
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          message={message}
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {" "}
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

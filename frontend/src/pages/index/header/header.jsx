@@ -25,6 +25,11 @@ function Header() {
 
     fetchData();
   }, []);
+
+  const scrollToContact = () => {
+    document.getElementById("contact").scrollIntoView({ behavior: "smooth" });
+  };
+
   const handleLogout = () => {
     logout(); // Gọi hàm logout
     navigate("/login"); // Điều hướng người dùng về trang đăng nhập
@@ -68,7 +73,7 @@ function Header() {
               </a>
             </li>
 
-            <li className="nav-item">
+            <li className="nav-item" onClick={scrollToContact}>
               <a className="nav-link" href="#">
                 Liên Hệ
               </a>

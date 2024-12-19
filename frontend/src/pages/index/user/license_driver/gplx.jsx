@@ -4,7 +4,10 @@ import {
   editDriverLicense,
   getDriverLicense,
 } from "../../../../lib/Axiosintance";
-const BASE_URL = "http://localhost:8000/";
+
+// const BASE_URL = "http://localhost:8000/";
+
+import { API_URL_IMG_LICENSE_DRIVER } from "../../../../lib/Axiosintance";
 
 function Gplx() {
   const [license_number, setLicenseNumber] = useState("");
@@ -202,7 +205,7 @@ function Gplx() {
         <div className="note-license">
           <p>
             <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
-            <u>người đặt xe</u> trên Mioto (đã xác thực GPLX) <b>ĐỒNG THỜI </b>
+            <u>người đặt xe</u>(đã xác thực GPLX) <b>ĐỒNG THỜI </b>
             phải là <u>người nhận xe.</u>
           </p>
         </div>
@@ -231,7 +234,7 @@ function Gplx() {
                     className="img-license"
                     src={
                       gplx[0]?.license_image
-                        ? `${BASE_URL}${gplx[0].license_image}`
+                        ? `${API_URL_IMG_LICENSE_DRIVER}${gplx[0].license_image}`
                         : "/upload/upload.png"
                     }
                     alt="upload"

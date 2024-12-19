@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
+import { resetPassword2 } from "../../../lib/Axiosintance";
 
 function Forget_password() {
+  const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -10,6 +12,7 @@ function Forget_password() {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
+  const [message, setMessage] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -19,6 +22,25 @@ function Forget_password() {
   };
   const toggleConfirmPassword = () => {
     setshowConfirmPassword(!showConfirmPassword);
+  };
+
+  const resetPassword = async (e) => {
+    try {
+      const response = await resetPassword2(
+        email,
+        newPassword,
+        confirmPassword
+      );
+      console.log("Password reset successful:", response);
+    } catch (error) {
+      if (error.response && error.response.data) {
+        console.error("Error while resetting password:", error.message);
+        throw new Error(error.response.data.message || "Có lỗi xảy ra");
+      } else {
+        console.error("Unknown error occurred:", error.message);
+        throw new Error("Không thể kết nối tới server.");
+      }
+    }
   };
   return (
     <div>
@@ -49,7 +71,12 @@ function Forget_password() {
                     </div>
                     <div className="wrap-input ">
                       <div className="wrap-text">
-                        <input type="text" name="ip_pw" placeholder="" />
+                        <input
+                          type="email"
+                          name="ip_pw"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
                       </div>
                     </div>
                   </div>
@@ -235,7 +262,10 @@ function Forget_password() {
                     </div>
                   </div>
                   <div className="apply-button">
-                    <a className="btn btn--m btn-primary" disabled="">
+                    <a
+                      className="btn btn--m btn-primary"
+                      onClick={resetPassword}
+                    >
                       Xác nhận
                     </a>
                   </div>

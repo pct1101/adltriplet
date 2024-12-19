@@ -70,9 +70,11 @@ const Login = () => {
     }
   };
 
+  const handleshow = () => {
+    setShowForgerPassword(!showForgerPassword);
+  };
   //  note: forget password
   const handleForgetPassword = async (e, token) => {
-    setShowForgerPassword(!showForgerPassword);
     e.preventDefault();
 
     try {
@@ -107,9 +109,9 @@ const Login = () => {
               <div className="card-body">
                 <form onSubmit={handleLogin}>
                   <div className=" mb">
-                    <label htmlFor="email" className="form-label">
+                    <p htmlFor="email" className="form-label">
                       Tài khoản gmail
-                    </label>
+                    </p>
                     <input
                       type="email"
                       className="form-control"
@@ -124,9 +126,9 @@ const Login = () => {
                   </div>
 
                   <div className="mb">
-                    <label htmlFor="password" className="form-label">
+                    <p htmlFor="password" className="form-label">
                       Mật khẩu
-                    </label>
+                    </p>
                     <input
                       type="password"
                       className="form-control"
@@ -140,13 +142,8 @@ const Login = () => {
                     )}
                   </div>
                   {error && <div className="alert alert-danger">{error}</div>}
-                  {successMessage && (
-                    <div className="alert alert-success">{successMessage}</div>
-                  )}
-                  <div
-                    className="forgot-password"
-                    onClick={handleForgetPassword}
-                  >
+
+                  <div className="forgot-password" onClick={handleshow}>
                     <a href="#"> Quên mật khẩu?</a>
                   </div>
                   <div className="d-grid">
@@ -211,6 +208,9 @@ const Login = () => {
                     </div>
                   </div>
                 </div>
+                {successMessage && (
+                  <div className="alert alert-success">{successMessage}</div>
+                )}
                 <div className="wrap-btn">
                   <a
                     className="btn btn-primary btn--m"

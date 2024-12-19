@@ -23,19 +23,11 @@ function Side_bar() {
         <nav className="sidebar-nav">
           <ul>
             <li className="nav-item">
-              <Link to="/admin/settings">
-                <span className="icon">
-                  <i className="fa-solid fa-cogs"></i>
-                </span>
-                <span className="text">Settings</span>
-              </Link>
-            </li>
-            <li className="nav-item">
               <a href="/admin/products">
                 <span className="icon">
                   <i className="fa-solid fa-car"></i>{" "}
                 </span>
-                <span className="text">Car</span>
+                <span className="text">Xe</span>
               </a>
             </li>
             <li className="nav-item">
@@ -43,7 +35,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-store"></i>
                 </span>
-                <span className="text">Booking</span>
+                <span className="text">Đặt xe</span>
               </a>
             </li>
             <li className="nav-item">
@@ -51,7 +43,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-regular fa-comment"></i>
                 </span>
-                <span className="text">Feedbacks</span>
+                <span className="text">Phản hồi</span>
               </a>
             </li>
             <li className="nav-item">
@@ -59,7 +51,7 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-regular fa-star"></i>{" "}
                 </span>
-                <span className="text">Favorites</span>
+                <span className="text">Yêu thích</span>
               </a>
             </li>
             <li className="nav-item">
@@ -67,22 +59,15 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-table-list"></i>
                 </span>
-                <span className="text">License Driver</span>
+                <span className="text">GPLX</span>
               </a>
             </li>{" "}
             <li className="nav-item">
-              <a href="/admin/order">
-                <span className="icon">
-                  <i className="fa-solid fa-box-open"></i>
-                </span>
-                <span className="text">Đơn hàng</span>
-              </a>
-            </li><li className="nav-item">
               <a href="/admin/voucher">
                 <span className="icon">
                   <i className="fa-solid fa-gift"></i>
                 </span>
-                <span className="text">Vouchers</span>
+                <span className="text">Mã giảm giá</span>
               </a>
             </li>
             <li className="nav-item">
@@ -90,45 +75,9 @@ function Side_bar() {
                 <span className="icon">
                   <i className="fa-solid fa-users-gear"></i>
                 </span>
-                <span className="text">Users</span>
+                <span className="text">Người dùng</span>
               </a>
             </li>
-            <span className="divider">
-              <hr />
-            </span>
-            <li className="nav-item nav-item-has-children">
-              <a
-                href="#0"
-                className="collapsed"
-                data-bs-toggle="collapse"
-                data-bs-target="#ddmenu_2"
-                aria-controls="ddmenu_2"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-              >
-                <span className="icon">
-                  <i className="fa-solid fa-dumpster"></i>
-                </span>
-                <span className="text">Thùng rác</span>
-              </a>
-              <ul id="ddmenu_2" className="collapse dropdown-nav">
-                <li>
-                  <a href="/admin/product/trashed">
-                    <i className="fa-solid fa-boxes-packing"></i>
-                    Sản phẩm
-                  </a>
-                </li>
-                <li>
-                  <a href="/admin/account/trashed">
-                    <i className="fa-solid fa-user-xmark"></i>
-                    Tài khoản
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <span className="divider">
-              <hr />
-            </span>
           </ul>
         </nav>
       </aside>

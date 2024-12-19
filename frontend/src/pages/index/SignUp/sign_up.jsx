@@ -165,9 +165,9 @@ const Dangky = () => {
                   <div className="mb">
                     <div className="">
                       {" "}
-                      <label htmlFor="name" className="form-label">
+                      <p htmlFor="name" className="form-label">
                         Họ và tên
-                      </label>
+                      </p>
                     </div>
                     <input
                       type="text"
@@ -183,9 +183,9 @@ const Dangky = () => {
                   <div className="mb">
                     <div className="d-flex gap-2">
                       {" "}
-                      <label htmlFor="email" className="form-label">
+                      <p htmlFor="email" className="form-label">
                         Email
-                      </label>
+                      </p>
                     </div>
                     <input
                       type="text"
@@ -204,9 +204,9 @@ const Dangky = () => {
                   <div className="mb">
                     <div className="d-flex gap-2">
                       {" "}
-                      <label htmlFor="phone" className="form-label">
+                      <p htmlFor="phone" className="form-label">
                         Số điện thoại
-                      </label>
+                      </p>
                     </div>
 
                     <input
@@ -223,9 +223,9 @@ const Dangky = () => {
                     )}
                   </div>
                   <div className="mb">
-                    <label htmlFor="password" className="form-label">
+                    <p htmlFor="password" className="form-label">
                       Mật khẩu
-                    </label>
+                    </p>
                     <input
                       type="password"
                       className="form-control"
@@ -240,12 +240,9 @@ const Dangky = () => {
                     )}
                   </div>
                   <div className="mb-3">
-                    <label
-                      htmlFor="password_confirmation"
-                      className="form-label"
-                    >
+                    <p htmlFor="password_confirmation" className="form-label">
                       Xác nhận mật khẩu
-                    </label>
+                    </p>
                     <input
                       type="password"
                       className="form-control"
@@ -279,23 +276,26 @@ const Dangky = () => {
                         }
                       />
                       <label htmlFor="agree">
-                        Tôi đã đọc và đồng ý với{" "}
-                        <a
-                          className="text-primary fontWeight-5"
-                          target="_blank"
-                          href="/privacy"
-                        >
-                          Chính sách &amp; quy định
-                        </a>{" "}
-                        và{" "}
-                        <a
-                          className="text-primary fontWeight-5"
-                          target="_blank"
-                          href="/personalinfo"
-                        >
-                          Chính sách bảo vệ dữ liệu cá nhân
-                        </a>{" "}
-                        của Mioto.
+                        <p>
+                          {" "}
+                          Tôi đã đọc và đồng ý với
+                          <a
+                            className="text-primary fontWeight-5"
+                            target="_blank"
+                            href="/privacy"
+                          >
+                            Chính sách &amp; quy định
+                          </a>{" "}
+                          và{" "}
+                          <a
+                            className="text-primary fontWeight-5"
+                            target="_blank"
+                            href="/personalinfo"
+                          >
+                            Chính sách bảo vệ dữ liệu cá nhân
+                          </a>{" "}
+                          của ADL TRIPLE T.
+                        </p>
                       </label>
                     </div>
                   </div>

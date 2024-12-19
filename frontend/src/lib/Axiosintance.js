@@ -124,14 +124,23 @@ export const addCar = async (carData) => {
     const response = await axios.post(`${API_URL}/admin/car`, carData, {
       headers: {
         Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "multipart/form-data",
       },
     });
-    return response.data;
+    
+    if (response && response.data) {
+      console.log("Car added successfully:", response.data);
+      return response.data;
+    } else {
+      console.error("No data in response");
+    }
   } catch (error) {
-    console.error("Error adding car:", error);
+    console.error("Error adding car:", error.response?.data || error.message);
     throw error;
   }
 };
+
+
 
 export const getCarById = async (id) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage

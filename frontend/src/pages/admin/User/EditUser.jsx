@@ -53,6 +53,7 @@ function EditUser() {
     };
     console.log(userData);
 
+
     try {
       await updateUser(id, userData); // Gọi API để cập nhật thông tin người dùng
       alert("Thông tin người dùng đã được cập nhật thành công!");

@@ -364,7 +364,7 @@
     position: relative;
     display: grid;
     min-height: 500px;
-    background: var(--white);
+    background: white;
     padding: 20px;
     box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
     border-radius: 20px;
@@ -472,7 +472,7 @@
     display: grid;
     min-height: 500px;
     padding: 20px;
-    background: var(--white);
+    background: white;
     box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
     border-radius: 20px;
 }

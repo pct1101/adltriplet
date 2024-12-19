@@ -1639,7 +1639,7 @@ export const resetPassword2 = async (email, newPassword, confirmPassword) => {
     console.log("Password reset successful:", response.data);
     return response.data; // Trả về kết quả từ API
   } catch (error) {
-    console.error("Error while resetting password:", error);
+    console.error("Error while resetting password:", error.response.data);
     throw error; // Ném lỗi ra để xử lý phía ngoài
   }
 };
@@ -1653,4 +1653,25 @@ export const sendContactMail = (data) => {
     .catch((error) => {
       throw error.response ? error.response.data : error.message;
     });
+};
+
+// note: get dashboard admin
+
+export const getUserdashboard = async () => {
+  const apiToken = localStorage.getItem("api_token");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/dashboard/total-users`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    console.log(response);
+  } catch (error) {
+    console.log("lỗi nè:", error);
+  }
 };

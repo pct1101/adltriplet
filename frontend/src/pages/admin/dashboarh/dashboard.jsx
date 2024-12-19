@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
-import "ionicons";
-import { getAllCars } from "../../../lib/Axiosintance";
+import { getAllCars, getUserdashboard } from "../../../lib/Axiosintance";
 
 function Dashboarh() {
   const [cars, setCars] = useState([]);
@@ -93,8 +92,19 @@ function Dashboarh() {
     } catch (error) {
       console.error("Failed to fetch cars", error);
     }
+    fetchCars();
   };
-  fetchCars();
+
+  //   note: get data user
+  const fetchDataUsers = async () => {
+    try {
+      const response = await getUserdashboard();
+      setCars(response);
+    } catch (error) {
+      console.error("Failed to fetch cars", error);
+    }
+    fetchDataUsers();
+  };
 
   return (
     <div>
@@ -103,39 +113,36 @@ function Dashboarh() {
       </div>
       <div className="cardBox">
         <div className="card">
-          <div>
+          <div className="iconBx">
+            <i className="fa-solid fa-car"></i>{" "}
+          </div>
+          <div className="d-flex align-items-center gap-2">
             <div className="numbers">100</div>
-            <div className="cardName">CAR</div>
-          </div>
-          <div className="iconBx">
-            <ion-icon name="people-outline"></ion-icon>
+            <div className="cardName">Xe</div>
           </div>
         </div>
         <div className="card">
-          <div>
+          <div className="iconBx">
+            <i className="fa-solid fa-user"></i>
+          </div>
+          <div className="d-flex align-items-center gap-2">
             <div className="numbers">80</div>
-            <div className="cardName">USER</div>
-          </div>
-          <div className="iconBx">
-            <ion-icon name="people-outline"></ion-icon>
+            <div className="cardName">Người dùng</div>
           </div>
         </div>
         <div className="card">
-          <div>
+          <div className="iconBx">
+            <i className="fa-solid fa-phone"></i>{" "}
+          </div>
+          <div className="d-flex align-items-center gap-2">
             <div className="numbers">284</div>
-            <div className="cardName">Comments</div>
-          </div>
-          <div className="iconBx">
-            <ion-icon name="chatbubbles-outline"></ion-icon>
+            <div className="cardName">Booking</div>
           </div>
         </div>
         <div className="card">
-          <div>
+          <div className=" align-items-center gap-2">
             <div className="numbers">$7,842</div>
-            <div className="cardName">Earning</div>
-          </div>
-          <div className="iconBx">
-            <ion-icon name="cash-outline"></ion-icon>
+            <div className="cardName">Tổng doanh thu</div>
           </div>
         </div>
       </div>

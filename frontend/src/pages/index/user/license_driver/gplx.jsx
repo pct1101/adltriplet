@@ -55,6 +55,7 @@ function Gplx() {
         setError("Dung lượng ảnh giấy phép không được vượt quá 2MB.");
         return;
       }
+
       // Lưu hình ảnh vào state
       setSelectedImage(file);
       setError(""); // Xóa thông báo lỗi nếu file hợp lệ
@@ -65,10 +66,7 @@ function Gplx() {
   const handleSubmit = async () => {
     setError("");
     setSuccessMessage("");
-    if (!license_number || !license_holder || !selectedImage) {
-      setError("Vui lòng nhập đầy đủ thông tin.");
-      return; // prevent submission if any field is missing
-    }
+
     try {
       const formData = new FormData();
       formData.append("license_number", license_number);

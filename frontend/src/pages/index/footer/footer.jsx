@@ -14,7 +14,7 @@ function Footer() {
                   <a className="navbar-brand" href="/">
                     <img
                       style={{ width: "", height: "" }}
-                      src="/upload/Black and Grey Illustrated Car Rental Service Logo 1.png"
+                      src="/upload/logo.png"
                     />
                   </a>
                 </div>

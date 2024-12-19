@@ -40,7 +40,7 @@ function Header() {
         <div className="logo">
           {" "}
           <a className="navbar-brand" href="/">
-            <img src="/upload/Black and Grey Illustrated Car Rental Service Logo 1.png" />
+            <img src="/upload/logo.png" />
           </a>
         </div>
         <button

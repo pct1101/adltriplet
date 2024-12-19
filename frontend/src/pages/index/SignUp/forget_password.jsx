@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
 import { resetPassword2 } from "../../../lib/Axiosintance";
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 function Forget_password() {
+  const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -13,6 +16,10 @@ function Forget_password() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -32,6 +39,8 @@ function Forget_password() {
         confirmPassword
       );
       console.log("Password reset successful:", response);
+      setMessage("Đổi mật khẩu thành công");
+      setOpen(true);
     } catch (error) {
       if (error.response && error.response.data) {
         console.error("Error while resetting password:", error.message);
@@ -276,6 +285,19 @@ function Forget_password() {
         </div>
       </div>
       <Footer></Footer>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          message={message}
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+          onClick={handleClose}
+        >
+          {" "}
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

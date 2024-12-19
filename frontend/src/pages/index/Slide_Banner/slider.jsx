@@ -216,7 +216,7 @@ function Slider() {
             <Carousel.Caption>
               <h3>ADL TRIPBEL T</h3>
               <hr />
-              <p>Miễn bạn còn sống, chúng tôi sẽ còn hỗ trợ</p>
+              <p>Hỗ trợ tận tình, giao xe tận nơi</p>
             </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item>

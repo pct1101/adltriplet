@@ -94,7 +94,7 @@ const Dangky = () => {
       // (?=.{6,21}$) => Độ dài từ 6 đến 21 ký tự
       if (!passwordRegex.test(formData.password)) {
         setPasswordError(
-          "*Mật khẩu phải có từ 6 đến 21 ký tự và bao gồm ít nhất 1 ký tự đặc biệt."
+          "*Mật khẩu phải có từ 8 đến 21 ký tự và bao gồm ít nhất 1 ký tự đặc biệt."
         );
         hasError = true;
       } else {
@@ -293,26 +293,6 @@ const Dangky = () => {
                           Chính sách bảo vệ dữ liệu cá nhân
                         </a>{" "}
                         của ADL TRIPLE T.
-                        <p>
-                          {" "}
-                          Tôi đã đọc và đồng ý với
-                          <a
-                            className="text-primary fontWeight-5"
-                            target="_blank"
-                            href="/privacy"
-                          >
-                            Chính sách &amp; quy định
-                          </a>{" "}
-                          và{" "}
-                          <a
-                            className="text-primary fontWeight-5"
-                            target="_blank"
-                            href="/personalinfo"
-                          >
-                            Chính sách bảo vệ dữ liệu cá nhân
-                          </a>{" "}
-                          của ADL TRIPLE T.
-                        </p>
                       </label>
                     </div>
                   </div>

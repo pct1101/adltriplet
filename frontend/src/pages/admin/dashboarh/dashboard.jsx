@@ -71,6 +71,7 @@ function Dashboarh() {
         },
         options: { responsive: true },
       });
+
       const earningCtx = earningChartRef.current.getContext("2d");
       earningChartInstance.current = new Chart(earningCtx, {
         type: "bar",
@@ -113,7 +114,7 @@ function Dashboarh() {
         options: { responsive: true },
       });
     }
-  }, []);
+  });
 
   const formatRevenue = (revenue) => {
     return revenue.toLocaleString("vi-VN"); // Định dạng số theo chuẩn Việt Nam

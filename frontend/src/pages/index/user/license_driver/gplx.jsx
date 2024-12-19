@@ -82,18 +82,19 @@ function Gplx() {
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
-        const errors = err.response.data.errors;
-        const errorMessage = errors.license_number
-          ? errors.license_number[0]
-          : "Đã xảy ra lỗi, vui lòng thử lại.";
-        setError(errorMessage);
-      } else {
-        setError("Đã xảy ra lỗi, vui lòng thử lại.");
+        const serverErrors = err.response.data.errors;
+        setError({
+          license_number: serverErrors.license_number
+            ? serverErrors.license_number[0]
+            : "",
+          license_holder: serverErrors.license_holder
+            ? serverErrors.license_holder[0]
+            : "",
+          license_image: serverErrors.license_image
+            ? serverErrors.license_image[0]
+            : "",
+        });
       }
-      console.log(
-        "Lỗi trong khi gửi yêu cầu:",
-        err.response ? err.response.data : err.message
-      );
     }
   };
 
@@ -249,6 +250,9 @@ function Gplx() {
                 />
               )}
             </label>
+            {error.license_image && (
+              <div className="error-message">{error.license_image}</div>
+            )}
           </div>
 
           <div className="info-license">
@@ -275,6 +279,9 @@ function Gplx() {
                   />
                 </div>
               </div>
+              {error.license_number && (
+                <div className="error-message">{error.license_number}</div>
+              )}
             </div>
             <div className="custom-input">
               <div className="wrap-info">
@@ -295,7 +302,9 @@ function Gplx() {
                 </div>
               </div>
             </div>
-            {error && <div className="error-message">{error}</div>}
+            {error.license_holder && (
+              <div className="error-message">{error.license_holder}</div>
+            )}{" "}
             {successMessage && (
               <div className="alert alert-success">{successMessage}</div>
             )}

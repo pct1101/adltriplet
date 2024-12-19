@@ -4,6 +4,7 @@ import Footer from "../footer/footer";
 import { resetPassword2 } from "../../../lib/Axiosintance";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 function Forget_password() {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,10 @@ function Forget_password() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const [message, setMessage] = useState("");
+
+  const [emailError, setEmailError] = useState("");
+  const [newPasswordError, setNewPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
   const handleClose = () => {
     setOpen(false);
@@ -31,7 +36,27 @@ function Forget_password() {
     setshowConfirmPassword(!showConfirmPassword);
   };
 
+  const navigate = useNavigate();
+
   const resetPassword = async (e) => {
+    setEmailError("");
+    setNewPasswordError("");
+    setConfirmPasswordError("");
+
+    // Client-side validation
+    if (!email) {
+      setEmailError("Email không được để trống.");
+      return;
+    }
+    if (!newPassword) {
+      setNewPasswordError("Mật khẩu mới không được để trống.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setConfirmPasswordError("Mật khẩu xác nhận không khớp.");
+      return;
+    }
+
     try {
       const response = await resetPassword2(
         email,
@@ -39,15 +64,22 @@ function Forget_password() {
         confirmPassword
       );
       console.log("Password reset successful:", response);
-      setMessage("Đổi mật khẩu thành công");
+      setMessage("Đổi mật khẩu thành công", response);
+      setTimeout(() => {
+        navigate("/login"); // Chuyển hướng sau 3 giây
+      }, 2000);
       setOpen(true);
     } catch (error) {
-      if (error.response && error.response.data) {
-        console.error("Error while resetting password:", error.message);
-        throw new Error(error.response.data.message || "Có lỗi xảy ra");
+      if (error.response && error.response.data.errors) {
+        const errors = error.response.data.errors;
+        if (errors.email) setEmailError(errors.email[0]);
+        if (errors.password) setNewPasswordError(errors.password[0]);
+        if (errors.confirm_password)
+          setConfirmPasswordError(errors.confirm_password[0]);
       } else {
         console.error("Unknown error occurred:", error.message);
-        throw new Error("Không thể kết nối tới server.");
+        setMessage("Không thể kết nối tới server.");
+        setOpen(true);
       }
     }
   };
@@ -88,7 +120,11 @@ function Forget_password() {
                         />
                       </div>
                     </div>
+                    {emailError && (
+                      <div className="error-message">{emailError}</div>
+                    )}
                   </div>
+
                   <div className="custom-input">
                     <div className="wrap-info">
                       <div className="title-status">
@@ -177,7 +213,11 @@ function Forget_password() {
                         )}
                       </div>
                     </div>
+                    {newPasswordError && (
+                      <div className="error-message">{newPasswordError}</div>
+                    )}
                   </div>
+
                   <div className="custom-input">
                     <div className="wrap-info">
                       <div className="title-status">
@@ -269,6 +309,11 @@ function Forget_password() {
                         )}
                       </div>
                     </div>
+                    {confirmPasswordError && (
+                      <div className="error-message">
+                        {confirmPasswordError}
+                      </div>
+                    )}
                   </div>
                   <div className="apply-button">
                     <a

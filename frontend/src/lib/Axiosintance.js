@@ -121,7 +121,7 @@ export const addCar = async (carData) => {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
   }
   try {
-    const response = await axios.post(`${API_URL}/admin/car/`, carData, {
+    const response = await axios.post(`${API_URL}/admin/car`, carData, {
       headers: {
         Authorization: `Bearer ${apiToken}`,
         "Content-Type": "multipart/form-data",
@@ -365,15 +365,11 @@ export const addBooking = async (bookingData) => {
 
   try {
     // Gửi yêu cầu POST đến API để thêm booking
-    const response = await axios.post(
-      `${API_URL}/admin/booking/`,
-      bookingData,
-      {
-        headers: {
-          Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
-        },
-      }
-    );
+    const response = await axios.post(`${API_URL}/admin/booking`, bookingData, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`, // Gửi token trong header Authorization
+      },
+    });
 
     // Nếu thành công, trả về dữ liệu phản hồi từ API
     return response.data;
@@ -756,8 +752,6 @@ export const updateUser = async (id, updatedUserData) => {
     throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
   }
 };
-
-
 
 // API xóa một user
 export const deleteUser = async (userId) => {

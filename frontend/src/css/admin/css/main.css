@@ -1896,6 +1896,7 @@ h6,
 
 /* =========== tables css =========== */
 .table {
+  background-color: white;
   border-collapse: inherit;
   border-spacing: 0px;
 }

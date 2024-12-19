@@ -13,11 +13,7 @@ function Side_bar() {
       <aside className="sidebar-nav-wrapper" style={{ overflow: "hidden" }}>
         <div className="navbar-logo">
           <a href="/">
-            <img
-              src="/upload/Black and Grey Illustrated Car Rental Service Logo 1.png"
-              width="150px"
-              alt="logo"
-            />
+            <img src="/upload/logo.png" width="150px" alt="logo" />
           </a>
         </div>
         <nav className="sidebar-nav">

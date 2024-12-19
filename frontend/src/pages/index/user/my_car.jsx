@@ -8,6 +8,7 @@ import {
   cancelUserBooking,
 } from "../../../lib/Axiosintance";
 import dayjs from "dayjs";
+import "../../../css/index/mycar.css";
 
 function My_car() {
   const [bookingData, setbookingData] = useState(null);
@@ -174,12 +175,14 @@ function My_car() {
                               booking.booking_status === 7
                                 ? "#ffc107" // Vàng - Chờ xác nhận
                                 : booking.booking_status === 1
-                                  ? "yellow" // Booking thành công
-                                  : booking.booking_status === 3
-                                    ? "green" // Đã thanh toán
-                                    : booking.booking_status === 4 || booking.booking_status === 5
-                                      ? "#dc3545" // Hủy bởi người dùng hoặc admin
-                                      : "#198754", // Trạng thái khác
+                                  ? "orange" // Booking thành công
+                                  : booking.booking_status === 2
+                                    ? "#000080" // Đã thanh toán
+                                    : booking.booking_status === 3
+                                      ? "#green" // Đã thanh toán
+                                      : booking.booking_status === 4 || booking.booking_status === 5
+                                        ? "#dc3545" // Hủy bởi người dùng hoặc admin
+                                        : "#198754", // Trạng thái khác
                             color: booking.booking_status === 7 ? "black" : "white",
                             fontSize: ".550rem",
                           }}
@@ -325,7 +328,7 @@ function My_car() {
                           Xem chi tiết
                         </button>
                         {
-                          booking.booking_status !== 4 && booking.booking_status !== 7 && (
+                          booking.booking_status !== 4 && booking.booking_status !== 7 && booking.booking_status !== 6 && (
                             <button className="btn btn-danger"
                               onClick={() => {
                                 setSelectedBookingId(booking.booking_id);

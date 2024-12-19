@@ -295,7 +295,7 @@ const Dangky = () => {
                         >
                           Chính sách bảo vệ dữ liệu cá nhân
                         </a>{" "}
-                        của Mioto.
+                        của ADL TRIPLE T.
                       </label>
                     </div>
                   </div>

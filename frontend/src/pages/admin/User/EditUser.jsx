@@ -29,6 +29,8 @@ function EditUser() {
     fetchUserData();
   }, [id]);
 
+  
+
   // Xử lý khi có thay đổi trong form
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +51,7 @@ function EditUser() {
       role: user.role,
       status: user.status,
     };
+    console.log(userData);
 
     try {
       await updateUser(id, userData); // Gọi API để cập nhật thông tin người dùng
@@ -116,7 +119,7 @@ function EditUser() {
             id="role"
             name="role"
             className="form-control"
-            value={user.role || ""}
+            value={user.role}
             onChange={handleChange}
             required
           >

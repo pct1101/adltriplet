@@ -1,0 +1,74 @@
+.cancel-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .cancel-modal h5 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .cancel-modal select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .cancel-modal div {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .cancel-modal button {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .cancel-modal button:first-child {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+  
+  .cancel-modal button:first-child:hover {
+    background-color: #c0392b;
+  }
+  
+  .cancel-modal button:last-child {
+    background-color: #bdc3c7;
+    color: #333;
+  }
+  
+  .cancel-modal button:last-child:hover {
+    background-color: #95a5a6;
+  }
+  
+  /* Background overlay */
+  /* .cancel-modal::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  } */

@@ -5,18 +5,25 @@ import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 
 function EditFeedback() {
-  const [feedback, setFeedback] = useState({
-    content: "",
-    rating: "",
-  });
-  const { id } = useParams();
+  const { id } = useParams(); // Lấy id từ URL
   const navigate = useNavigate();
+
+  // Khởi tạo các state riêng cho từng trường dữ liệu
+  const [content, setContent] = useState("");
+  const [rating, setRating] = useState("");
+  const [userId, setUserId] = useState("");
+  const [carId, setCarId] = useState("");
 
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const data = await getFeedbackById(id);
-        setFeedback(data);
+        const response = await getFeedbackById(id);
+        console.log("Dữ liệu phản hồi: ", response); // Kiểm tra dữ liệu trả về
+        const feedbackData = response.data; // Lấy dữ liệu từ response
+        setContent(feedbackData.content || "");
+        setRating(feedbackData.rating || "");
+        setUserId(feedbackData.user_id || "");
+        setCarId(feedbackData.car_id || "");
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu feedback:", error);
       }
@@ -26,18 +33,26 @@ function EditFeedback() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFeedback((prevFeedback) => ({
-      ...prevFeedback,
-      [name]: value,
-    }));
+    // Cập nhật state dựa trên name của input
+    if (name === "content") {
+      setContent(value);
+    } else if (name === "rating") {
+      setRating(value);
+    } else if (name === "user_id") {
+      setUserId(value);
+    } else if (name === "car_id") {
+      setCarId(value);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const feedbackData = {
-      content: feedback.content,
-      rating: feedback.rating,
+      content,
+      rating,
+      user_id: userId,
+      car_id: carId,
     };
 
     try {
@@ -52,13 +67,11 @@ function EditFeedback() {
 
   return (
     <div>
-      {" "}
-      <Side_bar></Side_bar>
+      <Side_bar />
       <div className="main-wrapper section">
-        <Header></Header>
+        <Header />
         <h1 className="title">Sửa Phản Hồi</h1>
         <div className="container-m">
-          {" "}
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="content" className="form-label">
@@ -68,7 +81,7 @@ function EditFeedback() {
                 id="content"
                 name="content"
                 className="form-control"
-                value={feedback.content}
+                value={content}
                 onChange={handleChange}
                 required
               />
@@ -82,13 +95,49 @@ function EditFeedback() {
                 id="rating"
                 name="rating"
                 className="form-control"
-                value={feedback.rating}
+                value={rating}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="user_id" className="form-label">
+                ID Người dùng
+              </label>
+              <input
+                type="number"
+                id="user_id"
+                name="user_id"
+                className="form-control"
+                value={userId}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="car_id" className="form-label">
+                ID Xe
+              </label>
+              <input
+                type="number"
+                id="car_id"
+                name="car_id"
+                className="form-control"
+                value={carId}
                 onChange={handleChange}
                 required
               />
             </div>
             <button type="submit" className="btn btn-primary">
               Lưu thay đổi
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => navigate("/admin/feedbacks")}
+              style={{ marginLeft: "10px" }}
+            >
+              Quay lại
             </button>
           </form>
         </div>

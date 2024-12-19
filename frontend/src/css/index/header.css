@@ -49,15 +49,14 @@
 
 .signin-icon:hover {
   background-color: #A2FDBF;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 7);
   cursor: pointer;
-
+  color: black;
 }
 
 .signup-icon {
 
   width: 100%;
-  max-width: 100px;
+  max-width: 120px;
   height: 53px;
   display: flex;
   justify-content: center;

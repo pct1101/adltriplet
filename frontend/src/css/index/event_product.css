@@ -87,7 +87,10 @@
 }
 
 .modal-confirm-body {
-  width: 635px;
+  display: flex;
+  grid-gap: 16px;
+  gap: 16px;
+  flex-direction: column;
 }
 
 .none-label {

@@ -8,9 +8,16 @@ import {
   cancelUserBooking,
 } from "../../../lib/Axiosintance";
 import dayjs from "dayjs";
+import { API_URL_IMG } from "../../../lib/Axiosintance";
+import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 function My_car() {
   const [bookingData, setbookingData] = useState(null);
+  console.log(bookingData);
+
   const [startDateFormatted, setStartDateFormatted] = useState(null);
   const [endDateFormatted, setEndDateFormatted] = useState(null);
   const [filteredData, setFilteredData] = useState([]); // Dữ liệu sau khi lọc
@@ -19,6 +26,22 @@ function My_car() {
   const [isCanceling, setIsCanceling] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
   const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const carsPerPage = 3;
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+    const handleClose = () => {
+      setOpen(false);
+    };
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+  const displayedCars = filteredData
+    ? filteredData.slice(
+        currentPage * carsPerPage,
+        (currentPage + 1) * carsPerPage
+      )
+    : [];
 
   useEffect(() => {
     const fecthBookingData = async () => {
@@ -78,10 +101,10 @@ function My_car() {
         data.map((booking) =>
           booking.id === selectedBookingId
             ? {
-              ...booking,
-              booking_status: 7, // Trạng thái chờ xác nhận
-              cancel_reason: cancelReason,
-            }
+                ...booking,
+                booking_status: 7, // Trạng thái chờ xác nhận
+                cancel_reason: cancelReason,
+              }
             : booking
         );
 
@@ -110,14 +133,47 @@ function My_car() {
       // Lưu giá trị đã định dạng vào state
       setStartDateFormatted(startDateFormatted);
       setEndDateFormatted(endDateFormatted);
-      console.log("Formatted start date:", startDateFormatted);
-      console.log("Formatted end date:", endDateFormatted);
     } else {
       console.log("Start date not found or invalid");
     }
   }, [bookingData]);
 
-  console.log(bookingData);
+  const formatPrice = (price) => {
+    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
+    if (price >= 1000) {
+      return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
+    }
+    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+  };
+  const navigate = useNavigate();
+
+  const handleUrls = (booking_id) => {
+    const bookingItem = bookingData.find(
+      (item) => item.booking_id === booking_id
+    );
+    console.log(bookingItem);
+
+    if (bookingItem) {
+      console.log("Trạng thái booking: ", bookingItem.booking_status);
+      if (bookingItem.booking_status === 1) {
+        navigate(`/payment_car/${booking_id}`); // Chuyển hướng đến trang thanh toán
+      } else {
+        setMessage("Trạng thái không cho phép điều hướng đến thanh toán!");
+        setOpen(true);
+      }
+      if (bookingItem.booking_status === 2) {
+        setMessage("Vui lòng chờ xác nhận thanh toán!");
+        setOpen(true);
+      }
+      if (bookingItem.booking_status === 3) {
+        setMessage("Vui lòng chờ xác nhận thanh toán!");
+        setOpen(true);
+      }
+    } else {
+      setMessage("Không tìm thấy thông tin đặt xe!");
+      setOpen(true);
+    }
+  };
 
   return (
     <div>
@@ -137,10 +193,13 @@ function My_car() {
                   <div className="filter-status">
                     <p>Trạng thái: </p>
                     <div className="custom-select">
-                      <select value={selectedStatus} onChange={handleStatusChange}>
+                      <select
+                        value={selectedStatus}
+                        onChange={handleStatusChange}
+                      >
                         <option value="0">Tất cả</option>
                         <option value="1">Chưa thanh toán</option>
-                        <option value="2">Xác nhận thanh toán</option>
+                        <option value="2">Đã thanh toán</option>
                         <option value="3">Đã thanh toán</option>
                         <option value="4">Đã hủy</option>
                         <option value="5">Hủy bởi admin</option>
@@ -151,8 +210,8 @@ function My_car() {
                   </div>
                 </div>
               </div>
-              {filteredData && filteredData.length > 0 ? (
-                filteredData.slice(0, 3).map((booking) => (
+              {displayedCars && displayedCars.length > 0 ? (
+                displayedCars.map((booking) => (
                   <div className="card-car row" key={booking.id}>
                     <div className="item-box">
                       <a href="#">
@@ -160,7 +219,7 @@ function My_car() {
                           <div className="car-img">
                             <img
                               className="scale-img"
-                              src={`http://localhost:8000/imgs/${booking.car.car_image}`}
+                              src={` ${API_URL_IMG}/${booking.car.car_image}`}
                               alt="Car"
                             />
                           </div>
@@ -174,41 +233,42 @@ function My_car() {
                               booking.booking_status === 7
                                 ? "#ffc107" // Vàng - Chờ xác nhận
                                 : booking.booking_status === 1
-                                  ? "yellow" // Booking thành công
-                                  : booking.booking_status === 3
-                                    ? "green" // Đã thanh toán
-                                    : booking.booking_status === 4 || booking.booking_status === 5
-                                      ? "#dc3545" // Hủy bởi người dùng hoặc admin
-                                      : "#198754", // Trạng thái khác
-                            color: booking.booking_status === 7 ? "black" : "white",
+                                ? "yellow" // Booking thành công
+                                : booking.booking_status === 3
+                                ? "green" // Đã thanh toán
+                                : booking.booking_status === 4 ||
+                                  booking.booking_status === 5
+                                ? "#dc3545" // Hủy bởi người dùng hoặc admin
+                                : "#198754", // Trạng thái khác
+                            color:
+                              booking.booking_status === 7 ? "black" : "white",
                             fontSize: ".550rem",
                           }}
                         >
-                          {
-                            booking.booking_status === 1
-                              ? "Chưa thanh toán"
-                              : booking.booking_status === 2
-                                ? "Xác nhận thanh toán"
-                                : booking.booking_status === 3
-                                  ? "Đã thanh toán"
-                                  : booking.booking_status === 4
-                                    ? "Đã hủy"
-                                    : booking.booking_status === 5
-                                      ? "Hủy bởi admin"
-                                      : booking.booking_status === 6
-                                        ? "Đã hoàn thành"
-                                        : booking.booking_status === 7
-                                          ? "Chờ xác nhận"
-                                          : "Trạng thái không xác định"
-                          }
+                          {booking.booking_status === 1
+                            ? "Chưa thanh toán"
+                            : booking.booking_status === 2
+                            ? "Xác nhận thanh toán"
+                            : booking.booking_status === 3
+                            ? "Đã thanh toán"
+                            : booking.booking_status === 4
+                            ? "Đã hủy"
+                            : booking.booking_status === 5
+                            ? "Hủy bởi admin"
+                            : booking.booking_status === 6
+                            ? "Đã hoàn thành"
+                            : booking.booking_status === 7
+                            ? "Chờ xác nhận"
+                            : "Trạng thái không xác định"}
                         </div>
-
 
                         {/* <div className="desc-name">
                           Lý do : {booking.cancel_reason}
                         </div> */}
                         {booking.booking_status === 7 && (
-                          <div className="desc-name">Lý do hủy: {booking.cancel_reason}</div>
+                          <div className="desc-name">
+                            Lý do hủy: {booking.cancel_reason}
+                          </div>
                         )}
                         <div className="desc-name">
                           <p> {booking.car.car_name} </p>
@@ -280,9 +340,7 @@ function My_car() {
                               <div className="wrap-date-time">
                                 <div className="wrap-date">
                                   <span className="value">
-                                    {startDateFormatted
-                                      ? startDateFormatted
-                                      : "Đang tải..."}{" "}
+                                    {booking.start_date}
                                   </span>{" "}
                                 </div>
                               </div>
@@ -297,9 +355,7 @@ function My_car() {
                                   <span className="value">
                                     {" "}
                                     <span className="value">
-                                      {endDateFormatted
-                                        ? endDateFormatted
-                                        : "Đang tải..."}{" "}
+                                      {booking.end_date}
                                     </span>{" "}
                                   </span>{" "}
                                 </div>
@@ -318,15 +374,19 @@ function My_car() {
                         <div className="price">
                           <span className="price-special">
                             {" "}
-                            {booking.total_cost}{" "}
+                            {formatPrice(booking.total_cost)}{" "}
                           </span>
                         </div>
-                        <button className="btn btn-primary">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleUrls(booking.booking_id)}
+                        >
                           Xem chi tiết
                         </button>
-                        {
-                          booking.booking_status !== 4 && booking.booking_status !== 7 && (
-                            <button className="btn btn-danger"
+                        {booking.booking_status !== 4 &&
+                          booking.booking_status !== 7 && (
+                            <button
+                              className="btn btn-danger"
                               onClick={() => {
                                 setSelectedBookingId(booking.booking_id);
                                 setIsCanceling(true);
@@ -334,47 +394,69 @@ function My_car() {
                             >
                               Hủy chuyến
                             </button>
-                          )
-                        }
-                      </div >
-                    </div >
-                  </div >
+                          )}
+                      </div>
+                    </div>
+                  </div>
                 ))
               ) : (
                 <p>Vui lòng chờ</p>
-              )
-              }
+              )}
               {/* Modal chọn lý do hủy */}
-              {
-                isCanceling && (
-                  <div className="cancel-modal">
-                    <h5>Chọn lý do hủy chuyến</h5>
-                    <select
-                      value={cancelReason}
-                      onChange={(e) => setCancelReason(e.target.value)}
-                    >
-                      <option value="">-- Chọn lý do --</option>
-                      {cancelReasons.map((reason, index) => (
-                        <option key={index} value={reason}>
-                          {reason}
-                        </option>
-                      ))}
-                    </select>
-                    <div>
-                      <button onClick={handleCancelBooking}>Xác nhận hủy</button>
-                      <button onClick={() => setIsCanceling(false)}>
-                        Hủy bỏ
-                      </button>
-                    </div>
+              {isCanceling && (
+                <div className="cancel-modal">
+                  <h5>Chọn lý do hủy chuyến</h5>
+                  <select
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                  >
+                    <option value="">-- Chọn lý do --</option>
+                    {cancelReasons.map((reason, index) => (
+                      <option key={index} value={reason}>
+                        {reason}
+                      </option>
+                    ))}
+                  </select>
+                  <div>
+                    <button onClick={handleCancelBooking}>Xác nhận hủy</button>
+                    <button onClick={() => setIsCanceling(false)}>
+                      Hủy bỏ
+                    </button>
                   </div>
-                )
-              }
-            </div >
-          </div >
-        </div >
-      </div >
+                </div>
+              )}
+              <ReactPaginate
+                previousLabel={"<"}
+                nextLabel={">"}
+                breakLabel={"..."}
+                pageCount={Math.ceil((filteredData?.length || 0) / carsPerPage)}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={2}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                activeClassName={"active"}
+              />{" "}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Footer></Footer>
-    </div >
+      {/* Snackbar for showing alerts */}
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          message={message}
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+          onClick={handleClose}
+        >
+          {" "}
+          {message}
+        </Alert>
+      </Snackbar>
+    </div>
   );
 }
 

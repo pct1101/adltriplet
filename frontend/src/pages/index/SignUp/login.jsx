@@ -109,9 +109,9 @@ const Login = () => {
               <div className="card-body">
                 <form onSubmit={handleLogin}>
                   <div className=" mb">
-                    <label htmlFor="email" className="form-label">
+                    <p htmlFor="email" className="form-label">
                       Tài khoản gmail
-                    </label>
+                    </p>
                     <input
                       type="email"
                       className="form-control"
@@ -126,9 +126,9 @@ const Login = () => {
                   </div>
 
                   <div className="mb">
-                    <label htmlFor="password" className="form-label">
+                    <p htmlFor="password" className="form-label">
                       Mật khẩu
-                    </label>
+                    </p>
                     <input
                       type="password"
                       className="form-control"

@@ -33,7 +33,13 @@ function Forget_password() {
       );
       console.log("Password reset successful:", response);
     } catch (error) {
-      console.error("Error during login:", error.response.data); // Kiểm tra lỗi
+      if (error.response && error.response.data) {
+        console.error("Error while resetting password:", error.message);
+        throw new Error(error.response.data.message || "Có lỗi xảy ra");
+      } else {
+        console.error("Unknown error occurred:", error.message);
+        throw new Error("Không thể kết nối tới server.");
+      }
     }
   };
   return (

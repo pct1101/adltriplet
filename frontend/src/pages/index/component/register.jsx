@@ -38,7 +38,7 @@ function Register() {
   };
 
   return (
-    <div>
+    <div id="contact">
       <div className="section-intro"></div>
       <div className="container d-flex" style={{ borderRadius: "15px" }}>
         <div className="banner-register">
@@ -89,19 +89,6 @@ function Register() {
               ></textarea>
             </div>
             <div className="row">
-              <div className="col">
-                <label className="form-control-wrap file-4 custom-file-upload">
-                  <input
-                    style={{ margin: "0px", height: "37px" }}
-                    type="file"
-                    name="file-4"
-                    size="40"
-                    className="form-control file"
-                    accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.ppt,.pptx,.odt,.avi,.ogg,.m4a,.mov,.mp3,.mp4,.mpg,.wav,.wmv"
-                    aria-invalid="false"
-                  />
-                </label>
-              </div>
               <div className="col">
                 <input
                   type="submit"

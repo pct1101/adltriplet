@@ -28,7 +28,10 @@
 
     .navbar.navbar-expand-lg.navbar-light.bg-light {
         width: 100%;
-        max-width: 480px;
+    }
+
+    .info-license {
+        width: 100% !important;
     }
 
     .carousel-caption h3 {
@@ -48,9 +51,7 @@
         margin: 0 20px;
     }
 
-    .search-form {
-        flex-direction: column;
-    }
+    .search-form {}
 
     .container .title {
         margin-top: 2rem;
@@ -187,7 +188,7 @@
 
     .popup-content {
         width: 100%;
-        max-width: 480px;
+        max-width: 400px;
         margin: 1rem;
     }
 
@@ -248,12 +249,21 @@
     }
 
     .find-car .search-option.search-option-fixed {
-        transform: translateY(500px);
-        width: 90%;
-        right: 24px;
+        transform: translateY(710px);
+        width: 100%;
+        right: 0px;
         justify-content: center;
         text-align: center;
         align-items: center;
+    }
+
+    .carfinding-options-body .vehicle-types .custom-checkbox-selected {
+        width: calc(50% - 6px);
+        height: 140px;
+    }
+
+    .css-1m3p9o7 {
+        width: 100% !important;
     }
 
     .choose .time-date {
@@ -273,6 +283,90 @@
 
     .slide-drop .swiper .swiper-wrapper {
         width: 310px;
+    }
+
+    .group-user {
+        flex-direction: column;
+    }
+
+    .group-user .right-user {
+        width: 100%;
+        height: 450px;
+    }
+
+    .group-user .left-user {
+        width: 100%;
+
+    }
+
+    .left-user .content {
+        flex-direction: column;
+    }
+
+    .left-user .content .avatar-box {
+        width: 100% !important;
+
+    }
+
+    .info-user h6 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .info-user p {
+
+        text-align: center;
+    }
+
+
+
+    .group-user .right-user .sidebar a {
+        margin: 0px;
+    }
+
+    .card-car .item-box {
+        flex-direction: column;
+    }
+
+    .item-box .desc-car {
+        width: 200px !important;
+    }
+
+    .item-box .desc-car .desc-tag {
+        flex-wrap: nowrap !important;
+
+    }
+
+    .item-box .profile {
+        border-left: 0px !important;
+        width: 100% !important;
+    }
+
+    .content-account {
+        width: 100% !important;
+    }
+
+    .custom-checkbox-indeterminate label:after,
+    .custom-checkbox-selected label:after {
+        left: 0px;
+    }
+
+    .custom-checkbox-selected p {
+        font-size: 13px;
+    }
+
+    .nav-link {
+        color: black;
+    }
+
+    .container.about-us .col-4 {
+        width: 50%;
+
+    }
+
+    .content-margin {
+        top: 120px !important;
     }
 
 }

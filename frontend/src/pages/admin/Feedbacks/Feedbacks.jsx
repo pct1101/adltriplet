@@ -89,9 +89,9 @@ function AdminFeedbacks() {
     }
   };
 
-  const editFeedback = (FeedbackId) => {
-    navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
-  };
+  // const editFeedback = (FeedbackId) => {
+  //   navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
+  // };
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating); // Lấy phần nguyên của rating
@@ -188,7 +188,7 @@ function AdminFeedbacks() {
                           className="btn btn-danger"
                           onClick={() => deleteFeedback(feedback.id)}
                         >
-                          <i className="fas fa-trash"></i>
+                          <i className="fas fa-trash text-center"></i>
                         </button>
                       </td>
                     </tr>

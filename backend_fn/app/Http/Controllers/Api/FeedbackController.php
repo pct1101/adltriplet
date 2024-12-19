@@ -17,7 +17,7 @@ class FeedbackController extends Controller
     public function index($id)
     {
         // Lấy tất cả feedback của xe qua ID xe
-        $feedback = Feedback::where('car_id', $id)->get();
+        $feedback = Feedback::where('car_id', $id)->with('user')->get();
 
         // Trả về phản hồi dưới dạng JSON
         return response()->json($feedback);
@@ -73,10 +73,15 @@ class FeedbackController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
+        $userId = Auth::id(); // Lấy ID của người dùng đang đăng nhập
+
         // Lấy tất cả feedback của xe qua ID xe
-        $feedback = Feedback::where('id', $id)->get();
+        $feedback = Feedback::where('id', $id)
+        ->where('user_id', $userId)
+        ->with('user')
+        ->get();
 
         // Trả về phản hồi dưới dạng JSON
         return response()->json($feedback);

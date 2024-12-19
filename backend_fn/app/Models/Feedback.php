@@ -22,7 +22,7 @@ class Feedback extends Model
     ];
 
     // Quan hệ với User
-    public function user()
+    public function userzz()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

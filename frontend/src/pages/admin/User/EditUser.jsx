@@ -49,6 +49,7 @@ function EditUser() {
       role: user.role,
       status: user.status,
     };
+    console.log("Dữ liệu gửi đi:", userData);
 
     try {
       await updateUser(id, userData); // Gọi API để cập nhật thông tin người dùng

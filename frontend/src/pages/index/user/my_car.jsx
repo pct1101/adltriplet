@@ -117,6 +117,8 @@ function My_car() {
       // Reset lại các giá trị sau khi hủy
       setSelectedBookingId(null);
       setCancelReason("");
+      // Điều hướng về trang my car
+    navigate("/user_car");
     } catch (error) {
       console.error("Lỗi khi hủy booking:", error);
       alert("Có lỗi xảy ra khi hủy booking.");

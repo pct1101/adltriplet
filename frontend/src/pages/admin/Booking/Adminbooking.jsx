@@ -260,6 +260,7 @@ function AdminBooking() {
           >
             <option value="">Tất cả trạng thái</option>
             <option value="1">Booking thành công</option>
+            <option value="2">Chờ xác nhận thanh toán</option>
             <option value="3">Đã thanh toán</option>
             <option value="4">Hủy bởi user</option>
             <option value="5">Hủy bởi admin</option>
@@ -315,6 +316,7 @@ function AdminBooking() {
                         >
                           <option value="1">Booking thành công</option>
                           <option value="3">Đã thanh toán</option>
+                          <option value="2">Chờ xác nhận thanh toán</option>
                           <option value="4">Hủy bởi user</option>
                           <option value="5">Hủy bởi admin</option>
                           <option value="6">Đã hoàn thành</option>

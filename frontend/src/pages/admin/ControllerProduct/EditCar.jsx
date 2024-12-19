@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { updateCar, getCarById, getAllCarBrands } from "../../../lib/Axiosintance";
+import {
+  updateCar,
+  getCarById,
+  getAllCarBrands,
+} from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import Footer from "../component/footer";
 const API_URL_IMG = "https://api.thuexetulai.online/imgs/";
-
 
 const EditCar = () => {
   const [carName, setCarName] = useState("");
@@ -70,10 +73,8 @@ const EditCar = () => {
       setCarDescription(car.data.car_description);
       setBrandId(car.data.brandid); // Giả sử API trả về brandid
     } catch (error) {
-
       console.error("Error fetching car data:", error.message);
     }
-
   };
 
   const handleFileChange = (e) => {
@@ -88,13 +89,21 @@ const EditCar = () => {
 
     console.log("Tên xe hiện tại:", carName);
 
-    if (!carName || !seats || !model || !licensePlate || !rentalPrice || !mileage || !carDescription) {
+    if (
+      !carName ||
+      !seats ||
+      !model ||
+      !licensePlate ||
+      !rentalPrice ||
+      !mileage ||
+      !carDescription
+    ) {
       alert("Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     const formData = new FormData();
-    formData.append('_method', 'PUT');
+    formData.append("_method", "PUT");
     formData.append("car_name", carName);
     formData.append("seats", Number(seats));
     formData.append("model", model);
@@ -121,14 +130,17 @@ const EditCar = () => {
       const response = await updateCar(id, formData); // Gọi API update
       console.log("Cập nhật thành công:", response.data);
       alert("Cập nhật xe thành công!");
-      navigate("/admin");
+      navigate("/admin/products");
     } catch (error) {
-      console.error("Lỗi khi cập nhật xe:", error.response?.data?.message || error.message);
-      alert(`Cập nhật thất bại: ${error.response?.data?.message || error.message}`);
+      console.error(
+        "Lỗi khi cập nhật xe:",
+        error.response?.data?.message || error.message
+      );
+      alert(
+        `Cập nhật thất bại: ${error.response?.data?.message || error.message}`
+      );
     }
   };
-
-
 
   return (
     <div>
@@ -244,7 +256,7 @@ const EditCar = () => {
                     />
                   ) : carImage ? (
                     <img
-                    src={`${API_URL_IMG}/${carImage}`} // Hiển thị ảnh từ API
+                      src={`${API_URL_IMG}/${carImage}`} // Hiển thị ảnh từ API
                       // alt="Current Car"
                       style={{ width: "100px", height: "auto" }}
                     />

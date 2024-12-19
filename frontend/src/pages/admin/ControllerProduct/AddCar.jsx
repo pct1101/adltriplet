@@ -91,12 +91,13 @@ const AddCar = () => {
     try {
       if (carId) {
         // Nếu có carId thì thực hiện cập nhật
+
         await addCar(carData);
       } else {
         // Nếu không có carId thì thực hiện thêm mới
         await addCar(carData);
       }
-      navigate("/admin");
+      navigate("/admin/products");
     } catch (error) {
       console.error("Error while adding/updating car:", error.message);
     }

@@ -31,8 +31,10 @@ function My_car() {
   const carsPerPage = 3;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [tbsusecc, settbsusecc] = useState(false);
   const handleClose = () => {
     setOpen(false);
+    settbsusecc(false);
   };
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
@@ -96,6 +98,7 @@ function My_car() {
 
       // Gọi API hủy booking với lý do hủy
       await cancelUserBooking(selectedBookingId, cancelReason);
+      window.location.reload();
 
       // Cập nhật trạng thái của chuyến trong cả danh sách đã lọc và danh sách gốc
       const updateBookingStatus = (data) =>
@@ -118,7 +121,7 @@ function My_car() {
       setSelectedBookingId(null);
       setCancelReason("");
       // Điều hướng về trang my car
-    navigate("/user_car");
+      navigate("/user_car");
     } catch (error) {
       console.error("Lỗi khi hủy booking:", error);
       alert("Có lỗi xảy ra khi hủy booking.");
@@ -128,18 +131,22 @@ function My_car() {
   };
 
   useEffect(() => {
-    if (bookingData && bookingData[0]?.start_date) {
-      const startDate = bookingData[0].start_date;
-      const endDate = bookingData[0].end_date;
-      const startDateFormatted = dayjs(startDate).format("DD-MM-YYYY HH:mm");
-      const endDateFormatted = dayjs(endDate).format("DD-MM-YYYY HH:mm");
-      // Lưu giá trị đã định dạng vào state
-      setStartDateFormatted(startDateFormatted);
-      setEndDateFormatted(endDateFormatted);
+    if (selectedStatus === "0") {
+      setFilteredData(bookingData); // Nếu chọn "Tất cả", hiển thị toàn bộ dữ liệu
+    } else if (selectedStatus === "4") {
+      // Lọc cả trạng thái 4 và 5
+      const filtered = bookingData.filter(
+        (booking) =>
+          booking.booking_status === 4 || booking.booking_status === 5
+      );
+      setFilteredData(filtered);
     } else {
-      console.log("Start date not found or invalid");
+      const filtered = bookingData.filter(
+        (booking) => booking.booking_status === parseInt(selectedStatus) // So khớp chính xác trạng thái
+      );
+      setFilteredData(filtered);
     }
-  }, [bookingData]);
+  }, [selectedStatus, bookingData]); // Lọc lại khi trạng thái hoặc dữ liệu booking thay đổi
 
   const formatPrice = (price) => {
     // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
@@ -148,6 +155,7 @@ function My_car() {
     }
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
+
   const navigate = useNavigate();
 
   const handleUrls = (booking_id) => {
@@ -161,7 +169,7 @@ function My_car() {
       console.log("booking id", bookingItem.booking_id);
 
       if (bookingItem.booking_status === 1) {
-        // navigate(`/payment_car/${booking_id}`);
+        navigate(`/payment_car/${booking_id}`);
       } else {
         setMessage("Trạng thái không cho phép điều hướng đến thanh toán!");
         setOpen(true);
@@ -171,7 +179,20 @@ function My_car() {
         setOpen(true);
       }
       if (bookingItem.booking_status === 3) {
-        setMessage("Vui lòng chờ xác nhận thanh toán!");
+        settbsusecc(true);
+        setOpen(false);
+      }
+      if (bookingItem.booking_status === 4) {
+        setMessage("Bạn đã hủy xe thành công!");
+        setOpen(true);
+      }
+
+      if (bookingItem.booking_status === 6) {
+        setMessage("Xe đã hoàn thành, xin cảm ơn!");
+        setOpen(true);
+      }
+      if (bookingItem.booking_status === 7) {
+        setMessage("Vui lòng chờ xác nhận!");
         setOpen(true);
       }
     } else {
@@ -189,14 +210,12 @@ function My_car() {
           <div className="right-user">
             <Side_bar></Side_bar>
           </div>
-
           <div className="left-user">
             <div className="content-item user-car">
               <div className="title">
                 <div className="title-edit">
                   <h5>Danh sách xe</h5>
                   <div className="filter-status">
-                    <p>Trạng thái: </p>
                     <div className="custom-select">
                       <select
                         value={selectedStatus}
@@ -204,12 +223,11 @@ function My_car() {
                       >
                         <option value="0">Tất cả</option>
                         <option value="1">Chưa thanh toán</option>
-                        <option value="2">Đã thanh toán</option>
+                        <option value="2">Xác nhận thanh toán</option>
                         <option value="3">Đã thanh toán</option>
                         <option value="4">Đã hủy</option>
-                        <option value="5">Hủy bởi admin</option>
                         <option value="6">Đã hoàn thành</option>
-                        <option value="7">Vui lòng chờ xác nhận</option>
+                        <option value="7">Chờ xác nhận</option>
                       </select>
                     </div>
                   </div>
@@ -464,6 +482,77 @@ function My_car() {
           {message}
         </Alert>
       </Snackbar>
+      {tbsusecc && (
+        <div className="popup-overlay" onClick={() => settbsusecc(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <div className="group-title d-flex">
+              <h5> Hướng dẫn nhận xe</h5>
+              <button className="btn btn-close" onClick={handleClose}></button>
+            </div>
+            <div className="line-page"> </div>
+            <div className="modal-body">
+              <div className="block-content">
+                <img src="../upload/camon.jpg" /> <h5>1. Thông Báo Xác Nhận</h5>
+                <ul>
+                  <li>
+                    - Sau khi thanh toán, bạn sẽ nhận được email/SMS với các
+                    thông tin sau:
+                    <ul>
+                      <li>+ Thời gian nhận xe.</li>
+                      <li>
+                        + Địa điểm nhận xe:{" "}
+                        <span className="highlight">
+                          Văn phòng, bãi xe, hoặc trung tâm giao dịch.
+                        </span>
+                      </li>
+                      <li>+ Chi tiết xe: Loại xe, biển số, trạng thái.</li>
+                      <li>+ Hotline hỗ trợ.</li>
+                    </ul>
+                  </li>
+                </ul>
+                <h5>2. Chuẩn Bị Giấy Tờ</h5>
+                <ul>
+                  <li>CMND/CCCD hoặc hộ chiếu bản gốc.</li>
+                  <li>Bằng lái xe hợp lệ.</li>
+                  <li>Biên nhận thanh toán hoặc mã đặt xe.</li>
+                </ul>
+                <h5>3. Đến Địa Điểm Nhận Xe</h5>
+                <ul>
+                  <li>Tới đúng thời gian và địa điểm đã được thông báo.</li>
+                  <li>
+                    Liên hệ nhân viên hỗ trợ tại quầy hoặc điểm giao dịch.
+                  </li>
+                </ul>
+                <h5>4. Kiểm Tra Và Ký Biên Bản</h5>
+                <ul>
+                  <li>
+                    - Kiểm tra tình trạng xe:
+                    <ul>
+                      <li>+ Bề ngoài và nội thất xe.</li>
+                      <li>+ Nhiên liệu và các thiết bị đi kèm.</li>
+                    </ul>
+                  </li>
+                  <li>- Ký biên bản bàn giao hoặc hợp đồng nhận xe.</li>
+                </ul>
+                <h5>5. Nhận Chìa Khóa Và Khởi Hành</h5>
+                <ul>
+                  <li>Nhận chìa khóa xe từ nhân viên.</li>
+                  <li>Khởi hành và sử dụng dịch vụ.</li>
+                </ul>
+                <div className="note">
+                  <strong>Lưu ý:</strong> Hãy kiểm tra kỹ tình trạng xe và báo
+                  ngay nếu có vấn đề.
+                </div>
+                <span>
+                  Mọi chi tiết và thắc mắc xin liên hệ qua hotline: <br /> 0765
+                  801 204 hoặc 0399 558 442 để được giải đáp.
+                </span>
+                <strong>ADL TRIPEL T XIN CHÂN THÀNH CẢM ƠN</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

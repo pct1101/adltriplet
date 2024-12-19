@@ -6,7 +6,6 @@ import Header from "../component/header";
 import "../../../css/admin/css/feedback.css";
 import ReactPaginate from "react-paginate";
 
-
 function AdminFeedbacks() {
   const [feedbacks, setFeedbacks] = useState([]); // Đảm bảo feedbacks là một mảng trống ban đầu
   const [isAdmin, setIsAdmin] = useState(false);
@@ -63,12 +62,13 @@ function AdminFeedbacks() {
   });
 
   const offset = currentPage * feedbacksPerPage;
-  const currentFeedbacks = filteredFeedbacks.slice(offset, offset + feedbacksPerPage);
+  const currentFeedbacks = filteredFeedbacks.slice(
+    offset,
+    offset + feedbacksPerPage
+  );
 
   if (isLoading) return <div>Đang tải dữ liệu...</div>;
   // if (error) return <div>{error}</div>;
-
-
 
   const deleteFeedback = async (feedbackId) => {
     const apiToken = localStorage.getItem("api_token"); // Lấy api_token từ localStorage
@@ -102,12 +102,16 @@ function AdminFeedbacks() {
         {Array(fullStars)
           .fill(0)
           .map((_, index) => (
-            <span key={`full-${index}`} className="star full-star">★</span>
+            <span key={`full-${index}`} className="star full-star">
+              ★
+            </span>
           ))}
         {Array(emptyStars)
           .fill(0)
           .map((_, index) => (
-            <span key={`empty-${index}`} className="star empty-star">☆</span>
+            <span key={`empty-${index}`} className="star empty-star">
+              ☆
+            </span>
           ))}
       </span>
     );
@@ -121,38 +125,32 @@ function AdminFeedbacks() {
         <div className="">
           <div className="d-flex">
             <h1 className="title">Phản hồi khách hàng</h1>
-            <button className="btn ms-auto">
-              <Link className="btn btn-primary" to="/admin/add_feedback">
-                Thêm Feedback
-              </Link>
-            </button>
           </div>
 
-          <div className="d-flex ms-3 mb-4"> 
-          <select
-            className="form-select w-auto"
-            value={filterFeedback}
-                onChange={handleFilterChange}
-          > 
-            <option value="all">Tất cả</option>
-                <option value="5">5 ★</option>
-                <option value="4">4 ★</option>
-                <option value="3">3 ★</option>
-                <option value="2">2 ★</option>
-                <option value="1">1 ★</option>
-          </select>
-        </div>
+          <div className="d-flex ms-3 mb-4">
+            <select
+              className="form-select w-auto"
+              value={filterFeedback}
+              onChange={handleFilterChange}
+            >
+              <option value="all">Tất cả</option>
+              <option value="5">5 ★</option>
+              <option value="4">4 ★</option>
+              <option value="3">3 ★</option>
+              <option value="2">2 ★</option>
+              <option value="1">1 ★</option>
+            </select>
+          </div>
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-            <div className="filter-section">
-            </div>
+            <div className="filter-section"></div>
             <table className="table">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th className="text-center">Tên xe</th>
-                  <th className="text-center" >Tên người dùng</th>
+                  <th className="text-center">Tên người dùng</th>
                   <th>Nội dung phản hồi</th>
                   <th className="text-start">Đánh giá</th>
                   <th>Ngày phản hồi</th>
@@ -181,15 +179,11 @@ function AdminFeedbacks() {
                           : "Không có tên người dùng"}
                       </td>
                       <td>{feedback.content}</td>
-                      <td className="text-start">{renderStars(feedback.rating)}</td>
+                      <td className="text-start">
+                        {renderStars(feedback.rating)}
+                      </td>
                       <td>{feedback.feedback_date}</td>
                       <td>
-                        <button
-                          className="btn btn-warning me-2"
-                          onClick={() => editFeedback(feedback.id)}
-                        >
-                          <i className="fas fa-wrench"></i>
-                        </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => deleteFeedback(feedback.id)}

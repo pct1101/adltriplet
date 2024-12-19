@@ -60,6 +60,14 @@ function User_favorite() {
     return <div>{error}</div>;
   }
 
+  const formatPrice = (price) => {
+    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
+    if (price >= 1000) {
+      return `${(price / 1000).toLocaleString("vi-VN")}K/ngày`;
+    }
+    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+  };
+
   return (
     <div>
       <Header></Header>
@@ -176,9 +184,8 @@ function User_favorite() {
                           />
                         </div>
                         <div className="price">
-                          <span className="price-origin">976K</span>
                           <span className="price-special">
-                            {car.car ? car.car.rental_price : "Không có tên xe"}{" "}
+                            {formatPrice(car.car.rental_price)}{" "}
                           </span>
                         </div>
                         <button

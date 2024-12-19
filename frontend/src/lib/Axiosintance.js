@@ -127,7 +127,7 @@ export const addCar = async (carData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    
+
     if (response && response.data) {
       console.log("Car added successfully:", response.data);
       return response.data;
@@ -139,8 +139,6 @@ export const addCar = async (carData) => {
     throw error;
   }
 };
-
-
 
 export const getCarById = async (id) => {
   const apiToken = localStorage.getItem("authToken"); // Lấy api_token từ localStorage

@@ -7,10 +7,7 @@ export const useBooking = () => useContext(BookingContext);
 
 export const BookingProvider = ({ children }) => {
   // note: set booking
-  const [bookings, setBookings] = useState(() => {
-    const saved = localStorage.getItem("bookings");
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [bookings, setBookings] = useState(() => {});
   // note: set days
   const [startDate, setStartDate] = useState(() => {
     const saved = localStorage.getItem("startDate");

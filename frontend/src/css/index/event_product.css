@@ -105,7 +105,7 @@
 }
 
 .carfinding-options-body .vehicle-types .custom-checkbox-selected {
-  width: calc(25% - 9px);
+  width: calc(45% - 9px);
   height: 145px;
 }
 

@@ -11,33 +11,30 @@ import { getBookingId, getUserProfile } from "../../../lib/Axiosintance.js";
 import { payment } from "../../../lib/Axiosintance.js";
 import { API_URL_IMG } from "../../../lib/Axiosintance.js";
 
-const formatDate = (date) => (date ? dayjs(date).format("DD/MM/YYYY") : "");
 export default function Payment_booking() {
   const [userData, setUserData] = useState(null);
   const { booking_id } = useParams();
+  console.log("booking_id", booking_id);
 
   const [bookingData, setBookingData] = useState();
   console.log(bookingData);
 
-  // NOTE: get Booking_id
-  useEffect(() => {
-    const storedBookingId = localStorage.getItem("booking_id");
-    setBookingData(storedBookingId);
-  }, [booking_id]);
-  // note: getdetailbooking
   useEffect(() => {
     const fetchBookingDetails = async () => {
       try {
+        const response = await getBookingId(booking_id);
         // Gửi request để lấy thông tin chi tiết booking
-        const response = await getBookingId();
         console.log(response);
         setBookingData(response);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchBookingDetails();
-  }, []);
+
+    if (booking_id) {
+      fetchBookingDetails();
+    }
+  }, [booking_id]);
 
   // NOTE: handle post
   const handlePayment = async (event) => {
@@ -92,7 +89,6 @@ export default function Payment_booking() {
   }, []);
 
   const {
-    bookings,
     startDate,
     endDate,
     selectedTimes,
@@ -105,19 +101,15 @@ export default function Payment_booking() {
     setSelectedOption(event.target.value);
   };
 
-  const calculateTotalDays = (start, end) => {
-    const startDate = dayjs(start);
-    const endDate = dayjs(end);
-    return endDate.diff(startDate, "day");
+  const calculateTotalDays = (startDate, endDate) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const differenceInTime = end - start;
+    const totalDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); //note: Số ngày giữa hai ngày
+    return totalDays > 0 ? totalDays : 0;
   };
+
   const totalDays = calculateTotalDays(startDate, endDate);
-  const totalCost = bookings?.rental_price * totalDays;
-  const formatPrice2 = (price) => {
-    if (typeof price === "number") {
-      return `${price.toLocaleString("vi-VN")}đ`;
-    }
-    return "0 VND"; // Hoặc trả về một giá trị khác nếu price không hợp lệ
-  };
 
   // note: confirm user
   const { user } = useAuth();
@@ -133,6 +125,12 @@ export default function Payment_booking() {
     //note: Có thể yêu cầu người dùng đăng nhập lại hoặc tự động làm mới token nếu đang dùng refresh token.
     return;
   }
+  const formatRevenue = (bookingData) => {
+    return bookingData.toLocaleString("vi-VN"); // Định dạng số theo chuẩn Việt Nam
+  };
+  const formattedRevenue = formatRevenue(
+    Number(bookingData?.total_cost_after_voucher)
+  );
 
   return (
     <div>
@@ -175,7 +173,7 @@ export default function Payment_booking() {
                   <input
                     type="text"
                     name="txt_inv_city"
-                    value={selectedProvince ? selectedProvince.label : ""}
+                    value={bookingData?.city}
                   />{" "}
                 </div>
                 <div className="inputBox">
@@ -183,7 +181,7 @@ export default function Payment_booking() {
                   <input
                     type="text"
                     name="txt_inv_addr1"
-                    value={selectedDistrict ? selectedDistrict.label : ""}
+                    value={bookingData?.address}
                   />
                 </div>
               </div>
@@ -210,7 +208,13 @@ export default function Payment_booking() {
                       <div className="car-img">
                         <img
                           className="scale-img"
-                          src={`${API_URL_IMG}${bookings.car_image}`}
+                          src={
+                            bookingData &&
+                            bookingData.car &&
+                            bookingData.car.car_image
+                              ? `${API_URL_IMG}/${bookingData.car.car_image}`
+                              : "path/to/default_image.jpg"
+                          }
                           alt="Car"
                         />
                       </div>
@@ -227,13 +231,11 @@ export default function Payment_booking() {
                           <div className="wrap-date-time">
                             <div className="wrap-date">
                               <span className="value">
-                                {formatDate(bookingData?.start_date)}
+                                {bookingData?.start_date}
                               </span>{" "}
                             </div>
                             <div className="wrap-time">
-                              <span className="value">
-                                {selectedTimes.nhanXe}
-                              </span>
+                              <span className="value"></span>
                             </div>
                           </div>
                         </div>
@@ -246,14 +248,11 @@ export default function Payment_booking() {
                             <div className="wrap-date">
                               <span className="value">
                                 {" "}
-                                {formatDate(bookingData?.end_date)}
+                                {bookingData?.end_date}
                               </span>{" "}
                             </div>
                             <div className="wrap-time">
-                              <span className="value">
-                                {" "}
-                                {selectedTimes.traXe}
-                              </span>
+                              <span className="value"> </span>
                             </div>
                           </div>
                         </div>
@@ -265,12 +264,7 @@ export default function Payment_booking() {
                     </div>
                     <div className="total-price-car">
                       <h6> Tổng tiền :</h6>
-                      <span>
-                        {" "}
-                        {bookingData
-                          ? formatPrice2(bookingData.total_cost_after_voucher)
-                          : "Đang tải..."}{" "}
-                      </span>
+                      <span> {formattedRevenue} </span>
                     </div>
                   </div>
                 </div>

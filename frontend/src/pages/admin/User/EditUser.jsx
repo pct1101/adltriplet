@@ -69,7 +69,6 @@ function EditUser() {
   return (
     <div>
       <Side_bar />
-      <h1>Chỉnh sửa người dùng</h1>
       <div className="main-wrapper section">
         <Header />
         <div className="d-flex">

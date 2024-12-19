@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../event/loading";
 import { useBooking } from "../../Private/bookingContext";
 import { getvoucher } from "../../../lib/Axiosintance";
+import "dayjs/locale/vi";
+dayjs.locale("vi");
 
 function Booking() {
   // note: get booking
@@ -68,7 +70,6 @@ function Booking() {
 
   const handleBookingSubmit = async () => {
     setIsLoading(true);
-
     const apiToken = localStorage.getItem("remember_token");
     if (!user) {
       navigate("/login");
@@ -110,19 +111,30 @@ function Booking() {
     }
 
     console.log(bookingData);
-    console.log(total_cost);
 
     try {
       //note: Gọi hàm addBooking để thực hiện API call
       const response = await addBookingUser(bookingData, apiToken);
+      console.log("response", response);
+
       const { booking } = response;
       localStorage.setItem("booking_id", booking.booking_id);
       if (response.message === "Booking thành công") {
-        console.log(response);
-        setTimeout(() => {
-          setIsLoading(false);
-          navigate(`/payment_car/${booking.booking_id}`);
-        }, 3000);
+        const totalCost = bookingData?.total_cost;
+        const totalCostAfterVoucher =
+          total_voucher ?? bookingData?.total_voucher;
+        if (totalCost > 0 && totalCostAfterVoucher > 0) {
+          console.log("Booking thành công, chuyển trang");
+          setTimeout(() => {
+            setIsLoading(false);
+            navigate(`/payment_car/${booking.booking_id}`);
+          }, 3000);
+        } else {
+          console.error(
+            "Giá trị total hoặc total_cost_after_voucher bằng 0, không chuyển trang",
+            { totalCost, totalCostAfterVoucher }
+          );
+        }
       } else {
         console.log("lõi ne", Error);
       }
@@ -227,14 +239,6 @@ function Booking() {
       return;
     }
 
-    // Kiểm tra nếu ngày bắt đầu bị trùng với các ngày đã được đặt
-    if (isBookedDate(newStartDate)) {
-      setError(
-        "* Xe bận trong khoảng thời gian trên. Vui lòng đặt xe khác hoặc thay đổi lịch trình thích hợp."
-      );
-      return;
-    }
-
     setStartDate(newStartDate);
     setError(""); // Xóa lỗi nếu ngày hợp lệ
 
@@ -242,6 +246,13 @@ function Booking() {
     if (isBookedDate(nextDay)) {
       setError(
         "* Ngày trả xe bị trùng với lịch đặt trước. Vui lòng chọn ngày khác."
+      );
+      return;
+    }
+    // Kiểm tra nếu ngày bắt đầu bị trùng với các ngày đã được đặt
+    if (isBookedDate(newStartDate)) {
+      setError(
+        "* Xe bận trong khoảng thời gian trên. Vui lòng đặt xe khác hoặc thay đổi lịch trình thích hợp."
       );
       return;
     }
@@ -350,7 +361,6 @@ function Booking() {
   // Hàm kiểm tra ngày có bị đặt hay không
   const isBookedDate = (date) => {
     const formattedDate = date.format("YYYY-MM-DD");
-
     return bookedDatesArray.includes(formattedDate);
   };
 

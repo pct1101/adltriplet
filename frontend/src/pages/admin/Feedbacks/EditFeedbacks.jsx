@@ -38,10 +38,6 @@ function EditFeedback() {
       setContent(value);
     } else if (name === "rating") {
       setRating(value);
-    } else if (name === "user_id") {
-      setUserId(value);
-    } else if (name === "car_id") {
-      setCarId(value);
     }
   };
 
@@ -110,8 +106,7 @@ function EditFeedback() {
                 name="user_id"
                 className="form-control"
                 value={userId}
-                onChange={handleChange}
-                required
+                readOnly // Không thể chỉnh sửa
               />
             </div>
             <div className="mb-3">
@@ -124,8 +119,7 @@ function EditFeedback() {
                 name="car_id"
                 className="form-control"
                 value={carId}
-                onChange={handleChange}
-                required
+                readOnly // Không thể chỉnh sửa
               />
             </div>
             <button type="submit" className="btn btn-primary">

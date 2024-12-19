@@ -747,6 +747,9 @@ export const updateUser = async (id, updatedUserData) => {
     throw error; // Ném lỗi ra ngoài để có thể xử lý ở nơi gọi hàm này
   }
 };
+
+
+
 // API xóa một user
 export const deleteUser = async (userId) => {
   const apiToken = localStorage.getItem("authToken");

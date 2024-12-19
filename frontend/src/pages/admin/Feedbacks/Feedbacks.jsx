@@ -4,25 +4,34 @@ import { getAllFeedbacks, deleteFeedbackById } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import "../../../css/admin/css/feedback.css";
+import ReactPaginate from "react-paginate";
+
 
 function AdminFeedbacks() {
   const [feedbacks, setFeedbacks] = useState([]); // Đảm bảo feedbacks là một mảng trống ban đầu
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+  const [filterFeedback, setFilterFeedback] = useState("all");
+  const [feedbacksPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
+      setIsLoading(true);
       try {
         const response = await getAllFeedbacks();
         if (Array.isArray(response)) {
-          setFeedbacks(response); // Nếu là mảng, cập nhật state
+          setFeedbacks(response);
         } else {
           console.error("Dữ liệu trả về không phải mảng:", response);
-          setFeedbacks([]); // Nếu không phải mảng, đặt state là mảng rỗng
+          setFeedbacks([]);
         }
       } catch (error) {
         console.log("Thất bại khi lấy danh sách feedback", error);
-        setFeedbacks([]); // Đảm bảo state luôn là mảng rỗng nếu có lỗi
+        setFeedbacks([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,6 +47,28 @@ function AdminFeedbacks() {
       setIsAdmin(false);
     }
   };
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterFeedback(e.target.value);
+    setCurrentPage(0); // Reset về trang đầu tiên khi thay đổi bộ lọc
+  };
+
+  const filteredFeedbacks = feedbacks.filter((feedback) => {
+    if (filterFeedback === "all") return true;
+    return feedback.rating === filterFeedback;
+  });
+
+  const offset = currentPage * feedbacksPerPage;
+  const currentFeedbacks = filteredFeedbacks.slice(offset, offset + feedbacksPerPage);
+
+  if (isLoading) return <div>Đang tải dữ liệu...</div>;
+  // if (error) return <div>{error}</div>;
+
+
 
   const deleteFeedback = async (feedbackId) => {
     const apiToken = localStorage.getItem("api_token"); // Lấy api_token từ localStorage
@@ -96,9 +127,26 @@ function AdminFeedbacks() {
               </Link>
             </button>
           </div>
+
+          <div className="d-flex ms-3 mb-4"> 
+          <select
+            className="form-select w-auto"
+            value={filterFeedback}
+                onChange={handleFilterChange}
+          > 
+            <option value="all">Tất cả</option>
+                <option value="5">5 ★</option>
+                <option value="4">4 ★</option>
+                <option value="3">3 ★</option>
+                <option value="2">2 ★</option>
+                <option value="1">1 ★</option>
+          </select>
+        </div>
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
+            <div className="filter-section">
+            </div>
             <table className="table">
               <thead>
                 <tr>
@@ -112,14 +160,14 @@ function AdminFeedbacks() {
                 </tr>
               </thead>
               <tbody>
-                {feedbacks.length === 0 ? (
+                {currentFeedbacks.length === 0 ? (
                   <tr>
-                    <td colSpan="5">
+                    <td colSpan="7">
                       Chưa có phản hồi nào hoặc có lỗi khi lấy dữ liệu.
                     </td>
                   </tr>
                 ) : (
-                  feedbacks.map((feedback) => (
+                  currentFeedbacks.map((feedback) => (
                     <tr key={feedback.id}>
                       <td>{feedback.id}</td>
                       <td>
@@ -140,21 +188,31 @@ function AdminFeedbacks() {
                           className="btn btn-warning me-2"
                           onClick={() => editFeedback(feedback.id)}
                         >
-                          <i className="fas fa-wrench"></i> {/* Icon cái kềm */}
+                          <i className="fas fa-wrench"></i>
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => deleteFeedback(feedback.id)}
                         >
-                          <i className="fas fa-trash"></i> {/* Icon thùng rác */}
+                          <i className="fas fa-trash"></i>
                         </button>
                       </td>
-
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
+            <ReactPaginate
+              previousLabel={"←"}
+              nextLabel={"→"}
+              breakLabel={"..."}
+              pageCount={Math.ceil(filteredFeedbacks.length / feedbacksPerPage)}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={5}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              activeClassName={"active"}
+            />
           </div>
         </div>
       </div>

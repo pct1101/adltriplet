@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllUsers } from "../../../lib/Axiosintance"; // Import API call
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
+import ReactPaginate from "react-paginate";
+import "../../../css/admin/css/user.css";
+
 
 function UserList() {
   const [users, setUsers] = useState([]); // Khởi tạo `users` với mảng rỗng
@@ -10,11 +13,13 @@ function UserList() {
   const [error, setError] = useState(null); // Trạng thái lỗi
   const [isAdmin, setIsAdmin] = useState(false); // Kiểm tra quyền admin
   const navigate = useNavigate(); // Sử dụng useNavigate để điều hướng
+  const [filterGender, setFilterGender] = useState("all");
+  const [usersPerPage] = useState(5);
+  const [currentPage, setCurrentPage] = useState(0);
 
   // Gọi API khi component được render
   useEffect(() => {
     fetchUsers();
-    checkUserRole();
   }, []);
 
   const fetchUsers = async () => {
@@ -34,11 +39,35 @@ function UserList() {
     }
   };
 
-  // Kiểm tra quyền admin
-  const checkUserRole = () => {
-    const role = localStorage.getItem("userRole");
-    setIsAdmin(role === "admin");
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
   };
+
+  const handleFilterChange = (e) => {
+    setFilterGender(e.target.value);
+    setCurrentPage(0); // Reset về trang đầu tiên khi thay đổi bộ lọc
+  };
+
+  const filteredUsers = users.filter((user) => {
+    if (filterGender === "all") return true;
+    if (filterGender === "male") return user.gender === "male";
+    if (filterGender === "female") return user.gender === "female";
+    if (filterGender === "admin") return user.role === "admin";
+    if (filterGender === "user") return user.role === "user";
+    return !user.gender || user.gender === "";
+  });
+
+  const offset = currentPage * usersPerPage;
+  const currentUsers = filteredUsers.slice(offset, offset + usersPerPage);
+
+  if (isLoading) return <div>Đang tải dữ liệu...</div>;
+  if (error) return <div>{error}</div>;
+
+  // Kiểm tra quyền admin
+  // const checkUserRole = () => {
+  //   const role = localStorage.getItem("userRole");
+  //   setIsAdmin(role === "admin");
+  // };
 
   // Điều hướng đến trang chỉnh sửa người dùng
   const editUser = (userId) => {
@@ -81,6 +110,22 @@ function UserList() {
             </Link>
           </button>
         </div>
+
+        <div className="filter-section">
+          <label htmlFor="genderFilter">Lọc theo giới tính: </label>
+          <select
+            id="genderFilter"
+            value={filterGender}
+            onChange={handleFilterChange}
+          >
+            <option value="all">Tất cả</option>
+            <option value="male">Nam</option>
+            <option value="female">Nữ</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="unknown">Chưa cập nhật</option>
+          </select>
+        </div>
         <table className="table mt-3 ms-4">
           <thead>
             <tr>
@@ -93,8 +138,8 @@ function UserList() {
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
+            {currentUsers.length > 0 ? (
+              currentUsers.map((user) => (
                 <tr key={user.id}>
                   <td className="short-info-column">
                     <div className="row">
@@ -130,8 +175,8 @@ function UserList() {
                         {user.name} |{" "}
                         <span
                           className={`badge ${user.role === "user"
-                              ? "text-bg-warning"
-                              : "text-bg-danger"
+                            ? "text-bg-warning"
+                            : "text-bg-danger"
                             }`}
                         >
                           {user.role}
@@ -188,6 +233,17 @@ function UserList() {
             )}
           </tbody>
         </table>
+        <ReactPaginate
+          previousLabel={"←"}
+          nextLabel={"→"}
+          breakLabel={"..."}
+          pageCount={Math.ceil(filteredUsers.length / usersPerPage)}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
     </div>
   );

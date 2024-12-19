@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 import {
   getAllBookings,
@@ -18,9 +19,11 @@ function AdminBooking() {
   const [bookings, setBookings] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  // const [cancelNote, setCancelNote] = useState("");
   const [cancelReason, setCancelReason] = useState("");
   const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0); // Trạng thái trang hiện tại
+  const [statusFilter, setStatusFilter] = useState(""); // Trạng thái lọc
+  const bookingsPerPage = 8; // Số booking mỗi trang
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,27 +102,45 @@ function AdminBooking() {
   };
 
   // Cập nhật trạng thái
-  const handleStatusChange = async (bookingId, newStatus) => {
+  const handleStatusChange = async (
+    bookingId,
+    newStatus,
+    isAdminCancel = false
+  ) => {
     try {
       let updatedStatus = newStatus;
-      // Nếu trạng thái là 7 (Xác nhận hủy bởi người dùng), chuyển về trạng thái 4
-      if (newStatus === "7") {
-        updatedStatus = "4";
+      let cancelNote = "";
+
+      // Nếu trạng thái là hủy (4 hoặc 5), xác định lý do
+      if (newStatus === "4" || newStatus === "5") {
+        cancelNote = isAdminCancel ? "Hủy bởi admin" : "Hủy bởi user";
+        updatedStatus = isAdminCancel ? "5" : "4"; // 5 cho admin, 4 cho user
       }
 
-      const updatedBookingData = { booking_status: updatedStatus };
+      const updatedBookingData = {
+        booking_status: updatedStatus,
+        cancel_note: cancelNote,
+      };
+
       await updateBooking(bookingId, updatedBookingData);
 
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking.booking_id === bookingId
-            ? { ...booking, booking_status: updatedStatus }
+            ? {
+                ...booking,
+                booking_status: updatedStatus,
+                cancel_note: cancelNote,
+              }
             : booking
         )
       );
+
       alert(
         updatedStatus === "4"
           ? "Trạng thái đã chuyển về 'Hủy bởi user'!"
+          : updatedStatus === "5"
+          ? "Trạng thái đã chuyển về 'Hủy bởi admin'!"
           : "Trạng thái đã được cập nhật!"
       );
     } catch (error) {
@@ -137,9 +158,10 @@ function AdminBooking() {
     );
   };
 
-  const handleCancelBooking = (bookingId) => {
-    setSelectedBookingId(bookingId);
-    setShowCancelModal(true);
+  const handleCancelBooking = async (bookingId) => {
+    if (window.confirm("Bạn có chắc chắn muốn hủy booking này bởi admin?")) {
+      await handleStatusChange(bookingId, "5", true); // Hủy bởi admin
+    }
   };
 
   // Áp dụng màu sắc dựa trên trạng thái
@@ -192,6 +214,31 @@ function AdminBooking() {
     navigate(`/admin/DetailBooking/${BookingId}`);
   };
 
+  // Phân trang
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
+  // Lọc trạng thái
+  const handleStatusFilterChange = (e) => {
+    const selectedStatus = e.target.value;
+    setStatusFilter(selectedStatus);
+    setCurrentPage(0); // Reset về trang đầu tiên khi thay đổi trạng thái lọc
+  };
+
+  // Lọc booking theo trạng thái
+  const filteredBookings = statusFilter
+    ? bookings.filter(
+        (booking) => booking.booking_status === parseInt(statusFilter)
+      ) // So sánh theo kiểu số
+    : bookings;
+
+  // Phân trang bookings
+  const paginatedBookings = filteredBookings.slice(
+    currentPage * bookingsPerPage,
+    (currentPage + 1) * bookingsPerPage
+  );
+
   return (
     <div>
       <Side_bar />
@@ -205,26 +252,44 @@ function AdminBooking() {
             </Link>
           </button>
         </div>
+        <div className="d-flex ms-3 mb-4">
+          <select
+            className="form-select w-auto"
+            onChange={handleStatusFilterChange}
+            value={statusFilter}
+          >
+            <option value="">Tất cả trạng thái</option>
+            <option value="1">Booking thành công</option>
+            <option value="3">Đã thanh toán</option>
+            <option value="4">Hủy bởi user</option>
+            <option value="5">Hủy bởi admin</option>
+            <option value="6">Đã hoàn thành</option>
+          </select>
+        </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-            <table className="table">
+            <table
+              className="table"
+              style={{ fontSize: "0.9rem", lineHeight: "1.4" }}
+            >
               <thead>
                 <tr>
-                  <th>ID Booking</th>
-                  <th>Tên sản phẩm</th>
+                  <th className="text-center">ID Booking</th>
+                  <th className="text-center">Tên sản phẩm</th>
                   <th>Ngày đặt</th>
                   <th>Ngày bắt đầu</th>
                   <th>Ngày kết thúc</th>
-                  <th className="text-center">Trạng thái thanh toán</th>
+                  <th className="text-center">Trạng thái</th>
                   <th>Lý do hủy</th>
                   <th className="text-center">Hành động</th>
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(bookings) && bookings.length > 0 ? (
-                  bookings.map((booking) => (
+                {Array.isArray(paginatedBookings) &&
+                paginatedBookings.length > 0 ? (
+                  paginatedBookings.map((booking) => (
                     <tr key={booking.booking_id}>
-                      <td>{booking.booking_id}</td>
+                      <td className="text-center">{booking.booking_id} | </td>
                       <td>
                         {booking.car ? booking.car.car_name : "Không có tên xe"}
                       </td>
@@ -234,17 +299,7 @@ function AdminBooking() {
                       <td>
                         {new Date(booking.start_date).toLocaleDateString()}
                       </td>
-
-                      <td>
-                        {booking.car ? booking.car.car_name : "Không có tên xe"}
-                      </td>
-                      {/* <td>
-                        {new Date(booking.booking_date).toLocaleDateString()}
-                      </td>
-                      <td>
-                        {new Date(booking.start_date).toLocaleDateString()}
-                      </td>
-                      <td>{new Date(booking.end_date).toLocaleDateString()}</td> */}
+                      <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <select
                           value={booking.booking_status}
@@ -258,55 +313,44 @@ function AdminBooking() {
                           className="form-select text-center"
                         >
                           <option value="1">Booking thành công</option>
-                          {/* <option value="2" >Xác nhận thanh toán</option> */}
-
                           <option value="3">Đã thanh toán</option>
                           <option value="4">Hủy bởi user</option>
                           <option value="5">Hủy bởi admin</option>
                           <option value="6">Đã hoàn thành</option>
-                          <option value="7">Xác nhận hủy bởi người dùng</option>
                         </select>
                       </td>
-                      {/* Hiển thị lý do hủy chỉ khi trạng thái là 5 */}
                       <td>
-                        {booking.booking_status === "5"
-                          ? booking.cancel_reason
+                        {booking.booking_status === "4" ||
+                        booking.booking_status === "5"
+                          ? booking.cancel_note
                           : "-"}
                       </td>
                       <td>
                         <div className="d-flex justify-content-center">
-                          <button
-                            className="btn btn-info me-2"
-                            onClick={() =>
-                              handleSpecialStatus(booking.booking_id, "3")
-                            }
+                          <select
+                            className="form-select w-auto"
+                            onChange={(e) => {
+                              const { value } = e.target;
+                              if (value === "3") {
+                                handleSpecialStatus(booking.booking_id, "3");
+                              } else if (value === "cancel") {
+                                handleCancelBooking(booking.booking_id);
+                              } else if (value === "4") {
+                                handleStatusChange(booking.booking_id, "4");
+                              } else if (value === "view") {
+                                handleViewDetail(booking.booking_id);
+                              }
+                            }}
                             disabled={!isAdmin}
                           >
-                            Xác nhận thanh toán
-                          </button>
-                          <button
-                            className="btn btn-danger me-2"
-                            onClick={() =>
-                              handleCancelBooking(booking.booking_id)
-                            }
-                            disabled={!isAdmin}
-                          >
-                            Hủy booking
-                          </button>
-                          <button
-                            className="btn btn-warning me-2"
-                            onClick={() =>
-                              handleStatusChange(booking.booking_id, "7")
-                            }
-                          >
-                            Xác nhận hủy bởi người dùng
-                          </button>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => handleViewDetail(booking.booking_id)}
-                          >
-                            <i className="fas fa-eye"></i>
-                          </button>
+                            <option value="" disabled selected>
+                              Chọn hành động
+                            </option>
+                            <option value="3">Xác nhận thanh toán</option>
+                            <option value="cancel">Hủy booking</option>
+                            <option value="4">Hủy bởi người dùng</option>
+                            <option value="view">Xem chi tiết</option>
+                          </select>
                         </div>
                       </td>
                     </tr>
@@ -322,6 +366,16 @@ function AdminBooking() {
             </table>
           </div>
         </div>
+
+        {/* Phân trang */}
+        <ReactPaginate
+          previousLabel={"←"}
+          nextLabel={"→"}
+          pageCount={Math.ceil(filteredBookings.length / bookingsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
 
       {/* Modal Hủy */}
@@ -330,37 +384,23 @@ function AdminBooking() {
           <Modal.Title>Hủy Booking</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="mb-3">
-            <label className="form-label">Chọn lý do hủy</label>
-            <select
-              className="form-select"
-              value={cancelReason}
-              onChange={(e) => setCancelReason(e.target.value)}
-            >
-              <option value="">-- Chọn lý do --</option>
-              <option value="Khách hàng yêu cầu">Khách hàng yêu cầu</option>
-
-              <option value="Xe không khả dụng">Xe không khả dụng</option>
-              <option value="Lỗi thanh toán">Lỗi thanh toán</option>
-              <option value="Không đủ tài liệu">Không đủ tài liệu</option>
-              <option value="Khác">Khác</option>
-            </select>
-          </div>
-          {/* <div className="mb-3">
-            <label className="form-label">Ghi chú</label>
-            <textarea
-              className="form-control"
-              value={cancelNote}
-              onChange={(e) => setCancelNote(e.target.value)}
-            ></textarea>
-          </div> */}
+          <textarea
+            rows="4"
+            className="form-control"
+            placeholder="Nhập lý do hủy"
+            value={cancelReason}
+            onChange={(e) => setCancelReason(e.target.value)}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
             Đóng
           </Button>
-          <Button variant="danger" onClick={submitCancelBooking}>
-            Xác nhận hủy
+          <Button
+            variant="danger"
+            onClick={() => handleCancelBooking(selectedBookingId)}
+          >
+            Hủy Booking
           </Button>
         </Modal.Footer>
       </Modal>

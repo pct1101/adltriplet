@@ -66,11 +66,11 @@ function AdminFavorite() {
         <div className="d-flex">
           {" "}
           <h1 className="title">Quản lý Yêu thích</h1>
-          <button className="btn ms-auto">
+          {/* <button className="btn ms-auto">
             <Link className="btn btn-primary" to="/admin/AddFavorite">
               Thêm Yêu thích
             </Link>
-          </button>
+          </button> */}
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
@@ -104,13 +104,13 @@ function AdminFavorite() {
                         >
                           <i className="fas fa-eye"></i>
                         </button>
-                        <button
+                        {/* <button
                           className="btn btn-danger"
                           onClick={() => deleteFavorite(favorite.favorite_id)}
                           disabled={!isAdmin}
                         >
                           <i className="fas fa-trash"></i>
-                        </button>
+                        </button> */}
                       </td>
                     </tr>
                   ))

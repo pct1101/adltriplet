@@ -89,9 +89,9 @@ function AdminFeedbacks() {
     }
   };
 
-  const editFeedback = (FeedbackId) => {
-    navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
-  };
+  // const editFeedback = (FeedbackId) => {
+  //   navigate(`/admin/edit_feedback/${FeedbackId}`); // Điều hướng đến trang sửa và truyền carId
+  // };
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating); // Lấy phần nguyên của rating
@@ -121,11 +121,11 @@ function AdminFeedbacks() {
         <div className="">
           <div className="d-flex">
             <h1 className="title">Phản hồi khách hàng</h1>
-            <button className="btn ms-auto">
+            {/* <button className="btn ms-auto">
               <Link className="btn btn-primary" to="/admin/add_feedback">
                 Thêm Feedback
               </Link>
-            </button>
+            </button> */}
           </div>
 
           <div className="d-flex ms-3 mb-4"> 
@@ -184,17 +184,17 @@ function AdminFeedbacks() {
                       <td className="text-start">{renderStars(feedback.rating)}</td>
                       <td>{feedback.feedback_date}</td>
                       <td>
-                        <button
+                        {/* <button
                           className="btn btn-warning me-2"
                           onClick={() => editFeedback(feedback.id)}
                         >
                           <i className="fas fa-wrench"></i>
-                        </button>
+                        </button> */}
                         <button
                           className="btn btn-danger"
                           onClick={() => deleteFeedback(feedback.id)}
                         >
-                          <i className="fas fa-trash"></i>
+                          <i className="fas fa-trash text-center"></i>
                         </button>
                       </td>
                     </tr>

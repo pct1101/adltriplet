@@ -9,6 +9,7 @@ import {
   addToFavorites,
   deleteFavorite,
   addFeedbackCarUser,
+  getFeedbackByCarId
 } from "../../../lib/Axiosintance";
 import "../../../css/index/event_product.css";
 import "../../../css/index/home.css";
@@ -42,20 +43,16 @@ const Detail_product = () => {
         setIsLoading(true);
         const response = await getCarDetails(id);
         setCar(response.data.car);
-        const imageResponse = await getCarImagesByCarId(
-          response.data.car.car_id
-        );
+        const imageResponse = await getCarImagesByCarId(response.data.car.car_id);
         setCarImages(imageResponse.data);
-        const feedbackData = response.data.car.feedback;
-        setFeedbacks(
-          feedbackData && feedbackData.length > 0 ? feedbackData : []
-        );
-        // Kiểm tra yêu thích
-        const favoriteStatus =
-          localStorage.getItem(`favorite_${id}`) === "true";
-        setIsFavorite(favoriteStatus); // Gọi hook không có điều kiện
+
+        // Lấy feedbacks từ API
+        const feedbackResponse = await getFeedbackByCarId(response.data.car.car_id);
+        setFeedbacks(feedbackResponse.data || []); // Nếu không có feedbacks, đặt mảng rỗng
       } catch (error) {
         console.error("Error fetching car details or feedbacks", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchCarDetails();
@@ -133,7 +130,7 @@ const Detail_product = () => {
     }
   };
 
-    // console.log(feedbackData);
+  // console.log(feedbackData);
 
   return (
     <div>
@@ -608,7 +605,7 @@ const Detail_product = () => {
                               </a>
                               <div className="info">
                                 <a href="#" className="name-review">
-                                <h3>Tên người dùng: {feedback.user && feedback.user.name ? feedback.user.name : 'Chưa có tên'}</h3>
+                                  <h3>Tên người dùng: {feedback.user && feedback.user.name ? feedback.user.name : 'Chưa có tên'}</h3>
                                 </a>
                                 <a href="#" className="name-review">                                </a>
                                 <div className="rate">
@@ -831,9 +828,9 @@ const Detail_product = () => {
                           </div>
                           <pre className="main-review">
                             <span>
-                              Nội dung đánh giá : <b>{feedback.content}</b> 
+                              Nội dung đánh giá : <b>{feedback.content}</b>
                               <h6>
-                                
+
                               </h6>
                             </span>
                           </pre>

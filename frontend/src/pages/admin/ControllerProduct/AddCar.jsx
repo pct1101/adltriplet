@@ -76,8 +76,7 @@ const AddCar = () => {
     setErrorMessage("");
     setSuccessMessage("");
 
-
-    const carData = new FormData(); // Sử dụng FormData để gửi file và dữ liệu khác
+    const carData = new FormData();
     carData.append("car_name", carName);
     carData.append("seats", Number(seats));
     carData.append("model", model);
@@ -85,19 +84,21 @@ const AddCar = () => {
     carData.append("rental_price", Number(rentalPrice));
     carData.append("car_status", Number(carStatus));
     carData.append("mileage", Number(mileage));
-    carData.append("car_image", carImage); // Thêm file ảnh vào FormData
+    carData.append("car_image", carImage);
     carData.append("car_description", carDescription);
     carData.append("brandid", Number(brandId));
 
     try {
       if (carId) {
-        await addCar(carId, carData);
+        // Nếu có carId thì thực hiện cập nhật
+        await addCar(carData);
       } else {
+        // Nếu không có carId thì thực hiện thêm mới
         await addCar(carData);
       }
       navigate("/admin");
     } catch (error) {
-      console.error("Error while adding/updating car:", error.response.data);
+      console.error("Error while adding/updating car:", error.message);
     }
   };
 

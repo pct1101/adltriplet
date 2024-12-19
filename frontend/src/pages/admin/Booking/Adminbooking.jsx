@@ -242,7 +242,7 @@ function AdminBooking() {
             </Link>
           </button>
         </div>
-        <div className="d-flex mb-3">
+        <div className="d-flex ms-3 mb-4">
           <select
             className="form-select w-auto"
             onChange={handleStatusFilterChange}

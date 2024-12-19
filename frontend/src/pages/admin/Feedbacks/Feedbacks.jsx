@@ -127,23 +127,25 @@ function AdminFeedbacks() {
               </Link>
             </button>
           </div>
-        </div>
-        <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
-          <div className="card-body p-0">
-            <div className="filter-section">
-              <label htmlFor="genderFilter">Lọc theo đánh giá: </label>
-              <select
-                id="genderFilter"
-                value={filterFeedback}
+
+          <div className="d-flex ms-3 mb-4"> 
+          <select
+            className="form-select w-auto"
+            value={filterFeedback}
                 onChange={handleFilterChange}
-              >
-                <option value="all">Tất cả</option>
+          > 
+            <option value="all">Tất cả</option>
                 <option value="5">5 ★</option>
                 <option value="4">4 ★</option>
                 <option value="3">3 ★</option>
                 <option value="2">2 ★</option>
                 <option value="1">1 ★</option>
-              </select>
+          </select>
+        </div>
+        </div>
+        <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
+          <div className="card-body p-0">
+            <div className="filter-section">
             </div>
             <table className="table">
               <thead>

@@ -41,6 +41,8 @@ const Detail_product = () => {
       try {
         setIsLoading(true);
         const response = await getCarDetails(id);
+        console.log("reponse detail car", response);
+
         setCar(response.data.car);
         const imageResponse = await getCarImagesByCarId(
           response.data.car.car_id
@@ -436,7 +438,7 @@ const Detail_product = () => {
                     </div>
                     <div className="title">
                       <p className="sub">Nhiên liệu</p>
-                      <p className="main">{car.transmission_type}</p>
+                      <p className="main">{car.fuel_type}</p>
                     </div>
                   </div>
                   <div className="outstanding-features__item">

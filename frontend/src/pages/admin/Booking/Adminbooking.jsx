@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 import {
   getAllBookings,
@@ -18,13 +19,11 @@ function AdminBooking() {
   const [bookings, setBookings] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
-  // const [cancelNote, setCancelNote] = useState("");
   const [cancelReason, setCancelReason] = useState("");
   const [selectedBookingId, setSelectedBookingId] = useState(null);
-  const [filteredBookings, setFilteredBookings] = useState([]); // Dữ liệu sau khi lọc
-  const [statusFilter, setStatusFilter] = useState(""); // Bộ lọc trạng thái
-  const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
-  const bookingsPerPage = 5; // Số lượng booking trên mỗi trang
+  const [currentPage, setCurrentPage] = useState(0); // Trạng thái trang hiện tại
+  const [statusFilter, setStatusFilter] = useState(""); // Trạng thái lọc
+  const bookingsPerPage = 8; // Số booking mỗi trang
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -203,36 +202,32 @@ function AdminBooking() {
     }
   };
 
-  // Lọc booking theo trạng thái
-  const handleFilterChange = (status) => {
-    setStatusFilter(status);
-    if (status === "") {
-      setFilteredBookings(bookings); // Không lọc
-    } else {
-      const filtered = bookings.filter(
-        (booking) => booking.booking_status === status
-      );
-      setFilteredBookings(filtered);
-    }
-    setCurrentPage(0); // Reset về trang đầu
-  };
-
-  // Xử lý khi thay đổi trang
-  const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
-  };
-
-  // Tính toán dữ liệu hiển thị trên trang hiện tại
-  const offset = currentPage * bookingsPerPage;
-  const currentBookings = filteredBookings.slice(
-    offset,
-    offset + bookingsPerPage
-  );
-  const pageCount = Math.ceil(filteredBookings.length / bookingsPerPage);
-
   const handleViewDetail = (BookingId) => {
     navigate(`/admin/DetailBooking/${BookingId}`);
   };
+
+  // Phân trang
+  const handlePageClick = (event) => {
+    setCurrentPage(event.selected);
+  };
+
+  // Lọc trạng thái
+  const handleStatusFilterChange = (e) => {
+    const selectedStatus = e.target.value;
+    setStatusFilter(selectedStatus);
+    setCurrentPage(0); // Reset về trang đầu tiên khi thay đổi trạng thái lọc
+  };
+
+  // Lọc booking theo trạng thái
+  const filteredBookings = statusFilter
+    ? bookings.filter((booking) => booking.booking_status === parseInt(statusFilter)) // So sánh theo kiểu số
+    : bookings;
+
+  // Phân trang bookings
+  const paginatedBookings = filteredBookings.slice(
+    currentPage * bookingsPerPage,
+    (currentPage + 1) * bookingsPerPage
+  );
 
   return (
     <div>
@@ -247,30 +242,23 @@ function AdminBooking() {
             </Link>
           </button>
         </div>
-
-        {/* Bộ lọc trạng thái */}
-        <div className="filter-container my-3">
-          <label htmlFor="statusFilter" className="me-2">
-            Lọc theo trạng thái:
-          </label>
+        <div className="d-flex mb-3">
           <select
-            id="statusFilter"
-            value={statusFilter}
-            onChange={(e) => handleFilterChange(e.target.value)}
             className="form-select w-auto"
+            onChange={handleStatusFilterChange}
+            value={statusFilter}
           >
-            <option value="">Tất cả</option>
+            <option value="">Tất cả trạng thái</option>
             <option value="1">Booking thành công</option>
             <option value="3">Đã thanh toán</option>
             <option value="4">Hủy bởi user</option>
             <option value="5">Hủy bởi admin</option>
-            <option value="6">Hoàn thành</option>
+            <option value="6">Đã hoàn thành</option>
           </select>
         </div>
-
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-          <table className="table" style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
+            <table className="table" style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
               <thead>
                 <tr>
                   <th className="text-center">ID Booking</th>
@@ -284,53 +272,30 @@ function AdminBooking() {
                 </tr>
               </thead>
               <tbody>
-                {currentBookings.length > 0 ? (
-                  currentBookings.map((booking) => (
+                {Array.isArray(paginatedBookings) && paginatedBookings.length > 0 ? (
+                  paginatedBookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td className="text-center">{booking.booking_id} | </td>
-                      <td>
-                        {booking.car ? booking.car.car_name : "Không có tên xe"}
-                      </td>
-                      <td>
-                        {new Date(booking.booking_date).toLocaleDateString()}
-                      </td>
-                      <td>
-                        {new Date(booking.start_date).toLocaleDateString()}
-                      </td>
-
-                      <td>
-                        {new Date(booking.end_date).toLocaleDateString()}
-                      </td>
-                      {/* <td>
-                        {new Date(booking.booking_date).toLocaleDateString()}
-                      </td>
-                      <td>
-                        {new Date(booking.start_date).toLocaleDateString()}
-                      </td>
-                      <td>{new Date(booking.end_date).toLocaleDateString()}</td> */}
+                      <td>{booking.car ? booking.car.car_name : "Không có tên xe"}</td>
+                      <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
+                      <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                      <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <select
                           value={booking.booking_status}
                           onChange={(e) =>
-                            handleStatusChange(
-                              booking.booking_id,
-                              e.target.value
-                            )
+                            handleStatusChange(booking.booking_id, e.target.value)
                           }
                           style={getStatusStyle(booking.booking_status)}
                           className="form-select text-center"
                         >
                           <option value="1">Booking thành công</option>
-                          {/* <option value="2" >Xác nhận thanh toán</option> */}
-
                           <option value="3">Đã thanh toán</option>
                           <option value="4">Hủy bởi user</option>
                           <option value="5">Hủy bởi admin</option>
                           <option value="6">Đã hoàn thành</option>
-                          <option value="7">Xác nhận hủy user</option>
                         </select>
                       </td>
-                      {/* Hiển thị lý do hủy chỉ khi trạng thái là 5 */}
                       <td>
                         {booking.booking_status === "4" || booking.booking_status === "5"
                           ? booking.cancel_note
@@ -364,7 +329,6 @@ function AdminBooking() {
                           </select>
                         </div>
                       </td>
-
                     </tr>
                   ))
                 ) : (
@@ -378,6 +342,16 @@ function AdminBooking() {
             </table>
           </div>
         </div>
+
+        {/* Phân trang */}
+        <ReactPaginate
+          previousLabel={"←"}
+          nextLabel={"→"}
+          pageCount={Math.ceil(filteredBookings.length / bookingsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={"pagination"}
+          activeClassName={"active"}
+        />
       </div>
 
       {/* Modal Hủy */}
@@ -386,37 +360,23 @@ function AdminBooking() {
           <Modal.Title>Hủy Booking</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="mb-3">
-            <label className="form-label">Chọn lý do hủy</label>
-            <select
-              className="form-select"
-              value={cancelReason}
-              onChange={(e) => setCancelReason(e.target.value)}
-            >
-              <option value="">-- Chọn lý do --</option>
-              <option value="Khách hàng yêu cầu">Khách hàng yêu cầu</option>
-
-              <option value="Xe không khả dụng">Xe không khả dụng</option>
-              <option value="Lỗi thanh toán">Lỗi thanh toán</option>
-              <option value="Không đủ tài liệu">Không đủ tài liệu</option>
-              <option value="Khác">Khác</option>
-            </select>
-          </div>
-          {/* <div className="mb-3">
-            <label className="form-label">Ghi chú</label>
-            <textarea
-              className="form-control"
-              value={cancelNote}
-              onChange={(e) => setCancelNote(e.target.value)}
-            ></textarea>
-          </div> */}
+          <textarea
+            rows="4"
+            className="form-control"
+            placeholder="Nhập lý do hủy"
+            value={cancelReason}
+            onChange={(e) => setCancelReason(e.target.value)}
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowCancelModal(false)}>
             Đóng
           </Button>
-          <Button variant="danger" onClick={submitCancelBooking}>
-            Xác nhận hủy
+          <Button
+            variant="danger"
+            onClick={() => handleCancelBooking(selectedBookingId)}
+          >
+            Hủy Booking
           </Button>
         </Modal.Footer>
       </Modal>

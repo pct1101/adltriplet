@@ -3,11 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { getAllDriverLicenses, deleteDriverLicenseById } from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
+import ReactPaginate from 'react-paginate'; // Import ReactPaginate
 
 function AdminDriverLicense() {
     const [driverLicenses, setDriverLicenses] = useState([]);
     const [licenseStatus, setLicenseStatus] = useState(""); // Trạng thái lọc
     const [isAdmin, setIsAdmin] = useState(false);
+    const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại
+    const [itemsPerPage] = useState(5); // Số lượng giấy phép trên mỗi trang
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,24 +42,6 @@ function AdminDriverLicense() {
         }
     };
 
-    // const deleteDriverLicense = async (driverLicenseId) => {
-    //     const apiToken = localStorage.getItem("authToken");
-    //     if (window.confirm("Bạn có chắc chắn muốn xóa giấy phép lái xe này?")) {
-    //         try {
-    //             await deleteDriverLicenseById(driverLicenseId, apiToken);
-    //             setDriverLicenses(
-    //                 driverLicenses.filter(
-    //                     (license) => license.driver_license_id !== driverLicenseId
-    //                 )
-    //             );
-    //             alert("Giấy phép lái xe đã được xóa thành công!");
-    //         } catch (error) {
-    //             console.error("Lỗi khi xóa giấy phép lái xe:", error);
-    //             alert("Thất bại trong việc xóa giấy phép lái xe: " + error.message);
-    //         }
-    //     }
-    // };
-
     const editDriverLicense = (licenseId) => {
         navigate(`/admin/EditDriverLicense/${licenseId}`);
     };
@@ -65,6 +50,7 @@ function AdminDriverLicense() {
         navigate(`/admin/DetailDriverLicense/${driverLicenseId}`);
     };
 
+    // Lọc giấy phép theo trạng thái
     const handleFilterChange = (e) => {
         const newStatus = e.target.value;
         setLicenseStatus(newStatus); // Cập nhật trạng thái lọc
@@ -72,6 +58,17 @@ function AdminDriverLicense() {
         // Cập nhật URL với giá trị mới của licenseStatus
         navigate(`?status=${newStatus}`);
     };
+
+    // Lấy giấy phép cho trang hiện tại
+    const indexOfLastLicense = (currentPage + 1) * itemsPerPage;
+    const indexOfFirstLicense = indexOfLastLicense - itemsPerPage;
+    const currentLicenses = driverLicenses.slice(indexOfFirstLicense, indexOfLastLicense);
+
+    // Hàm phân trang
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected);
+    };
+
     return (
         <div>
             <Side_bar></Side_bar>
@@ -103,7 +100,7 @@ function AdminDriverLicense() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>ID giấy phép</th>
                                     <th>ID Người dùng</th>
                                     <th>Số giấy phép</th>
                                     <th>Tên chủ giấy phép</th>
@@ -113,24 +110,23 @@ function AdminDriverLicense() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.isArray(driverLicenses) && driverLicenses.length > 0 ? (
-                                    driverLicenses.map((license) => (
+                                {Array.isArray(currentLicenses) && currentLicenses.length > 0 ? (
+                                    currentLicenses.map((license) => (
                                         <tr key={license.driver_license_id}>
-                                            <td>{license.driver_license_id}</td>
+                                            <td className="text-start">{license.driver_license_id}</td>
                                             <td>{license.user_id}</td>
                                             <td>{license.license_number}</td>
                                             <td>{license.license_holder}</td>
                                             <td>
                                                 <span
-                                                    className={`badge ${
-                                                        license.license_status === "active"
+                                                    className={`badge ${license.license_status === "active"
                                                             ? "bg-success"  // Màu xanh cho active
                                                             : license.license_status === "inactive"
                                                                 ? "bg-warning"  // Màu vàng cho inactive
                                                                 : license.license_status === "invalid"
                                                                     ? "bg-danger" // Màu đỏ cho invalid
                                                                     : "bg-secondary" // Màu xám dự phòng cho trạng thái không xác định
-                                                    }`}
+                                                        }`}
                                                     value={license.license_status} // Thêm value trạng thái
                                                 >
                                                     {license.license_status === "active"
@@ -175,6 +171,16 @@ function AdminDriverLicense() {
                                 )}
                             </tbody>
                         </table>
+
+                        {/* Phân trang */}
+                        <ReactPaginate
+                            previousLabel={"←"}
+                            nextLabel={"→"}
+                            pageCount={Math.ceil(driverLicenses.length / itemsPerPage)} // Dùng driverLicenses thay vì filteredBookings
+                            onPageChange={handlePageClick}
+                            containerClassName={"pagination"}
+                            activeClassName={"active"}
+                        />
                     </div>
                 </div>
             </div>

@@ -313,7 +313,6 @@ const Dangky = () => {
                           </a>{" "}
                           của ADL TRIPLE T.
                         </p>
->>>>>>> 4e49bf40005f9ba7aa3849053ab463130b98b921
                       </label>
                     </div>
                   </div>

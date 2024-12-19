@@ -293,26 +293,6 @@ const Dangky = () => {
                           Chính sách bảo vệ dữ liệu cá nhân
                         </a>{" "}
                         của ADL TRIPLE T.
-                        <p>
-                          {" "}
-                          Tôi đã đọc và đồng ý với
-                          <a
-                            className="text-primary fontWeight-5"
-                            target="_blank"
-                            href="/privacy"
-                          >
-                            Chính sách &amp; quy định
-                          </a>{" "}
-                          và{" "}
-                          <a
-                            className="text-primary fontWeight-5"
-                            target="_blank"
-                            href="/personalinfo"
-                          >
-                            Chính sách bảo vệ dữ liệu cá nhân
-                          </a>{" "}
-                          của ADL TRIPLE T.
-                        </p>
                       </label>
                     </div>
                   </div>

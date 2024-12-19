@@ -133,6 +133,8 @@ const Detail_product = () => {
     }
   };
 
+    // console.log(feedbackData);
+
   return (
     <div>
       <Header />
@@ -213,9 +215,8 @@ const Detail_product = () => {
                     </svg>
                   </div>
                   <div
-                    className={`fav-item wrap-ic wrap-svg ${
-                      isFavorite ? "favorite-active" : ""
-                    }`} // Thêm class để đổi màu trái tim
+                    className={`fav-item wrap-ic wrap-svg ${isFavorite ? "favorite-active" : ""
+                      }`} // Thêm class để đổi màu trái tim
                     onClick={handleAddToFavorites}
                   >
                     <svg
@@ -607,19 +608,9 @@ const Detail_product = () => {
                               </a>
                               <div className="info">
                                 <a href="#" className="name-review">
-                                  <h6> ID người dùng : {feedback.user_id} </h6>
+                                <h3>Tên người dùng: {feedback.user && feedback.user.name ? feedback.user.name : 'Chưa có tên'}</h3>
                                 </a>
-                                <a href="#" className="name-review">
-                                  <h6>
-                                    {" "}
-                                    ID người dùng :{" "}
-                                    {feedback &&
-                                    feedback.car &&
-                                    feedback.car.car_name
-                                      ? feedback.car.car_name
-                                      : "Không có tên xe"}{" "}
-                                  </h6>
-                                </a>
+                                <a href="#" className="name-review">                                </a>
                                 <div className="rate">
                                   <div
                                     className="star-ratings"
@@ -840,9 +831,9 @@ const Detail_product = () => {
                           </div>
                           <pre className="main-review">
                             <span>
-                              Nội dung đánh giá :{" "}
+                              Nội dung đánh giá : <b>{feedback.content}</b> 
                               <h6>
-                                <b>{feedback.content}</b>
+                                
                               </h6>
                             </span>
                           </pre>

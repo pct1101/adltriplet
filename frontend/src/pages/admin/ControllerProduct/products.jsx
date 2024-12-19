@@ -5,6 +5,8 @@ import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import ReactPaginate from "react-paginate";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
+import "../../../css/admin/css/car.css";
+
 
 const AdminProducts = () => {
   const [cars, setCars] = useState([]);
@@ -62,7 +64,7 @@ const AdminProducts = () => {
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
-  
+
   useEffect(() => {
     fetchCars();
     // checkUserRole();
@@ -81,11 +83,6 @@ const AdminProducts = () => {
       console.error("Failed to fetch cars", error);
     }
   };
-
-  // const checkUserRole = () => {
-  //   const role = localStorage.getItem("userRole");
-  //   setIsAdmin(role === "admin");
-  // };
 
   const applyBrandFilter = () => {
     if (filterBrand === "All") {
@@ -119,39 +116,46 @@ const AdminProducts = () => {
     }
   };
 
-const brands = [
-  { id: 1, name: "Baic" },
-  { id: 2, name: "Chevrolet" },
-  { id: 3, name: "Ford" },
-  { id: 4, name: "Hyundai" },
-  { id: 5, name: "Kia" },
-  { id: 6, name: "Lexus" },
-  { id: 7, name: "Mercedes" },
-  { id: 8, name: "Morris Garages" },
-  { id: 9, name: "Peugeot" },
-  { id: 10, name: "Subaru" },
-  { id: 11, name: "Toyota" },
-  { id: 12, name: "Volkswagen" },
-  { id: 13, name: "Audi" },
-  { id: 14, name: "BMW" },
-  { id: 15, name: "Daewoo" },
-  { id: 16, name: "Honda" },
-  { id: 17, name: "Isuzu" },
-  { id: 18, name: "Land Rover" },
-  { id: 19, name: "Mazda" },
-  { id: 20, name: "Mitsubishi" },
-  { id: 21, name: "Nissan" },
-  { id: 22, name: "Renault" },
-  { id: 23, name: "Suzuki" },
-  { id: 24, name: "Vinfast" },
-  { id: 25, name: "Zotye" },
-];
-// Hàm lấy tên thương hiệu dựa trên brandid
-const getBrandName = (brandid) => {
-  const brand = brands.find((b) => b.id === brandid); // Tìm kiếm thương hiệu theo ID
-  return brand ? brand.name : "Không xác định"; // Nếu không tìm thấy, trả về "Không xác định"
-};
+  const brands = [
+    { id: 1, name: "Baic" },
+    { id: 2, name: "Chevrolet" },
+    { id: 3, name: "Ford" },
+    { id: 4, name: "Hyundai" },
+    { id: 5, name: "Kia" },
+    { id: 6, name: "Lexus" },
+    { id: 7, name: "Mercedes" },
+    { id: 8, name: "Morris Garages" },
+    { id: 9, name: "Peugeot" },
+    { id: 10, name: "Subaru" },
+    { id: 11, name: "Toyota" },
+    { id: 12, name: "Volkswagen" },
+    { id: 13, name: "Audi" },
+    { id: 14, name: "BMW" },
+    { id: 15, name: "Daewoo" },
+    { id: 16, name: "Honda" },
+    { id: 17, name: "Isuzu" },
+    { id: 18, name: "Land Rover" },
+    { id: 19, name: "Mazda" },
+    { id: 20, name: "Mitsubishi" },
+    { id: 21, name: "Nissan" },
+    { id: 22, name: "Renault" },
+    { id: 23, name: "Suzuki" },
+    { id: 24, name: "Vinfast" },
+    { id: 25, name: "Zotye" },
+  ];
+  // Hàm lấy tên thương hiệu dựa trên brandid
+  const getBrandName = (brandid) => {
+    const brand = brands.find((b) => b.id === brandid); // Tìm kiếm thương hiệu theo ID
+    return brand ? brand.name : "Không xác định"; // Nếu không tìm thấy, trả về "Không xác định"
+  };
 
+  const formatPrice = (price) => {
+    // Chuyển đổi số thành định dạng "xxxK" nếu số > 1000
+    if (price >= 1000) {
+      return `${(price / 1000).toLocaleString("vi-VN")}K`;
+    }
+    return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
+  };
 
   return (
     <div>
@@ -199,7 +203,7 @@ const getBrandName = (brandid) => {
                 </tr>
               </thead>
               <tbody>
-              {displayedCars.map((car) =>(
+                {displayedCars.map((car) => (
                   <tr key={car.car_id}>
                     <td className="short-info-column">
                       <div className="row">
@@ -222,7 +226,9 @@ const getBrandName = (brandid) => {
                         </div>
                       </div>
                     </td>
-                    <td>{car.rental_price}</td>
+                    <td>
+                      <span className="rental-price"><b>{formatPrice(car.rental_price)}</b></span> / ngày
+                    </td>
                     <td>{car.seats}</td>
                     <td>
                       <button
@@ -234,16 +240,16 @@ const getBrandName = (brandid) => {
                       <button
                         className="btn btn-danger"
                         onClick={() => deleteCar(car.car_id)}
-                        // disabled={!isAdmin}
+                      // disabled={!isAdmin}
                       >
-                        <i className="fas fa-trash"></i> 
+                        <i className="fas fa-trash"></i>
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            
+
             {/* Phân trang */}
             <ReactPaginate
               previousLabel={"Trước"}

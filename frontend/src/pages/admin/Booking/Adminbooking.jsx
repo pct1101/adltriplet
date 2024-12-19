@@ -254,6 +254,7 @@ function AdminBooking() {
             <option value="4">Hủy bởi user</option>
             <option value="5">Hủy bởi admin</option>
             <option value="6">Đã hoàn thành</option>
+            <option value="7">Chờ xác nhận hủy</option>
           </select>
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
@@ -294,6 +295,7 @@ function AdminBooking() {
                           <option value="4">Hủy bởi user</option>
                           <option value="5">Hủy bởi admin</option>
                           <option value="6">Đã hoàn thành</option>
+                          <option value="7">Chờ xác nhận hủy</option>
                         </select>
                       </td>
                       <td>

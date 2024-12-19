@@ -30,9 +30,9 @@ function My_car() {
   const carsPerPage = 3;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-    const handleClose = () => {
-      setOpen(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -155,8 +155,10 @@ function My_car() {
 
     if (bookingItem) {
       console.log("Trạng thái booking: ", bookingItem.booking_status);
+      console.log("booking id", bookingItem.booking_id);
+
       if (bookingItem.booking_status === 1) {
-        navigate(`/payment_car/${booking_id}`); // Chuyển hướng đến trang thanh toán
+        // navigate(`/payment_car/${booking_id}`);
       } else {
         setMessage("Trạng thái không cho phép điều hướng đến thanh toán!");
         setOpen(true);

@@ -5,7 +5,7 @@ import {
   getAllBookings,
   deleteBookingById,
   updateBooking,
-  cancelBookingByAdmin
+  cancelBookingByAdmin,
 } from "../../../lib/Axiosintance";
 
 import Side_bar from "../component/side_bar";
@@ -184,7 +184,7 @@ function AdminBooking() {
       case "7":
         return { backgroundColor: "white", color: "darkred" }; // Xác nhận hủy
       default:
-        // return { backgroundColor: "#ccc", color: "black" }; // Mặc định
+      // return { backgroundColor: "#ccc", color: "black" }; // Mặc định
     }
   };
 
@@ -295,7 +295,9 @@ function AdminBooking() {
                           </button>
                           <button
                             className="btn btn-warning me-2"
-                            onClick={() => handleStatusChange(booking.booking_id, "7")}
+                            onClick={() =>
+                              handleStatusChange(booking.booking_id, "7")
+                            }
                           >
                             Xác nhận hủy bởi người dùng
                           </button>

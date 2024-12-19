@@ -17,6 +17,7 @@ export default function Payment_booking() {
   const { booking_id } = useParams();
 
   const [bookingData, setBookingData] = useState();
+  console.log(bookingData);
 
   // NOTE: get Booking_id
   useEffect(() => {
@@ -217,7 +218,7 @@ export default function Payment_booking() {
                   </a>
                   <div className="desc-car">
                     <div className="desc-name">
-                      <p>{bookings?.car_name}</p>
+                      <p> {bookingData?.car?.car_name} </p>
                     </div>
                     <div className="days">
                       <div className="desc-days">
@@ -226,7 +227,7 @@ export default function Payment_booking() {
                           <div className="wrap-date-time">
                             <div className="wrap-date">
                               <span className="value">
-                                {formatDate(startDate)}
+                                {formatDate(bookingData?.start_date)}
                               </span>{" "}
                             </div>
                             <div className="wrap-time">
@@ -245,7 +246,7 @@ export default function Payment_booking() {
                             <div className="wrap-date">
                               <span className="value">
                                 {" "}
-                                {formatDate(endDate)}
+                                {formatDate(bookingData?.end_date)}
                               </span>{" "}
                             </div>
                             <div className="wrap-time">

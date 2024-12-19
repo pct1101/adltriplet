@@ -6,7 +6,7 @@ import {
   getAllBookings,
   deleteBookingById,
   updateBooking,
-  cancelBookingByAdmin
+  cancelBookingByAdmin,
 } from "../../../lib/Axiosintance";
 
 import Side_bar from "../component/side_bar";
@@ -102,7 +102,11 @@ function AdminBooking() {
   };
 
   // Cập nhật trạng thái
-  const handleStatusChange = async (bookingId, newStatus, isAdminCancel = false) => {
+  const handleStatusChange = async (
+    bookingId,
+    newStatus,
+    isAdminCancel = false
+  ) => {
     try {
       let updatedStatus = newStatus;
       let cancelNote = "";
@@ -123,7 +127,11 @@ function AdminBooking() {
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking.booking_id === bookingId
-            ? { ...booking, booking_status: updatedStatus, cancel_note: cancelNote }
+            ? {
+                ...booking,
+                booking_status: updatedStatus,
+                cancel_note: cancelNote,
+              }
             : booking
         )
       );
@@ -132,8 +140,8 @@ function AdminBooking() {
         updatedStatus === "4"
           ? "Trạng thái đã chuyển về 'Hủy bởi user'!"
           : updatedStatus === "5"
-            ? "Trạng thái đã chuyển về 'Hủy bởi admin'!"
-            : "Trạng thái đã được cập nhật!"
+          ? "Trạng thái đã chuyển về 'Hủy bởi admin'!"
+          : "Trạng thái đã được cập nhật!"
       );
     } catch (error) {
       console.error("Lỗi khi cập nhật trạng thái booking:", error);
@@ -220,7 +228,9 @@ function AdminBooking() {
 
   // Lọc booking theo trạng thái
   const filteredBookings = statusFilter
-    ? bookings.filter((booking) => booking.booking_status === parseInt(statusFilter)) // So sánh theo kiểu số
+    ? bookings.filter(
+        (booking) => booking.booking_status === parseInt(statusFilter)
+      ) // So sánh theo kiểu số
     : bookings;
 
   // Phân trang bookings
@@ -259,7 +269,10 @@ function AdminBooking() {
         </div>
         <div className="card rounded-0 border-0 shadow-sm p-0 m-3">
           <div className="card-body p-0">
-            <table className="table" style={{ fontSize: '0.9rem', lineHeight: '1.4' }}>
+            <table
+              className="table"
+              style={{ fontSize: "0.9rem", lineHeight: "1.4" }}
+            >
               <thead>
                 <tr>
                   <th className="text-center">ID Booking</th>
@@ -273,19 +286,29 @@ function AdminBooking() {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(paginatedBookings) && paginatedBookings.length > 0 ? (
+                {Array.isArray(paginatedBookings) &&
+                paginatedBookings.length > 0 ? (
                   paginatedBookings.map((booking) => (
                     <tr key={booking.booking_id}>
                       <td className="text-center">{booking.booking_id} | </td>
-                      <td>{booking.car ? booking.car.car_name : "Không có tên xe"}</td>
-                      <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
-                      <td>{new Date(booking.start_date).toLocaleDateString()}</td>
+                      <td>
+                        {booking.car ? booking.car.car_name : "Không có tên xe"}
+                      </td>
+                      <td>
+                        {new Date(booking.booking_date).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {new Date(booking.start_date).toLocaleDateString()}
+                      </td>
                       <td>{new Date(booking.end_date).toLocaleDateString()}</td>
                       <td>
                         <select
                           value={booking.booking_status}
                           onChange={(e) =>
-                            handleStatusChange(booking.booking_id, e.target.value)
+                            handleStatusChange(
+                              booking.booking_id,
+                              e.target.value
+                            )
                           }
                           style={getStatusStyle(booking.booking_status)}
                           className="form-select text-center"
@@ -299,7 +322,8 @@ function AdminBooking() {
                         </select>
                       </td>
                       <td>
-                        {booking.booking_status === "4" || booking.booking_status === "5"
+                        {booking.booking_status === "4" ||
+                        booking.booking_status === "5"
                           ? booking.cancel_note
                           : "-"}
                       </td>

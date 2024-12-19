@@ -15,7 +15,6 @@ import ReactPaginate from "react-paginate";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
-
 function My_car() {
   const [bookingData, setbookingData] = useState(null);
   console.log(bookingData);
@@ -32,9 +31,9 @@ function My_car() {
   const carsPerPage = 3;
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
-    const handleClose = () => {
-      setOpen(false);
-    };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
@@ -159,8 +158,10 @@ function My_car() {
 
     if (bookingItem) {
       console.log("Trạng thái booking: ", bookingItem.booking_status);
+      console.log("booking id", bookingItem.booking_id);
+
       if (bookingItem.booking_status === 1) {
-        navigate(`/payment_car/${booking_id}`); // Chuyển hướng đến trang thanh toán
+        // navigate(`/payment_car/${booking_id}`);
       } else {
         setMessage("Trạng thái không cho phép điều hướng đến thanh toán!");
         setOpen(true);
@@ -237,15 +238,17 @@ function My_car() {
                               booking.booking_status === 7
                                 ? "#ffc107" // Vàng - Chờ xác nhận
                                 : booking.booking_status === 1
-                                  ? "orange" // Booking thành công
-                                  : booking.booking_status === 2
-                                    ? "#000080" // Đã thanh toán
-                                    : booking.booking_status === 3
-                                      ? "#green" // Đã thanh toán
-                                      : booking.booking_status === 4 || booking.booking_status === 5
-                                        ? "#dc3545" // Hủy bởi người dùng hoặc admin
-                                        : "#198754", // Trạng thái khác
-                            color: booking.booking_status === 7 ? "black" : "white",
+                                ? "orange" // Booking thành công
+                                : booking.booking_status === 2
+                                ? "#000080" // Đã thanh toán
+                                : booking.booking_status === 3
+                                ? "#green" // Đã thanh toán
+                                : booking.booking_status === 4 ||
+                                  booking.booking_status === 5
+                                ? "#dc3545" // Hủy bởi người dùng hoặc admin
+                                : "#198754", // Trạng thái khác
+                            color:
+                              booking.booking_status === 7 ? "black" : "white",
                             fontSize: ".550rem",
                           }}
                         >
@@ -387,9 +390,11 @@ function My_car() {
                         >
                           Xem chi tiết
                         </button>
-                        {
-                          booking.booking_status !== 4 && booking.booking_status !== 7 && booking.booking_status !== 6 && (
-                            <button className="btn btn-danger"
+                        {booking.booking_status !== 4 &&
+                          booking.booking_status !== 7 &&
+                          booking.booking_status !== 6 && (
+                            <button
+                              className="btn btn-danger"
                               onClick={() => {
                                 setSelectedBookingId(booking.booking_id);
                                 setIsCanceling(true);

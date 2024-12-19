@@ -94,7 +94,7 @@ const Dangky = () => {
       // (?=.{6,21}$) => Độ dài từ 6 đến 21 ký tự
       if (!passwordRegex.test(formData.password)) {
         setPasswordError(
-          "*Mật khẩu phải có từ 6 đến 21 ký tự và bao gồm ít nhất 1 ký tự đặc biệt."
+          "*Mật khẩu phải có từ 8 đến 21 ký tự và bao gồm ít nhất 1 ký tự đặc biệt."
         );
         hasError = true;
       } else {

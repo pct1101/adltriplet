@@ -34,6 +34,16 @@ export const getUserProfile = async () => {
   }
 };
 
+export const getCars = async () => {
+  try {
+    const response = axios.get(`${API_URL}/cars`);
+    console.log(response);
+  } catch (error) {
+    console.log("lỗi lấy car", error);
+  }
+  return axios.get(`${API_URL}/cars`);
+};
+
 // Lấy tất cả sản phẩm (sp)
 export const getAllCars = () => {
   return axios.get(`${API_URL}/cars`);
@@ -1656,9 +1666,9 @@ export const sendContactMail = (data) => {
 };
 
 // note: get dashboard admin
-
+//note: user
 export const getUserdashboard = async () => {
-  const apiToken = localStorage.getItem("api_token");
+  const apiToken = localStorage.getItem("authToken");
   // Kiểm tra xem token có tồn tại trong localStorage không
   if (!apiToken) {
     throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
@@ -1670,8 +1680,187 @@ export const getUserdashboard = async () => {
         Authorization: `Bearer ${apiToken}`,
       },
     });
-    console.log(response);
+    return response.data;
   } catch (error) {
     console.log("lỗi nè:", error);
+  }
+};
+//note: xe
+export const getCarsdashboard = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/dashboard/total-cars`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log("lỗi nè:", error);
+  }
+};
+
+//note: booking
+export const getBookingdashboard = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-bookings`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("lỗi nè:", error);
+  }
+};
+
+//note: phản hồi
+export const getCmtdashboard = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-feedbacks`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("lỗi nè:", error);
+  }
+};
+
+//note: tổng doanh thu
+export const getRevenueDashboarh = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-revenue`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("lỗi nè:", error);
+  }
+};
+
+export const getBrands = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(`${API_URL}/admin/car-brands`, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.log("lỗi brands nè:", error);
+  }
+};
+
+export const getCarsbybrand = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-carsbybrand`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+
+    console.log("getCarsbybrand", response);
+    return response;
+  } catch (error) {
+    console.log("lỗi brands nè:", error);
+  }
+};
+// note: tổng doanh thu booking theo tháng
+export const getRevenuebymonth = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-revenuebymonth`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+
+    console.log("tổng doanh thu serve", response);
+    return response;
+  } catch (error) {
+    console.log("lỗi brands nè:", error);
+  }
+};
+
+// note: user booking nhiều nhất
+export const getTotal_topuser = async () => {
+  const apiToken = localStorage.getItem("authToken");
+  // Kiểm tra xem token có tồn tại trong localStorage không
+  if (!apiToken) {
+    throw new Error("Không tìm thấy token. Vui lòng đăng nhập lại.");
+  }
+
+  try {
+    const response = await axios.get(
+      `${API_URL}/admin/dashboard/total-topuser`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+        },
+      }
+    );
+
+    return response;
+  } catch (error) {
+    console.log("lỗi brands nè:", error);
   }
 };

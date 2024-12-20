@@ -125,6 +125,7 @@ const EditDriverLicense = () => {
                 value={license_holder}
                 onChange={(e) => setLicense_holder(e.target.value)}
                 required
+                readOnly
               />
             </div>
             <div className="mb-3">
@@ -135,6 +136,7 @@ const EditDriverLicense = () => {
                 value={license_number}
                 onChange={(e) => setLicense_number(e.target.value)}
                 required
+                readOnly
               />
             </div>
             <div className="mb-3">
@@ -185,6 +187,7 @@ const EditDriverLicense = () => {
                 value={expiry_date}
                 onChange={(e) => setExpiry_date(e.target.value)}
                 required
+                readOnly
               />
             </div>
             <div className="mb-3">

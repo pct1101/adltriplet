@@ -202,11 +202,17 @@ function Gplx() {
           </a>
         </div>
         <div className="note-license">
-          <p>
-            <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
-            <u>người đặt xe</u>(đã xác thực GPLX) <b>ĐỒNG THỜI </b>
-            phải là <u>người nhận xe.</u>
-          </p>
+          {gplx[0]?.license_status === "invalid" ? (
+            <p>
+              <b>Lưu ý: </b> {gplx[0]?.rejection_reason}
+            </p>
+          ) : (
+            <p>
+              <b>Lưu ý: </b> để tránh phát sinh vấn đề trong quá trình thuê xe,{" "}
+              <u>người đặt xe</u>(đã xác thực GPLX) <b>ĐỒNG THỜI </b>
+              phải là <u>người nhận xe.</u>
+            </p>
+          )}
         </div>
 
         <div className="content">

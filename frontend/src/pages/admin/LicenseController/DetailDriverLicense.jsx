@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getDriverLicenseById , updateDriverLicense} from "../../../lib/Axiosintance";
+import {
+  getDriverLicenseById,
+  updateDriverLicense,
+} from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 
@@ -216,7 +219,7 @@ function AdminDriverLicenseDetails() {
                   />
                   <label>Hình ảnh giấy phép:</label>
                   <img
-                    src={`http://localhost:8000/${formData.license_image}`}
+                    src={`https://api.thuexetulai.online/${formData.license_image}`}
                     alt="License"
                     style={{
                       width: "100%",

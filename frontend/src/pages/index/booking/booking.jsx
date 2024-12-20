@@ -23,6 +23,8 @@ dayjs.locale("vi");
 function Booking() {
   // note: get booking
   const [bookedDates, setBookedDates] = useState([]);
+  console.log(bookedDates);
+
   const {
     selectedProvince,
     setSelectedProvince,

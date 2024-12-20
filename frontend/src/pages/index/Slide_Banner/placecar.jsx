@@ -9,8 +9,11 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { getAllCars } from "../../../lib/Axiosintance";
 import { API_URL_IMG } from "../../../lib/Axiosintance";
+import { Link } from "react-router-dom";
+
 function Placecar() {
   const [cars, setCars] = useState([]);
+  console.log(cars);
 
   useEffect(() => {
     // Gọi API để lấy danh sách xe
@@ -70,13 +73,18 @@ function Placecar() {
           {cars.map((slideBanner, index) => (
             <SwiperSlide key={slideBanner} virtualIndex={index}>
               <div className="cartop-item">
-                <Card.Img
-                  variant="sales"
-                  src={`${API_URL_IMG}${slideBanner.car_image}`}
-                />
-                <p>
-                  {slideBanner.car_name} <span> {slideBanner.seats} chỗ </span>{" "}
-                </p>
+                <Link to={`/detail_product/${slideBanner.car_id}`}>
+                  {" "}
+                  <Card.Img
+                    variant="sales"
+                    src={`${API_URL_IMG}${slideBanner.car_image}`}
+                    alt="Car image"
+                  />
+                  <p>
+                    {slideBanner.car_name}{" "}
+                    <span> {slideBanner.seats} chỗ </span>{" "}
+                  </p>
+                </Link>
               </div>
             </SwiperSlide>
           ))}

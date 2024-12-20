@@ -23,6 +23,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Virtual, Navigation, Pagination } from "swiper/modules";
+import { API_URL_LOGO } from "../../../lib/Axiosintance";
 
 function Find_car() {
   // note:findcar
@@ -319,6 +320,7 @@ function Find_car() {
   };
   const groupCarsByTranmission = groupCarsByTranmission_Type();
   console.log(groupCarsByTranmission);
+
   //note: Hàm hiển thị các xe theo  loại xe(xe sàn, xe tự động)
   const handleSelectTranmission = (transmission_type) => {
     if (SelectedTranmission === transmission_type) {
@@ -364,7 +366,6 @@ function Find_car() {
 
       // Gọi hàm tìm kiếm
       const results = await searchCars(startDate, endDate);
-      console.log(results);
 
       if (results?.cars?.length > 0) {
         const params = new URLSearchParams({
@@ -418,7 +419,6 @@ function Find_car() {
 
       // note: lọc theo năm
       filtered = filtered.filter((car) => {
-        console.log("Model as Number:", Number(car.model));
         return Number(car.model) >= minYear && Number(car.model) <= maxYear;
       });
 
@@ -1232,7 +1232,7 @@ function Find_car() {
                         <label htmlFor={`${brand}`}>
                           <img
                             loading="lazy"
-                            src={`http://localhost:8000/brand_logo/${brand.toLowerCase()}.png`}
+                            src={`https://api.thuexetulai.online/brand_logo/${brand}.png`}
                             alt=" "
                           />
                           <p>

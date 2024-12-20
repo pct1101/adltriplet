@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDriverLicenseById, updateDriverLicense } from "../../../lib/Axiosintance";
+import {
+  getDriverLicenseById,
+  updateDriverLicense,
+} from "../../../lib/Axiosintance";
 import Side_bar from "../component/side_bar";
 import Header from "../component/header";
 import Footer from "../component/footer";
@@ -96,8 +99,13 @@ const EditDriverLicense = () => {
       alert("Cập nhật giấy phép thành công!");
       navigate("/admin/license");
     } catch (error) {
-      console.error("Error updating license:", error.response?.data?.message || error.message);
-      alert(`Cập nhật thất bại: ${error.response?.data?.message || error.message}`);
+      console.error(
+        "Error updating license:",
+        error.response?.data?.message || error.message
+      );
+      alert(
+        `Cập nhật thất bại: ${error.response?.data?.message || error.message}`
+      );
     }
   };
 

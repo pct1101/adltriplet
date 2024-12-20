@@ -28,7 +28,6 @@ const Productlist = () => {
     }
     return `${price.toLocaleString("vi-VN")} VND/ngày`; // Format cho số dưới 1000
   };
-  
 
   // note: Lấy danh sách xe cho trang hiện tại
   const displayedCars = cars.slice(

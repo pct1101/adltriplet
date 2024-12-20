@@ -18,7 +18,7 @@ function Footer() {
                     />
                   </a>
                 </div>
-                <p>CÔNG TY TNHH ADL TRIPBEL T</p>
+                <p>CÔNG TY TNHH ADL TRIPEL T</p>
                 <p>Hotline 1: 1900 6771</p>
                 <p>Hotline 2: 1900 6771</p>
                 <p>
@@ -81,7 +81,7 @@ function Footer() {
                 <ul className="list-unstyled">
                   <li>
                     <a href="#" className="text-dark">
-                      Về ADL TRIPBLE T
+                      Về ADL TRIPLE T
                     </a>
                   </li>
                   <li>
@@ -101,12 +101,12 @@ function Footer() {
                 <ul className="list-unstyled">
                   <li>
                     <a href="#" className="text-dark">
-                      Về ADL TRIPBLE T
+                      Về ADL TRIPLE T
                     </a>
                   </li>
                   <li>
                     <a href="#" className="text-dark">
-                      TRIPBLE T Blog
+                      ADL TRIPLE T Blog
                     </a>
                   </li>
                   <li>
@@ -122,7 +122,7 @@ function Footer() {
             className="text-center p-3"
             style={{ backgroundColor: "#f1f1f1" }}
           >
-            © 2024 ADL TRIPBLE T - All rights reserved.
+            © 2024 ADL TRIPLE T - All rights reserved.
           </div>
         </footer>
       </div>
